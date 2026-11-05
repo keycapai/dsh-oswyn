@@ -26,7 +26,8 @@
     }
   },
   "scripts": {
-    "test": "node --test test/*.test.js"
+    "build:client": "node lib/client/build.js",
+    "test": "node lib/client/build.js && node --test test/*.test.js"
   },
   "license": "MIT"
 }
