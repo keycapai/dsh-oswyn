@@ -1,0 +1,62 @@
+[
+  {
+    "arm": "baseline",
+    "total_steps": 24,
+    "fresh_prompt_tokens": 156561,
+    "cached_prompt_tokens": 0,
+    "completion_tokens": 1250,
+    "total_billed_tokens": 157811,
+    "cache_hit_rate_pct": 0,
+    "mean_context_tokens": 4394,
+    "peak_context_tokens": 8011,
+    "compressions_executed": 0,
+    "probe_accuracy_pct": 100,
+    "test_pass_rate_pct": 100,
+    "cost_usd": 0.12211
+  },
+  {
+    "arm": "oswyn",
+    "total_steps": 24,
+    "fresh_prompt_tokens": 80285,
+    "cached_prompt_tokens": 0,
+    "completion_tokens": 2192,
+    "total_billed_tokens": 82477,
+    "cache_hit_rate_pct": 0,
+    "mean_context_tokens": 1717,
+    "peak_context_tokens": 3368,
+    "compressions_executed": 0,
+    "probe_accuracy_pct": 100,
+    "test_pass_rate_pct": 100,
+    "cost_usd": 0.06843
+  },
+  {
+    "arm": "bc",
+    "total_steps": 24,
+    "fresh_prompt_tokens": 233091,
+    "cached_prompt_tokens": 0,
+    "completion_tokens": 6253,
+    "total_billed_tokens": 239344,
+    "cache_hit_rate_pct": 0,
+    "mean_context_tokens": 4685,
+    "peak_context_tokens": 8802,
+    "compressions_executed": 0,
+    "probe_accuracy_pct": 100,
+    "test_pass_rate_pct": 100,
+    "cost_usd": 0.19827
+  },
+  {
+    "arm": "synergy",
+    "total_steps": 24,
+    "fresh_prompt_tokens": 199574,
+    "cached_prompt_tokens": 0,
+    "completion_tokens": 3061,
+    "total_billed_tokens": 202635,
+    "cache_hit_rate_pct": 0,
+    "mean_context_tokens": 1813,
+    "peak_context_tokens": 3478,
+    "compressions_executed": 0,
+    "probe_accuracy_pct": 100,
+    "test_pass_rate_pct": 100,
+    "cost_usd": 0.16116
+  }
+]

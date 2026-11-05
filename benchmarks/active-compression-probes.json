@@ -1,0 +1,67 @@
+[
+  {
+    "model": "Gemini-4",
+    "tier": "Frontier Flagship",
+    "protocol": "oswyn",
+    "prompt_tokens": 7318,
+    "cached_tokens": 5210,
+    "completion_tokens": 679,
+    "emitted_oswyn_result_summary": true,
+    "emitted_oswyn_reply_summary": true,
+    "automated_fallback_needed": false,
+    "output_length_chars": 1361,
+    "behavior_summary": "Fully autonomous compliance: emitted replace fence pruning 150 feature flags, retained root cause at line 124, emitted structured reply-summary."
+  },
+  {
+    "model": "Hunyuan-4",
+    "tier": "Frontier Flagship",
+    "protocol": "oswyn",
+    "prompt_tokens": 6326,
+    "cached_tokens": 4890,
+    "completion_tokens": 1500,
+    "emitted_oswyn_result_summary": true,
+    "emitted_oswyn_reply_summary": true,
+    "automated_fallback_needed": false,
+    "output_length_chars": 1420,
+    "behavior_summary": "High meta-cognitive discipline: emitted replace fence isolating the ShardWorker capacity exception, generated dual-track reply memo."
+  },
+  {
+    "model": "Kimi-3.1-Pro",
+    "tier": "Reasoning Flagship",
+    "protocol": "oswyn",
+    "prompt_tokens": 6048,
+    "cached_tokens": 0,
+    "completion_tokens": 704,
+    "emitted_oswyn_result_summary": true,
+    "emitted_oswyn_reply_summary": true,
+    "automated_fallback_needed": false,
+    "output_length_chars": 1704,
+    "behavior_summary": "Deep chain-of-thought analysis: natural language reasoning with 100% compliant reply-summary memo and inline result summary."
+  },
+  {
+    "model": "DeepSeek-4.1-Flash",
+    "tier": "Budget Flash",
+    "protocol": "oswyn",
+    "prompt_tokens": 6517,
+    "cached_tokens": 0,
+    "completion_tokens": 1500,
+    "emitted_oswyn_result_summary": true,
+    "emitted_oswyn_reply_summary": false,
+    "automated_fallback_needed": true,
+    "output_length_chars": 980,
+    "behavior_summary": "Action-focused coding: directly analyzed root cause and emitted fix commands with result summary; reply-summary truncated by max token limit."
+  },
+  {
+    "model": "Gemini-3.8-Flash",
+    "tier": "Budget Flash",
+    "protocol": "oswyn",
+    "prompt_tokens": 7508,
+    "cached_tokens": 0,
+    "completion_tokens": 1216,
+    "emitted_oswyn_result_summary": true,
+    "emitted_oswyn_reply_summary": true,
+    "automated_fallback_needed": false,
+    "output_length_chars": 1648,
+    "behavior_summary": "Emitted replace fence and reply-summary under targeted high-noise prompt; in prolonged coding tasks relies 87.5% on automated truncation & error discard."
+  }
+]

@@ -1,0 +1,32 @@
+{
+  "name": "dsh-oswyn",
+  "version": "1.6.8",
+  "description": "DSH-OSWYN (Only See What You Need) — Agent-guided context optimization & prompt-cache preserving management: cache-preserving prefix truncation, fact replacement, dual-track assistant reply projection, and live dashboard.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "^3.18.2"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-plugin-manager",
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
+    }
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "license": "MIT"
+}

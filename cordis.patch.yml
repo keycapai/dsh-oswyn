@@ -1,0 +1,9 @@
+# dsh-oswyn bundle patch.
+# DSH-OSWYN: Only See What You Need
+- insert:
+    - id: oswyn
+      name: "dsh-oswyn"
+      config:
+        enabled: true
+        defaultKeepChars: 2000
+        replySummaryEnabled: true
