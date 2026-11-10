@@ -482,15 +482,15 @@ npm test
 如果您在学术研究、生产评估或二次开发中使用了 DSH-OSWYN 插件或其论文中的实证数据集，请按照以下 BibTeX 格式进行引用：
 
 ```bibtex
-@article{oswyn2026empirical,
-  title     = {OSWYN: Agent-Guided In-Band Step-Boundary Context Micro-Distillation and Prefix-Preserving Prompt Cache Management in Autonomous Software Engineering},
-  author    = {DSH Agent Systems and Open Source Research Group},
-  journal   = {DeepSeek Harness Empirical Research Archive},
+@article{zhang2026oswyn,
+  title     = {OSWYN: Preserving Capability Boundaries and KV-Cache Locality in Long-Horizon Software Engineering Agents via In-Band Step-Boundary Context Distillation},
+  author    = {Zhang, Rentong},
+  journal   = {Keycap AI Research Archive},
   year      = {2026},
   volume    = {2},
   number    = {1},
   pages     = {1--42},
-  note      = {Version 2.1.0, Artifact: paper/oswyn-paper.md}
+  note      = {Artifact: paper/oswyn-paper.md, Repository: https://github.com/keycapai/dsh-oswyn}
 }
 ```
 

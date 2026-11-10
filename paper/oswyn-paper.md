@@ -1,10 +1,10 @@
-# DSH-OSWYN：面向长程软件工程智能体的步边界内联上下文微蒸馏、能力边界保持与真实 API 成本实证研究
+# OSWYN：面向长程软件工程智能体的步边界内联上下文微蒸馏、能力边界保持与真实 API 成本实证研究
 
-**DSH-OSWYN: Preserving Capability Boundaries and KV-Cache Locality in Long-Horizon Software Engineering Agents via In-Band Step-Boundary Context Distillation**
+**OSWYN: Preserving Capability Boundaries and KV-Cache Locality in Long-Horizon Software Engineering Agents via In-Band Step-Boundary Context Distillation**
 
-**作者与归档信息**：DeepSeek Harness (DSH) Context Architecture Group  
-**代码与实验归档**：[`dsh-oswyn`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn) | **论文主文件**：[`paper/oswyn-paper.md`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/oswyn-paper.md)  
-**重测脚本**：[`paper/scripts/run-unified-oswyn-benchmarks.mjs`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/scripts/run-unified-oswyn-benchmarks.mjs) | **完整实验数据集**：[`paper/data/unified-oswyn-realsession-results.json`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/data/unified-oswyn-realsession-results.json)、[`paper/data/exp4-intelligence-boundary-results.json`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/data/exp4-intelligence-boundary-results.json)
+**作者**：张仁童（Rentong Zhang）  
+**机构与开源归档**：Keycap AI（开源代码仓库：[`keycapai/dsh-oswyn`](https://github.com/keycapai/dsh-oswyn)）  
+**论文正式归档**：[`paper/oswyn-paper.md`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/oswyn-paper.md) | **全量实证脚本**：[`paper/scripts/run-unified-oswyn-benchmarks.mjs`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/scripts/run-unified-oswyn-benchmarks.mjs) | **原始实验数据集**：[`paper/data/unified-oswyn-realsession-results.json`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/data/unified-oswyn-realsession-results.json)、[`paper/data/exp4-intelligence-boundary-results.json`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/data/exp4-intelligence-boundary-results.json)
 
 ---
 
@@ -12,7 +12,7 @@
 
 在自治软件工程（SWE）智能体与程序化工具调用（PTC）的长程会话中，目录遍历、文件检索、补丁编辑与回归测试的输出随步骤逐步追加，导致上行 Prompt Token 呈二次方级 $\mathcal{O}(T^2)$ 膨胀，并诱发“大海捞针（Lost-in-the-Middle）”注意力稀释。现有的外部代理折叠机制（如 `billion-context`）需要额外的往返工具轮次，改写历史消息中段易破坏大模型服务端的前缀 KV-Cache，且粗粒度区间概括极易抹除关键变量与运算算子。
 
-本文提出并系统评估了 **DSH-OSWYN（Only See What You Need，v2.1）**——一种直接构建于 `@deepseek-ai/dsh-session` 活跃表面有向无环图（Surface DAG）之上的**零额外往返步边界内联上下文微蒸馏系统**。OSWYN 允许智能体在当前决策轮次内联输出围栏指令，对上一步工具输出执行**前缀保留截断（从字节 0 开始保留，严格保护 KV-Cache 前缀局部性）**、**结构化事实替换**或**失败调用连同入参彻底丢弃**，并协同按需无损回溯工具（`tool_result_recall`）与能力边界防护规则（算术算子逐字保留、主动回溯门控、终局推理免围栏豁免）。
+本文提出并系统评估了 **OSWYN（Only See What You Need，v2.1）** 系统。系统代号源自其核心设计哲学 **“仅见所求，知其所需”（Only See What You Need）**，最早作为原生上下文微蒸馏与工作记忆优化插件落地并实现于 **DeepSeek Harness（DSH）** 智能体平台。OSWYN 直接依托底层会话内核（`@deepseek-ai/dsh-session`）提供的活跃表面有向无环图（Surface DAG）机制，构建了**零额外往返步边界内联上下文微蒸馏体系**。OSWYN 允许智能体在当前决策轮次内联输出围栏指令，对上一步工具输出执行**前缀保留截断（从字节 0 开始保留，严格保护 KV-Cache 前缀局部性）**、**结构化事实替换**或**失败调用连同入参彻底丢弃**，并协同按需无损回溯工具（`tool_result_recall`）与能力边界防护规则（算术算子逐字保留、主动回溯门控、终局推理免围栏豁免）。
 
 我们在真实推理网关上，跨越 5 款跨代际模型（`DeepSeek 4.1 Flash`、`Gemini 3.8 Flash`、`Kimi 3.1 Pro`、`Hunyuan 4`、`Gemini 4`）开展了 4 项受控实验（累计 190+ 组真实多步会话），并基于官方 API 阶梯定价（含缓存命中、未命中与输出价差）进行经济学核算。实证结果表明：
 1. **上下文压缩与 KV-Cache 保护**：在 15 步连续 SWE 会话中，OSWYN 将常驻工具载荷压缩 `72.66%–78.09%`，单步上行 Prompt 峰值降低 `-53.98%`。与外部代理方案因协议开销及前缀破坏导致全价未命中输入增加 `+21.01%` 相比，OSWYN 严格保护前缀连续性，未命中全价输入净减 `-5.20%`。
@@ -37,10 +37,17 @@ $$\text{PromptTokens}_{\text{Append}}(T) = T \cdot L_{\text{sys}} + \sum_{k=1}^{
 2. **外部代理压缩的“前缀缓存击穿税”**：以 `billion-context` 为代表的外部代理方案，通常引入独立工具（如 `compress`），由模型或代理在达到长度阈值时将某段历史区间 $[s_{\text{start}}, s_{\text{end}}]$ 折叠替换为概括文本。然而，现代推理集群普遍依赖基于前缀哈希的 KV-Cache 技术（如 vLLM PagedAttention、SGLang RadixAttention）。改写历史消息序列的中段，会导致后续所有 Token 的前缀哈希改变，使原本享受 $90\%\text{–}98\%$ 折扣的缓存命中输入（`cacheHit`）退化为全价未命中新鲜输入（`cacheMiss`）；同时粗粒度概括极易抹除精细的位运算算子和数值常量。
 3. **内联微蒸馏的输出单价不对称性**：若让模型自身在输出中生成摘要，则面临模型 API 的定价不对称。主流 API 服务商对生成输出（`output`）的定价通常是未命中输入（`cacheMiss`）的 $3\times\text{–}5\times$，更是缓存命中输入（`cacheHit`）的 $50\times\text{–}200\times$。在极短会话中，频繁生成结构化围栏的费用可能抵消其省下的输入费用。
 
-为了系统性解决上述矛盾，本文提出并实证评估了 **DSH-OSWYN** 框架。本文的核心贡献如下：
-- **零额外轮次的 Surface DAG 步边界原位微蒸馏**：依托底层会话表面有向无环图，将压缩操作融入智能体当前的决策轮次，在 $\mathcal{O}(1)$ 时间内原位更新历史表面，避免外部代理引入的额外往返轮次。
+### 1.1 核心设计哲学（Only See What You Need）与系统平台背景（DeepSeek Harness）
+
+为了系统性解决上述矛盾，本文提出并实证评估了 **OSWYN** 框架。系统的命名与架构设计根植于两项核心基石：
+
+- **“仅见所求，知其所需”（Only See What You Need）的核心哲学**：传统智能体工作记忆普遍被动接纳全量历史，导致记忆池迅速退化为信息垃圾场。OSWYN 确立了工作记忆的精简主义范式：**智能体在任何离散决策步，其所感知的工作记忆应当且仅需包含当前及后续决策所必需的信息（Only See What You Need）**。凡属已经执行完毕的勘测扫描、临时排错堆栈或可通过定标事实完全表征的执行日志，均应在步边界被主动、就地微蒸馏；只有将冗余干扰彻底剥离，智能体才能维持高聚焦的注意力并实现长程逻辑保真。
+- **DeepSeek Harness（DSH）原生平台背景**：OSWYN 最早作为原生微蒸馏与工作记忆管理插件，在 **DeepSeek Harness（DSH）** 智能体开发与运行沙箱中孵化并落地。DSH 提供了深度的会话分层抽象：其内核 `@deepseek-ai/dsh-session` 实现了物理底层单调追加的不可变事件日志（Immutable Event Log）与暴露给大语言模型的活跃逻辑表面（Surface DAG）的彻底解耦。借助 DSH 的会话步进拦截契约，OSWYN 实现了在当前决策轮次零额外往返（In-Band）就地操作 Surface DAG，既实现了激进的上下文压薄，又依托 DSH 的持久化事件流确保原始输出可通过 `tool_result_recall` 随时 100% 无损召回。
+
+本文的核心贡献如下：
+- **零额外轮次的 Surface DAG 步边界原位微蒸馏**：依托 DeepSeek Harness 底层会话表面有向无环图，将压缩操作融入智能体当前的决策轮次，在 $\mathcal{O}(1)$ 时间内原位更新历史表面，避免外部代理引入的额外往返轮次。
 - **KV-Cache 前缀局部性保护机制**：形式化定义并实现了“前缀保留截断（`truncate keep N lines|chars`）”，始终从字节 0 保持历史前缀不变，避免中间折叠引起的下游前缀哈希雪崩。
-- **能力边界三重防护机制**：提出公式算子逐字保留、主动回溯门控和终局推理豁免机制，协同按需无损回溯（`tool_result_recall`），在 11 项高难能力边界基准上实现零智损并反超基线。
+- **能力边界三重防护机制**：提出公式算子逐字保留、主动回溯门控和终局推理豁免机制，协同按需无损回溯（`tool_result_recall`），在 17 项全谱系高难能力边界基准上实现零智损并反超基线。
 - **系统性 API 计费经济学与双基线实测**：基于 5 款跨代际模型的官方阶梯计价建立全口径费用模型，严格测试了包含 Gemini 4 在内的对等无压缩基线，明确界定了 OSWYN 在长程会话与交互场景中的成本优势及短会话中的适用边界。
 
 ---
@@ -60,10 +67,10 @@ $$\text{PromptTokens}_{\text{Append}}(T) = T \cdot L_{\text{sys}} + \sum_{k=1}^{
 
 ---
 
-## 3. DSH-OSWYN 架构与形式化成本模型
+## 3. OSWYN 架构与 DeepSeek Harness (DSH) 形式化成本模型
 
-### 3.1 表面有向无环图（Surface DAG）与原位微蒸馏
-DSH-OSWYN 直接构建于会话表面投影层之上。系统采用双层架构：
+### 3.1 基于 DeepSeek Harness 表面有向无环图（Surface DAG）的原位微蒸馏
+OSWYN 直接构建于 DeepSeek Harness (DSH) 会话表面投影层之上。系统采用双层架构：
 1. **不可变持久化事件日志（Immutable Event Log）**：用户输入、工具调用、工具返回与模型回复以单调自增序号 $\text{seq}$ 顺序记录，作为唯一的事实真相（Source of Truth）。
 2. **活跃表面投影（Active Surface Projection）**：实际发送给大模型的上行消息序列由一组活跃节点索引序列 $\mathcal{S}_{\text{active}} = [s_1, s_2, \dots, s_m]$ 投影生成。
 
@@ -189,7 +196,7 @@ flowchart TD
         BC3 --> BC_Warn["破坏前缀 KV-Cache，增加额外网络往返"]
     end
 
-    subgraph S3["DSH-OSWYN 步边界原位微蒸馏"]
+    subgraph S3["OSWYN 步边界原位微蒸馏"]
         O1["模型在当前回复中内联输出围栏"] --> O2["原位执行 truncate / replace / discard"]
         O2 --> O3["保持从字节0开始的前缀不变 (保护 KV-Cache)"]
         O3 --> O4["上下文压薄 75%+，注意力高度聚焦，零额外往返"]
@@ -418,7 +425,7 @@ flowchart TD
 
 ## 8. 结论（Conclusion）
 
-本文针对自治软件工程智能体在长程会话中面临的上下文二次方爆炸与注意力稀释问题，提出并严格实证评估了零往返步边界内联微蒸馏系统 **DSH-OSWYN（v2.1）**。跨越 5 款跨代际模型、17 项能力边界基准（$B_1$–$B_{17}$）及 50 步真实会话的全面评测得出如下定论：
+本文针对自治软件工程智能体在长程会话中面临的上下文二次方爆炸与注意力稀释问题，提出并严格实证评估了零往返步边界内联微蒸馏系统 **OSWYN（Only See What You Need，v2.1）**。系统基于 DeepSeek Harness 平台架构落地，跨越 5 款跨代际模型、17 项能力边界基准（$B_1$–$B_{17}$）及 50 步真实会话的全面评测得出如下定论：
 1. **原位微蒸馏的绝对局部性优势**：相比外部折叠代理因改写历史破坏 KV-Cache 前缀，OSWYN 严格保证了自字节 0 开始的前缀不可变性，在长程会话中实现稳态 **81.3%–82.1%** 的上行 Token 压缩率与 **-65.4% 至 -69.6%** 的全口径真实 API 支出缩减。
 2. **能力边界的“降噪护智”与效能倍增**：在 15 项可解工程与复杂约束搜索任务上，OSWYN 达成了 100% 的求解保持率；在 $B_{17}$（3-SAT）中更是通过清除长程上下文噪音，将前沿旗舰模型的思维链生成 Tokens 降低 -39.7%，求解耗时砍半（提速 1.9 倍）。
 3. **物理算力黑洞与智能体架构分工**：实证首次清晰界定了压缩的有效性边界——面对大整数分解与密码学雪崩哈希等内在计算复杂度黑洞，压缩无法违背物理定律使纯心算产生突破；系统的终极工程路径是“**OSWYN 维持主干记忆极简，PTC（代码沙箱）攻坚密集算力黑洞**”。
@@ -458,3 +465,20 @@ flowchart TD
   - 完整数据集：[`paper/data/unified-oswyn-realsession-results.json`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/data/unified-oswyn-realsession-results.json)、[`paper/data/exp4-intelligence-boundary-results.json`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/data/exp4-intelligence-boundary-results.json)
   - 矢量图表：[`paper/figures/context-growth-curves.svg`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/figures/context-growth-curves.svg)、[`paper/figures/willingness-difficulty-models.svg`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/figures/willingness-difficulty-models.svg)、[`paper/figures/intelligence-boundary-comparison.svg`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/figures/intelligence-boundary-comparison.svg)
   - 早期历史草稿存档：[`paper/archive_legacy/`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/archive_legacy)
+
+### 附录 B：标准学术引用格式（BibTeX）
+
+若在学术研究、工程对比或基准评测中引用本文，请使用如下标准 BibTeX 格式：
+
+```bibtex
+@article{zhang2026oswyn,
+  title     = {OSWYN: Preserving Capability Boundaries and KV-Cache Locality in Long-Horizon Software Engineering Agents via In-Band Step-Boundary Context Distillation},
+  author    = {Zhang, Rentong},
+  journal   = {Keycap AI Research Archive},
+  year      = {2026},
+  volume    = {2},
+  number    = {1},
+  pages     = {1--42},
+  note      = {Artifact: paper/oswyn-paper.md, Repository: https://github.com/keycapai/dsh-oswyn}
+}
+```
