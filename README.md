@@ -2,19 +2,20 @@
 
 ### DeepSeek Harness 原生步边界内联上下文微蒸馏、KV-Cache 前缀保护与零智损闭环引擎
 
-[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/package.json)
-[![Tests](https://img.shields.io/badge/unit_tests-163_passed_%28100%25%29-brightgreen.svg)](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/test)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/package.json)
+[![Version](https://img.shields.io/badge/version-2.1.1-blue.svg)](https://www.npmjs.com/package/dsh-oswyn)
+[![npm](https://img.shields.io/npm/v/dsh-oswyn.svg)](https://www.npmjs.com/package/dsh-oswyn)
+[![Tests](https://img.shields.io/badge/unit_tests-163_passed_%28100%25%29-brightgreen.svg)](test)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-DeepSeek_Harness_Native-orange.svg)](https://github.com/deepseek-ai)
-[![Paper](https://img.shields.io/badge/paper-oswyn--paper.md-purple.svg)](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/oswyn-paper.md)
+[![Paper](https://img.shields.io/badge/paper-oswyn--paper.md-purple.svg)](paper/oswyn-paper.md)
 
 ---
 
 > 📄 **权威学术论文与实证数据集归档（Empirical Paper & Research Benchmarks）**
-> - **唯一正式学术论文（标准学术格式，含 5 款主流模型官方实际 API 价格核算）**：[**`paper/oswyn-paper.md`**](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/oswyn-paper.md)（交付副本：[`deliverables/oswyn-paper.md`](file:///Users/reno/Documents/deepseek-harness/default-workspace/deliverables/oswyn-paper.md)）
-> - **全量真机评测基准套件**：[`paper/scripts/run-unified-oswyn-benchmarks.mjs`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/scripts/run-unified-oswyn-benchmarks.mjs)
-> - **实验原始 JSON 数据集（180+ 组完整会话）**：[`paper/data/unified-oswyn-realsession-results.json`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/data/unified-oswyn-realsession-results.json) 与 [`paper/data/exp4-intelligence-boundary-results.json`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/data/exp4-intelligence-boundary-results.json)
-> - **出版级高解析度矢量图表**：[`paper/figures/`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/figures)（包含 5 幅标准折线图与柱状图）
+> - **唯一正式学术论文（标准学术格式，含 5 款主流模型官方实际 API 价格核算）**：[**`paper/oswyn-paper.md`**](paper/oswyn-paper.md)
+> - **全量真机评测基准套件**：[`paper/scripts/run-unified-oswyn-benchmarks.mjs`](paper/scripts/run-unified-oswyn-benchmarks.mjs)
+> - **实验原始 JSON 数据集（180+ 组完整会话）**：[`paper/data/unified-oswyn-realsession-results.json`](paper/data/unified-oswyn-realsession-results.json) 与 [`paper/data/exp4-intelligence-boundary-results.json`](paper/data/exp4-intelligence-boundary-results.json)
+> - **出版级高解析度矢量图表**：[`paper/figures/`](paper/figures/)（包含 5 幅标准折线图与柱状图）
 
 ---
 
@@ -75,7 +76,7 @@ flowchart TD
 1. **上下文二次方膨胀（$\mathcal{O}(T^2)$ Token Quadratic Explosion）**：
    长程任务中，早期每一步的冗余输出在后续每一步作为输入被反复计费。在 15 步交互中，无压缩基线上行 Prompt 累计达 19.9 万 Tokens；在 50 步窗口中，累计计费飙升至 184 万 Tokens。
 2. **外部代理压缩的“缓存击穿税（KV-Cache Breakdown Tax）”**：
-   外部区间折叠工具（如 `billion-context`）试图在第 $k$ 步发起外部工具调用，将第 $1 \dots k-1$ 步的历史消息区间替换为摘要。这种对历史前缀的变异直接破坏了云端推理服务的 Prompt Cache 树结构，导致后续步骤的全价未命中输入（`Fresh Tokens`）激增 **`+21.01%`**。在以极高缓存折扣为代表的现代模型（如 DeepSeek 4.1 Flash 谷价缓存命中 $¥0.02/\text{M}$ vs 未命中 $¥1.00/\text{M}$，相差 50 倍）定价下，外部压缩因缓存击穿反而比完全不压缩贵出 **`+13.30%`**。
+   外部区间折叠工具（如 `billion-context`）试图在第 $k$ 步发起外部工具调用，将第 $1 \dots k-1$ 步的历史消息区间替换为摘要。这种对历史前缀的变异直接破坏了云端推理服务的 Prompt Cache 树结构，导致后续步骤的全价未命中输入（`Fresh Tokens`）激增 **`+21.01%`**。在以极高缓存折扣为代表的现代模型（如 DeepSeek 4.1 Flash 谷价缓存命中 `¥0.02 / M` [约 `\$0.003`] vs 未命中 `¥1.00 / M` [约 `\$0.15`]，相差 50 倍）定价下，外部压缩因缓存击穿反而比完全不压缩贵出 **`+13.30%`**。
 3. **上下文失明与事实漂移（Context Blindness & Fact Drift）**：
    外部摘要模型往往将长文本概括为文学性短语，丢失诸如除数 `/250`、位掩码 `0x7F`、精确退出码及配置变量名等核心信息，使得智能体在下游计算中产生严重幻觉。
 
@@ -108,14 +109,14 @@ DSH-OSWYN 构建于 `@deepseek-ai/dsh-session` 提供的有向无环表面图（
 | **`discard`** | 级联丢弃该工具结果，并将对应的工具调用入参 `tool-call.arguments` 一并覆写为 `'{}'`。 | 命令语法错误、权限拒绝、无匹配项的探测调用。 | 彻底清除无效噪音，避免注意力分散。 |
 
 #### 内联围栏语法范例：
-```markdown
+````markdown
 ```dsh-result-summary
 truncate keep 12 lines
 FINDINGS:
 - Found 14 matching TypeScript files under src/modules/
 - Target entrypoint is src/modules/auth/service.ts
 ```
-```
+````
 
 ### 3.2 助手回复双轨投影机制（`dsh-reply-summary`）
 
@@ -123,7 +124,37 @@ FINDINGS:
 
 OSWYN 引入**双轨回复投影（Dual-Track Reply Projection）**：
 - **Web UI 视轨**：人类用户在界面中看到完整的富文本 Markdown 阐述；
-- **模型上下文视轨**：通过内联输出的 ` ```dsh-reply-summary ` 提取的紧凑备忘替代长篇阐述注入下一轮上下文，使步间上下文膨胀率直降 70%。
+- **模型上下文视轨**：通过内联输出的 `dsh-reply-summary` 提取的紧凑备忘替代长篇阐述注入下一轮上下文，使步间上下文膨胀率直降 70%。
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as 开发者 / 人类用户
+    participant WebUI as Web 客户端 UI
+    participant DSH as DeepSeek Harness 运行时
+    participant OSWYN as OSWYN 双轨投影引擎
+    participant Agent as 智能体 LLM (下一轮推理)
+
+    Note over Agent: Step N: 智能体输出长篇解释 + 内联摘要围栏
+    DSH->>OSWYN: 拦截助手回复内容 (Assistant Message)
+    OSWYN->>WebUI: 视轨 ①: 投射完整 Markdown 长篇阐述 (用户无损阅读)
+    WebUI-->>User: 展现清晰完整的技术报告与排查步骤
+    OSWYN->>DSH: 视轨 ②: 裁剪长篇解释，仅注入 dsh-reply-summary 紧凑备忘
+    Note over DSH: Surface DAG 活跃视图更新，上下文厚度压降 70%
+    DSH->>Agent: Step N+1: 组装下一轮 Context (保留前缀 + 仅含紧凑备忘)
+```
+
+#### 双轨投影内联语法范例：
+````markdown
+人类用户您好，我对用户鉴权模块进行了深度静态分析与跨步依赖排查……（此处省略 2000 字详细分析与排错步骤）……
+
+```dsh-reply-summary
+SUMMARY:
+- 诊断结论：src/auth/jwt.ts 第 84 行存在 Token 过期未刷新漏洞
+- 执行动作：已重写 verifyToken() 并注入单元测试
+- 下一步：准备调用 run_code 验证测试用例 pass 状态
+```
+````
 
 ### 3.3 不可变事件日志与无损秒级召回（`tool_result_recall`）
 
@@ -162,11 +193,11 @@ OSWYN 的所有压缩操作**仅作用于内存活跃的 Surface DAG 表面节�
 ```
 
 1. **公式算子逐字保全法则（Formula-Safe Verbatim Rule）**：
-   在 [`lib/prompts/base.js`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/lib/prompts/base.js) 中设立红线：当工具结果包含数学运算式、除数（如题 $B_9$ 中的 `/250`）、位操作符或参数定义时，模型若执行 `replace`，**必须将公式原型逐字（Verbatim）复制至事实摘要中**，严禁进行近似表达。
+   在 [`lib/prompts/base.js`](lib/prompts/base.js) 中设立红线：当工具结果包含数学运算式、除数（如题 $B_9$ 中的 `/250`）、位操作符或参数定义时，模型若执行 `replace`，**必须将公式原型逐字（Verbatim）复制至事实摘要中**，严禁进行近似表达。
 2. **跨步计算前主动回溯门控（Proactive Recall Gate）**：
    在单步压力感知指引中明确注入校验协议：在跨步执行循环累加或多变量汇聚前，检查参与运算的所有关键参数是否在活跃视图中清晰无缺。若发现已被截断，立刻执行 `tool_result_recall(call_id)` 召回原始输出。
 3. **终局推理免围栏豁免（`isFinalSynthesis` Exemption）**：
-   在 [`lib/prompts/nudge.js`](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/lib/prompts/nudge.js) 中增加终局感知逻辑。当智能体进行最后一轮答案汇总与深度代码推导时，系统自动免除围栏撰写要求，避免占用宝贵的推理输出长度（MaxTokens），彻底根除因追求压缩率而导致的思考精力分散。
+   在 [`lib/prompts/nudge.js`](lib/prompts/nudge.js) 中增加终局感知逻辑。当智能体进行最后一轮答案汇总与深度代码推导时，系统自动免除围栏撰写要求，避免占用宝贵的推理输出长度（MaxTokens），彻底根除因追求压缩率而导致的思考精力分散。
 4. **结构化三步正向决策树（$P_3$ Decision Tree）**：
    彻底杜绝由于系统提示词披露后台自动截断规则而引发的“道德风险（Moral Hazard）”，通过三步直观决策流（① 失败调用直接丢弃 $\to$ ② 包含公式/配置全量保留 $\to$ ③ 纯冗余日志前缀截断），引导模型自发实现高质量精准蒸馏。
 
@@ -176,17 +207,17 @@ OSWYN 的所有压缩操作**仅作用于内存活跃的 Surface DAG 表面节�
 
 本插件的研究团队在真实物理沙箱环境下执行了 180+ 组真实全流程端到端实验，涵盖 **5 款主流代表性大模型**，并接入各模型**官方最新实际 API 定价表**（严格计入**缓存命中输入费 `cacheHit`**、**缓存未命中输入费 `cacheMiss`** 与 **生成输出费 `output`**）进行真实账单审计。
 
-完整论文请参见：[**`paper/oswyn-paper.md`**](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/oswyn-paper.md)。
+完整论文请参见：[**`paper/oswyn-paper.md`**](paper/oswyn-paper.md)。
 
 ### 5.1 参评模型官方实际 API 计费标准
 
 | 模型代号与全称 | 官方 Cache Hit 价格 | 官方 Cache Miss 价格 | 官方 Output 价格 | 相对价格比 (Hit : Miss : Out) | 计费特性 |
 | :--- | :---: | :---: | :---: | :---: | :--- |
-| **`DeepSeek 4.1 Flash` (`ds4.1f`)** | $¥0.02 / \text{M}$ ($0.003) | $¥1.00 / \text{M}$ ($0.15) | $¥4.00 / \text{M}$ ($0.60) | **`1 : 50 : 200`** | 98% 极端缓存折扣，输出费用极度昂贵 |
-| **`Gemini 3.8 Flash`** | $\$0.075 / \text{M}$ | $\$0.75 / \text{M}$ | $\$3.75 / \text{M}$ | **`1 : 10 : 50`** | 90% 缓存折扣，典型高频轻量模型 |
-| **`Kimi 3.1 Pro`** | $\$0.20 / \text{M}$ ($¥1.30) | $\$2.00 / \text{M}$ ($¥13.0) | $\$10.00 / \text{M}$ ($¥68.0) | **`1 : 10 : 50`** | 90% 缓存折扣，长文本旗舰高阶模型 |
-| **`Hunyuan 4`** | $\$0.042 / \text{M}$ | $\$0.834 / \text{M}$ | $\$2.501 / \text{M}$ | **`1 : 19.86 : 59.55`** | 95% 缓存折扣，高性价比全功能旗舰 |
-| **`Gemini 4`** | $\$0.10 / \text{M}$ | $\$2.00 / \text{M}$ | $\$10.00 / \text{M}$ | **`1 : 20 : 100`** | 95% 缓存折扣，前沿旗舰推理引擎 |
+| **`DeepSeek 4.1 Flash` (`ds4.1f`)** | `¥0.02` / M (约 `\$0.003`) | `¥1.00` / M (约 `\$0.15`) | `¥4.00` / M (约 `\$0.60`) | **`1 : 50 : 200`** | 98% 极端缓存折扣，输出费用极度昂贵 |
+| **`Gemini 3.8 Flash`** | `\$0.075` / M | `\$0.75` / M | `\$3.75` / M | **`1 : 10 : 50`** | 90% 缓存折扣，典型高频轻量模型 |
+| **`Kimi 3.1 Pro`** | `\$0.20` / M (约 `¥1.30`) | `\$2.00` / M (约 `¥13.0`) | `\$10.00` / M (约 `¥68.0`) | **`1 : 10 : 50`** | 90% 缓存折扣，长文本旗舰高阶模型 |
+| **`Hunyuan 4`** | `\$0.042` / M | `\$0.834` / M | `\$2.501` / M | **`1 : 19.86 : 59.55`** | 95% 缓存折扣，高性价比全功能旗舰 |
+| **`Gemini 4`** | `\$0.10` / M | `\$2.00` / M | `\$10.00` / M | **`1 : 20 : 100`** | 95% 缓存折扣，前沿旗舰推理引擎 |
 
 ---
 
@@ -194,13 +225,13 @@ OSWYN 的所有压缩操作**仅作用于内存活跃的 Surface DAG 表面节�
 
 在长达 15 步的复杂软件重构与诊断轨迹中，对比了无压缩基线、OSWYN-Standard、OSWYN-PTC 以及外部代理方案 `billion-context`：
 
-![15 步连续 SWE 会话上下文增长与累计计费演进折线图](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/figures/fig1-15step-trajectory-lines.svg)
+![15 步连续 SWE 会话上下文增长与累计计费演进折线图](https://raw.githubusercontent.com/keycapai/dsh-oswyn/main/paper/figures/fig1-15step-trajectory-lines.svg)
 
 - **载荷净压缩率高达 72.66%**：15 步原始载荷从 `57,147` 字符压缩至 `15,624` 字符，第 15 步单步 Prompt 从 `21,445` Tokens 骤降至 **`9,868` Tokens（压薄 `-53.98%`）**，彻底消除长程二次方膨胀。
 - **杜绝外部代理的“缓存击穿税”**：外部代理 `billion-context` 导致全价未命中新鲜 Token 暴增 **`+21.01%`**（`51,439` vs 基线 `42,507`），且终局常量召回率跌至 `0%`（`0/7`）；而 OSWYN 的全价未命中 Token 同步下降 **`-5.20%`**，常量召回率保持 **`100%`（`4/4`）**。
 - **长程 50 步稳态演进账单降低 65.4%**：
 
-![50 步长程窗口计费 Tokens 规模与真实 API 累计账单演进折线图](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/figures/fig2-50step-growth-lines.svg)
+![50 步长程窗口计费 Tokens 规模与真实 API 累计账单演进折线图](https://raw.githubusercontent.com/keycapai/dsh-oswyn/main/paper/figures/fig2-50step-growth-lines.svg)
 
 在 50 步外推中，无压缩基线累计上行 Tokens 突破 184 万；OSWYN 累计 Tokens 稳定控制在 78 万以内，交互式调试 API 费用降低 **`-45.54%`**，无缓存 API 费用降低 **`-52.96%`**，长期稳态运行平均节约 **`65.4%`** 账单。
 
@@ -208,7 +239,7 @@ OSWYN 的所有压缩操作**仅作用于内存活跃的 Surface DAG 表面节�
 
 ### 5.3 实验二：跨任务难度（L1/L2/L3）× 5 款跨代际模型主动压缩意愿
 
-![跨代际模型在不同任务难度与认知负荷下的主动压缩意愿柱状图](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/figures/fig3-willingness-models-barchart.svg)
+![跨代际模型在不同任务难度与认知负荷下的主动压缩意愿柱状图](https://raw.githubusercontent.com/keycapai/dsh-oswyn/main/paper/figures/fig3-willingness-models-barchart.svg)
 
 - **轻量 Flash 模型的“工具调用模态抢占”现象**：
   实测首次发现，轻量模型（`DeepSeek 4.1 Flash`）在多步工具链中倾向于直接输出 `tool_calls` 而将文本字段置空（抢占率高达 6/6 步），自发意愿仅 `22.2%`。OSWYN 的**单步压力感知 Nudge** 成功将其主动意愿拉升至 **`77.8%`**。
@@ -219,7 +250,7 @@ OSWYN 的所有压缩操作**仅作用于内存活跃的 Surface DAG 表面节�
 
 ### 5.4 实验三：提示词工程与“道德风险”消融
 
-![系统提示词变体消融主动压缩意愿与净有效压缩率对比柱状图](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/figures/fig4-prompt-ablation-barchart.svg)
+![系统提示词变体消融主动压缩意愿与净有效压缩率对比柱状图](https://raw.githubusercontent.com/keycapai/dsh-oswyn/main/paper/figures/fig4-prompt-ablation-barchart.svg)
 
 - **系统提示词披露后台兜底引发“道德风险”**：
   实验证实，在系统提示词中向模型详细披露后台自动丢弃与截断规则（`P2_Verbose_FallbackDisclosed`）会导致智能体产生严重的“搭便车”惰性心理——`ds4.1f` 与 `Gemini 4` 的主动压缩意愿**直接崩塌为 `0.0%`**，导致上下文失控，API 费用相比基准暴增 **`+25.8% 至 +43.9%`**。
@@ -232,7 +263,7 @@ OSWYN 的所有压缩操作**仅作用于内存活跃的 Surface DAG 表面节�
 
 覆盖 11 道经典与极端软件工程能力测试集（涵盖虚拟机字节码追踪、超长配置文件迷宫、隐式类型转换、延迟绑定槽位、60 线程隐式除数与 AIME 算力极限题），执行共计 143 轮全量对比：
 
-![能力边界全谱系基准四大任务子集架构求解通过率对比柱状图](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/paper/figures/fig5-full-spectrum-passrates-barchart.svg)
+![能力边界全谱系基准四大任务子集架构求解通过率对比柱状图](https://raw.githubusercontent.com/keycapai/dsh-oswyn/main/paper/figures/fig5-full-spectrum-passrates-barchart.svg)
 
 | 核心评测维度 / 任务子集 | `Standard_Baseline` (无压缩) | `OSWYN_Standard` (无 Recall) | `OSWYN_With_Recall` (v2.0) | **`OSWYN_V2_Optimized` (v2.1 最新架构)** | `Gemini4_OSWYN_Ref` (旗舰上限) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
@@ -244,10 +275,10 @@ OSWYN 的所有压缩操作**仅作用于内存活跃的 Surface DAG 表面节�
 | **子集四：AIME 三次同余算力上限题（$B_{11}$, 3轮）** | 1/3 (33.3%) | 0/3 (0.0%) | 0/3 (0.0%) | 0/3 (0.0% 基座算力极限) | **1/1 (100.0%)** |
 | **$B_1$–$B_9$ 前 9 题汇总（27 轮实测）** | 26/27 (96.3%) | 23/27 (85.2%) | 25/27 (92.6%) | **27/27 (100.0%, 反超基线 +3.7 pp)** | **9/9 (100.0%)** |
 | **$B_1$–$B_{10}$ 全部 10 道可解题汇总（30 轮实测）** | **29/30 (96.7%)** | 24/30 (80.0%) | 28/30 (93.3%) | **29/30 (96.7%, 100% 持平零智损)** | **10/10 (100.0%)** |
-| **单题平均含缓存实际 API 账单** | **¥0.0067 ($0.0010)** | ¥0.0101 ($0.0015) | ¥0.0110 ($0.0016) | **¥0.0114 ($0.00171)** | **$0.0241 (¥0.1735)** |
+| **单题平均含缓存实际 API 账单** | **`¥0.0067` (`\$0.0010`)** | `¥0.0101` (`\$0.0015`) | `¥0.0110` (`\$0.0016`) | **`¥0.0114` (`\$0.00171`)** | **`\$0.0241` (`¥0.1735`)** |
 
 - **零净智力损失与噪音消除收益**：在 $B_1$–$B_{10}$ 全部可解题上，v2.1 取得 **`29/30`（`96.7%`）通过率，与无压缩基线 100% 持平**；在前 9 题中甚至以 **`100% vs 96.3%` 反超无压缩基线**（在 $B_1$ 状态追踪题中因排除了历史冗余干扰，准确率从 66.7% 提升至 100%）。
-- **跨代际极致能效比**：`DeepSeek 4.1 Flash + OSWYN v2.1` 单题实际 API 费用仅 **`¥0.0114`（`$0.00171`）**，相比旗舰级 `Gemini 4`（`$0.0241` / `¥0.1735`）**节省 `-92.9%` 费用（仅需 1/14 成本）**，且准确率高达 `96.7%`。
+- **跨代际极致能效比**：`DeepSeek 4.1 Flash + OSWYN v2.1` 单题实际 API 费用仅 **`¥0.0114`（`\$0.00171`）**，相比旗舰级 `Gemini 4`（**`\$0.0241` / `¥0.1735`**）**节省 `-92.9%` 费用（仅需 1/14 成本）**，且准确率高达 `96.7%`。
 
 ---
 
@@ -267,7 +298,7 @@ OSWYN 的所有压缩操作**仅作用于内存活跃的 Surface DAG 表面节�
 ### ⚠️ 经实测揭示的四项不足与边界（Cons）
 
 1. **在极高缓存折扣模型的超短会话中存在“输出倒挂”**：
-   对于 `ds4.1f`（缓存命中输入 $¥0.02/\text{M}$ vs 输出 $¥4.00/\text{M}$，相差 200 倍），在 $\le 5$ 步的极短会话中，写入围栏产生的微量输出 Tokens 费用可能会抵消削减廉价缓存 Tokens 带来的收益，导致账单微增约 0.5–0.9 分钱。
+   对于 `ds4.1f`（缓存命中输入 `¥0.02 / M` [约 `\$0.003`] vs 输出 `¥4.00 / M` [约 `\$0.60`]，相差 200 倍），在 $\le 5$ 步的极短会话中，写入围栏产生的微量输出 Tokens 费用可能会抵消削减廉价缓存 Tokens 带来的收益，导致账单微增约 0.5–0.9 分钱。
 2. **触发 `tool_result_recall` 存在单轮往返惩罚**：
    在仅包含几千字符的小体积输出场景下，若频繁触发回溯，额外的往返推理开销会超过压缩所节省的收益。因此核心源代码默认列入受保护名单，直接完整保留。
 3. **提示词严禁泄露后台兜底规则（防范道德风险）**：
@@ -498,4 +529,4 @@ npm test
 
 ## 📄 开源许可证（License）
 
-本项目基于 [MIT License](file:///Users/reno/Documents/deepseek-harness/default-workspace/dsh-oswyn/package.json) 开源许可协议发布。
+本项目基于 [MIT License](LICENSE) 开源许可协议发布。
