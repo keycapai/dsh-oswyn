@@ -1,0 +1,775 @@
+[
+  {
+    "condition": "Spontaneous (No Per-Step Nudge)",
+    "modelId": "ai-studio/gemini-3.8-flash",
+    "modelLabel": "Gemini 3.8 Flash (gemini3.8f)",
+    "variantId": "P1_Original_PreOswyn",
+    "variantName": "P1: 原始无保底披露版 (v1.0 Clean)",
+    "sysPromptChars": 3618,
+    "totalSteps": 6,
+    "activeFencesEmitted": 6,
+    "activeWillingnessPct": 100,
+    "activeFencesApplied": 6,
+    "activeEffectiveRatePct": 100,
+    "activeFencesRejected": 0,
+    "replySummariesEmitted": 3,
+    "totalPromptTokens": 15400,
+    "totalCompletionTokens": 2680,
+    "totalBilledTokens": 18080,
+    "rawToolPayloadChars": 18995,
+    "finalResidentToolPayloadChars": 1654,
+    "activeCompressionRatioPct": 91.29,
+    "recallScore": "3/3",
+    "stepDetails": [
+      {
+        "step": 1,
+        "name": "S1_DirScan",
+        "promptTokens": 1604,
+        "completionTokens": 289,
+        "hasResultFence": true,
+        "hasReplyFence": true,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 2,
+        "name": "S2_ReadConfig",
+        "promptTokens": 3243,
+        "completionTokens": 475,
+        "hasResultFence": true,
+        "hasReplyFence": true,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 3,
+        "name": "S3_TestCrash",
+        "promptTokens": 2607,
+        "completionTokens": 349,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 4,
+        "name": "S4_ReadDispatcher",
+        "promptTokens": 2898,
+        "completionTokens": 376,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 5,
+        "name": "S5_ProbeScriptError",
+        "promptTokens": 2278,
+        "completionTokens": 625,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "discard"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 6,
+        "name": "S6_FinalTestPass",
+        "promptTokens": 2770,
+        "completionTokens": 566,
+        "hasResultFence": true,
+        "hasReplyFence": true,
+        "appliedModes": [
+          "truncate"
+        ],
+        "rejectedReasons": []
+      }
+    ]
+  },
+  {
+    "condition": "Spontaneous (No Per-Step Nudge)",
+    "modelId": "ai-studio/gemini-3.8-flash",
+    "modelLabel": "Gemini 3.8 Flash (gemini3.8f)",
+    "variantId": "P2_Oswyn_Refactored",
+    "variantName": "P2: Oswyn修改后完整版 (v2.0 8be34da)",
+    "sysPromptChars": 10798,
+    "totalSteps": 6,
+    "activeFencesEmitted": 6,
+    "activeWillingnessPct": 100,
+    "activeFencesApplied": 6,
+    "activeEffectiveRatePct": 100,
+    "activeFencesRejected": 0,
+    "replySummariesEmitted": 1,
+    "totalPromptTokens": 29029,
+    "totalCompletionTokens": 3172,
+    "totalBilledTokens": 32201,
+    "rawToolPayloadChars": 18995,
+    "finalResidentToolPayloadChars": 1562,
+    "activeCompressionRatioPct": 91.78,
+    "recallScore": "3/3",
+    "stepDetails": [
+      {
+        "step": 1,
+        "name": "S1_DirScan",
+        "promptTokens": 3770,
+        "completionTokens": 420,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 2,
+        "name": "S2_ReadConfig",
+        "promptTokens": 5524,
+        "completionTokens": 263,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 3,
+        "name": "S3_TestCrash",
+        "promptTokens": 4939,
+        "completionTokens": 465,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "discard"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 4,
+        "name": "S4_ReadDispatcher",
+        "promptTokens": 5202,
+        "completionTokens": 248,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 5,
+        "name": "S5_ProbeScriptError",
+        "promptTokens": 4551,
+        "completionTokens": 996,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "discard"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 6,
+        "name": "S6_FinalTestPass",
+        "promptTokens": 5043,
+        "completionTokens": 780,
+        "hasResultFence": true,
+        "hasReplyFence": true,
+        "appliedModes": [
+          "truncate"
+        ],
+        "rejectedReasons": []
+      }
+    ]
+  },
+  {
+    "condition": "Spontaneous (No Per-Step Nudge)",
+    "modelId": "ai-studio/gemini-3.8-flash",
+    "modelLabel": "Gemini 3.8 Flash (gemini3.8f)",
+    "variantId": "P3_Streamlined_Action",
+    "variantName": "P3: 结构化精简版 (v3.0 Streamlined)",
+    "sysPromptChars": 1139,
+    "totalSteps": 6,
+    "activeFencesEmitted": 6,
+    "activeWillingnessPct": 100,
+    "activeFencesApplied": 6,
+    "activeEffectiveRatePct": 100,
+    "activeFencesRejected": 0,
+    "replySummariesEmitted": 1,
+    "totalPromptTokens": 13398,
+    "totalCompletionTokens": 2192,
+    "totalBilledTokens": 15590,
+    "rawToolPayloadChars": 18995,
+    "finalResidentToolPayloadChars": 2415,
+    "activeCompressionRatioPct": 87.29,
+    "recallScore": "3/3",
+    "stepDetails": [
+      {
+        "step": 1,
+        "name": "S1_DirScan",
+        "promptTokens": 992,
+        "completionTokens": 312,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "truncate"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 2,
+        "name": "S2_ReadConfig",
+        "promptTokens": 2908,
+        "completionTokens": 159,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 3,
+        "name": "S3_TestCrash",
+        "promptTokens": 2296,
+        "completionTokens": 203,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "discard"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 4,
+        "name": "S4_ReadDispatcher",
+        "promptTokens": 2637,
+        "completionTokens": 164,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 5,
+        "name": "S5_ProbeScriptError",
+        "promptTokens": 2028,
+        "completionTokens": 706,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "discard"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 6,
+        "name": "S6_FinalTestPass",
+        "promptTokens": 2537,
+        "completionTokens": 648,
+        "hasResultFence": true,
+        "hasReplyFence": true,
+        "appliedModes": [
+          "truncate"
+        ],
+        "rejectedReasons": []
+      }
+    ]
+  },
+  {
+    "condition": "Spontaneous (No Per-Step Nudge)",
+    "modelId": "ai-studio/gemini-3.8-flash",
+    "modelLabel": "Gemini 3.8 Flash (gemini3.8f)",
+    "variantId": "P4_Ultra_Minimal",
+    "variantName": "P4: 极简微指令版 (v4.0 Ultra-Minimal)",
+    "sysPromptChars": 642,
+    "totalSteps": 6,
+    "activeFencesEmitted": 6,
+    "activeWillingnessPct": 100,
+    "activeFencesApplied": 6,
+    "activeEffectiveRatePct": 100,
+    "activeFencesRejected": 0,
+    "replySummariesEmitted": 0,
+    "totalPromptTokens": 12607,
+    "totalCompletionTokens": 2182,
+    "totalBilledTokens": 14789,
+    "rawToolPayloadChars": 18995,
+    "finalResidentToolPayloadChars": 2536,
+    "activeCompressionRatioPct": 86.65,
+    "recallScore": "1/3",
+    "stepDetails": [
+      {
+        "step": 1,
+        "name": "S1_DirScan",
+        "promptTokens": 861,
+        "completionTokens": 289,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "truncate"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 2,
+        "name": "S2_ReadConfig",
+        "promptTokens": 2817,
+        "completionTokens": 106,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 3,
+        "name": "S3_TestCrash",
+        "promptTokens": 2229,
+        "completionTokens": 344,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "discard"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 4,
+        "name": "S4_ReadDispatcher",
+        "promptTokens": 2493,
+        "completionTokens": 372,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 5,
+        "name": "S5_ProbeScriptError",
+        "promptTokens": 1843,
+        "completionTokens": 75,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "discard"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 6,
+        "name": "S6_FinalTestPass",
+        "promptTokens": 2364,
+        "completionTokens": 996,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "truncate"
+        ],
+        "rejectedReasons": []
+      }
+    ]
+  },
+  {
+    "condition": "Spontaneous (No Per-Step Nudge)",
+    "modelId": "ai-studio/gemini-4-argon",
+    "modelLabel": "Gemini 4 (gemini-4)",
+    "variantId": "P1_Original_PreOswyn",
+    "variantName": "P1: 原始无保底披露版 (v1.0 Clean)",
+    "sysPromptChars": 3618,
+    "totalSteps": 6,
+    "activeFencesEmitted": 6,
+    "activeWillingnessPct": 100,
+    "activeFencesApplied": 6,
+    "activeEffectiveRatePct": 100,
+    "activeFencesRejected": 0,
+    "replySummariesEmitted": 6,
+    "totalPromptTokens": 16470,
+    "totalCompletionTokens": 2127,
+    "totalBilledTokens": 18597,
+    "rawToolPayloadChars": 18995,
+    "finalResidentToolPayloadChars": 1807,
+    "activeCompressionRatioPct": 90.49,
+    "recallScore": "3/3",
+    "stepDetails": [
+      {
+        "step": 1,
+        "name": "S1_DirScan",
+        "promptTokens": 1756,
+        "completionTokens": 389,
+        "hasResultFence": true,
+        "hasReplyFence": true,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 2,
+        "name": "S2_ReadConfig",
+        "promptTokens": 3440,
+        "completionTokens": 259,
+        "hasResultFence": true,
+        "hasReplyFence": true,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 3,
+        "name": "S3_TestCrash",
+        "promptTokens": 2803,
+        "completionTokens": 329,
+        "hasResultFence": true,
+        "hasReplyFence": true,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 4,
+        "name": "S4_ReadDispatcher",
+        "promptTokens": 3105,
+        "completionTokens": 393,
+        "hasResultFence": true,
+        "hasReplyFence": true,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 5,
+        "name": "S5_ProbeScriptError",
+        "promptTokens": 2437,
+        "completionTokens": 309,
+        "hasResultFence": true,
+        "hasReplyFence": true,
+        "appliedModes": [
+          "discard"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 6,
+        "name": "S6_FinalTestPass",
+        "promptTokens": 2929,
+        "completionTokens": 448,
+        "hasResultFence": true,
+        "hasReplyFence": true,
+        "appliedModes": [
+          "truncate"
+        ],
+        "rejectedReasons": []
+      }
+    ]
+  },
+  {
+    "condition": "Spontaneous (No Per-Step Nudge)",
+    "modelId": "ai-studio/gemini-4-argon",
+    "modelLabel": "Gemini 4 (gemini-4)",
+    "variantId": "P2_Oswyn_Refactored",
+    "variantName": "P2: Oswyn修改后完整版 (v2.0 8be34da)",
+    "sysPromptChars": 10798,
+    "totalSteps": 6,
+    "activeFencesEmitted": 6,
+    "activeWillingnessPct": 100,
+    "activeFencesApplied": 6,
+    "activeEffectiveRatePct": 100,
+    "activeFencesRejected": 0,
+    "replySummariesEmitted": 1,
+    "totalPromptTokens": 32202,
+    "totalCompletionTokens": 3090,
+    "totalBilledTokens": 35292,
+    "rawToolPayloadChars": 18995,
+    "finalResidentToolPayloadChars": 1813,
+    "activeCompressionRatioPct": 90.46,
+    "recallScore": "3/3",
+    "stepDetails": [
+      {
+        "step": 1,
+        "name": "S1_DirScan",
+        "promptTokens": 3864,
+        "completionTokens": 460,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "truncate"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 2,
+        "name": "S2_ReadConfig",
+        "promptTokens": 5774,
+        "completionTokens": 232,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 3,
+        "name": "S3_TestCrash",
+        "promptTokens": 5248,
+        "completionTokens": 383,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "discard"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 4,
+        "name": "S4_ReadDispatcher",
+        "promptTokens": 5668,
+        "completionTokens": 225,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 5,
+        "name": "S5_ProbeScriptError",
+        "promptTokens": 5165,
+        "completionTokens": 853,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "discard",
+          "discard"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 6,
+        "name": "S6_FinalTestPass",
+        "promptTokens": 6483,
+        "completionTokens": 937,
+        "hasResultFence": true,
+        "hasReplyFence": true,
+        "appliedModes": [
+          "truncate"
+        ],
+        "rejectedReasons": []
+      }
+    ]
+  },
+  {
+    "condition": "Spontaneous (No Per-Step Nudge)",
+    "modelId": "ai-studio/gemini-4-argon",
+    "modelLabel": "Gemini 4 (gemini-4)",
+    "variantId": "P3_Streamlined_Action",
+    "variantName": "P3: 结构化精简版 (v3.0 Streamlined)",
+    "sysPromptChars": 1139,
+    "totalSteps": 6,
+    "activeFencesEmitted": 6,
+    "activeWillingnessPct": 100,
+    "activeFencesApplied": 6,
+    "activeEffectiveRatePct": 100,
+    "activeFencesRejected": 0,
+    "replySummariesEmitted": 1,
+    "totalPromptTokens": 17054,
+    "totalCompletionTokens": 2488,
+    "totalBilledTokens": 19542,
+    "rawToolPayloadChars": 18995,
+    "finalResidentToolPayloadChars": 4097,
+    "activeCompressionRatioPct": 78.43,
+    "recallScore": "3/3",
+    "stepDetails": [
+      {
+        "step": 1,
+        "name": "S1_DirScan",
+        "promptTokens": 1161,
+        "completionTokens": 338,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "truncate"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 2,
+        "name": "S2_ReadConfig",
+        "promptTokens": 3185,
+        "completionTokens": 271,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 3,
+        "name": "S3_TestCrash",
+        "promptTokens": 2621,
+        "completionTokens": 233,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "truncate"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 4,
+        "name": "S4_ReadDispatcher",
+        "promptTokens": 3523,
+        "completionTokens": 227,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 5,
+        "name": "S5_ProbeScriptError",
+        "promptTokens": 3009,
+        "completionTokens": 550,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "discard"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 6,
+        "name": "S6_FinalTestPass",
+        "promptTokens": 3555,
+        "completionTokens": 869,
+        "hasResultFence": true,
+        "hasReplyFence": true,
+        "appliedModes": [
+          "truncate"
+        ],
+        "rejectedReasons": [
+          "tool/result replace failed: seq 30 already replaced (not on surface)"
+        ]
+      }
+    ]
+  },
+  {
+    "condition": "Spontaneous (No Per-Step Nudge)",
+    "modelId": "ai-studio/gemini-4-argon",
+    "modelLabel": "Gemini 4 (gemini-4)",
+    "variantId": "P4_Ultra_Minimal",
+    "variantName": "P4: 极简微指令版 (v4.0 Ultra-Minimal)",
+    "sysPromptChars": 642,
+    "totalSteps": 6,
+    "activeFencesEmitted": 6,
+    "activeWillingnessPct": 100,
+    "activeFencesApplied": 6,
+    "activeEffectiveRatePct": 100,
+    "activeFencesRejected": 0,
+    "replySummariesEmitted": 1,
+    "totalPromptTokens": 14847,
+    "totalCompletionTokens": 1705,
+    "totalBilledTokens": 16552,
+    "rawToolPayloadChars": 18995,
+    "finalResidentToolPayloadChars": 3128,
+    "activeCompressionRatioPct": 83.53,
+    "recallScore": "3/3",
+    "stepDetails": [
+      {
+        "step": 1,
+        "name": "S1_DirScan",
+        "promptTokens": 1033,
+        "completionTokens": 377,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "truncate"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 2,
+        "name": "S2_ReadConfig",
+        "promptTokens": 3058,
+        "completionTokens": 167,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 3,
+        "name": "S3_TestCrash",
+        "promptTokens": 2519,
+        "completionTokens": 203,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "discard"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 4,
+        "name": "S4_ReadDispatcher",
+        "promptTokens": 2928,
+        "completionTokens": 196,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "replace"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 5,
+        "name": "S5_ProbeScriptError",
+        "promptTokens": 2383,
+        "completionTokens": 149,
+        "hasResultFence": true,
+        "hasReplyFence": false,
+        "appliedModes": [
+          "discard"
+        ],
+        "rejectedReasons": []
+      },
+      {
+        "step": 6,
+        "name": "S6_FinalTestPass",
+        "promptTokens": 2926,
+        "completionTokens": 613,
+        "hasResultFence": true,
+        "hasReplyFence": true,
+        "appliedModes": [
+          "truncate"
+        ],
+        "rejectedReasons": [
+          "tool/result replace failed: seq 30 already replaced (not on surface)"
+        ]
+      }
+    ]
+  }
+]

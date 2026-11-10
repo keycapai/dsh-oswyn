@@ -1,0 +1,176 @@
+[
+  {
+    "problem": "B15_Large_Semiprime_Factorization",
+    "model": "ai-studio/gemini-4-argon",
+    "model_short": "gemini4",
+    "expected": "433494437",
+    "uncompressed_baseline": {
+      "passed": false,
+      "extracted": "3748631489",
+      "prompt_tokens": 793,
+      "completion_tokens": 3648,
+      "finish_reason": "stop",
+      "snippet": "the system boot log diagnostics and dummy monitor entries, as they are unrelated context to the mathematical factorization problem.\n2. We estimate the square root of $N$:\n   $$\\sqrt{14052238206128879427} \\approx 3748631511$$\n3. Searching downward from $\\lfloor\\sqrt{N}\\rfloor$ for the prime factor $p$ such that $N = p \\times q$ with $p < q$, we identify the smaller factor.\n\nFINAL_ANSWER: 3748631489"
+    },
+    "oswyn_compressed": {
+      "passed": false,
+      "extracted": null,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "finish_reason": null,
+      "snippet": ""
+    },
+    "oswyn_ptc": {
+      "passed": false,
+      "extracted": "3",
+      "sandbox_out": "FINAL_ANSWER: 3",
+      "prompt_tokens": 309,
+      "completion_tokens": 223
+    }
+  },
+  {
+    "problem": "B15_Large_Semiprime_Factorization",
+    "model": "workbuddy/deepseek-v4.1-flash",
+    "model_short": "ds4.1f",
+    "expected": "433494437",
+    "uncompressed_baseline": {
+      "passed": false,
+      "extracted": "3",
+      "prompt_tokens": 613,
+      "completion_tokens": 15295,
+      "finish_reason": "stop",
+      "snippet": "The given \\(N\\) is divisible by \\(3\\) (indeed, its digit sum is \\(81\\)), and since it is odd, \\(3\\) is its smallest prime factor.  \nNote: this means the stated “product of two distinct primes” condition is inconsistent with the supplied value, but the smaller prime factor is:\n\nFINAL_ANSWER: 3"
+    },
+    "oswyn_compressed": {
+      "passed": false,
+      "extracted": "3",
+      "prompt_tokens": 183,
+      "completion_tokens": 7123,
+      "finish_reason": "stop",
+      "snippet": "The number is divisible by 3 (digit sum \\(81\\)), and since it is odd, 3 is its smallest prime factor.\n\nFINAL_ANSWER: 3"
+    },
+    "oswyn_ptc": {
+      "passed": false,
+      "extracted": null,
+      "sandbox_out": null,
+      "prompt_tokens": null,
+      "completion_tokens": null
+    }
+  },
+  {
+    "problem": "B16_Cryptographic_Avalanche_Inversion",
+    "model": "ai-studio/gemini-4-argon",
+    "model_short": "gemini4",
+    "expected": "48291",
+    "uncompressed_baseline": {
+      "passed": false,
+      "extracted": null,
+      "prompt_tokens": 1852,
+      "completion_tokens": 16384,
+      "finish_reason": "length",
+      "snippet": "0xc0000000` = `0x7d11eabc`.\n   - Round 5 result `0x7d11eabc` IS ALSO 100% CORRECT!\n\nLet's check **Round 4 ($r_4 = \\text{0xCA62C1D6}$)**:\nInput: `0x7d11eabc`\n1. **Inv4:**\n   - `0x7d11eabc >> 13`: `0x7d11e >> 1` = `0x0003e88f`.\n   - `0x7d11eabc << 19`: `eabc * 8` = `0x755e0` -> `0x55e00000`.\n   - `0x55e00000 | 0x0003e88f` = `0x55e3e88f`. Correct!\n2. **Inv3 ($- \\text{0xCA62C1D6}$):**\n   - `0x55e3e88f"
+    },
+    "oswyn_compressed": {
+      "passed": false,
+      "extracted": null,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "finish_reason": "stop",
+      "snippet": "y 28 gives $x$.\nIn my previous steps, I computed `s ^ (s << 7) ^ (s << 14) ^ (s << 28)`, which is $y \\oplus (y \\ll 7) \\oplus (y \\ll 14) \\oplus (y \\ll 28)$, missing `(y << 21)`!\nBecause $(I + L^7)^{-1} = I + L^7 + L^{14} + L^{21} + L^{28}$ over 32-bit integers!\n\nLet's quickly recompute the rounds with the exact inverse for Step 1:\n`s = s ^ (s << 7); s = s ^ (s << 14); s = s ^ (s << 28)` (sequential"
+    },
+    "oswyn_ptc": {
+      "passed": false,
+      "extracted": "NOT_FOUND_WITH_DEFAULT_CONSTANTS",
+      "sandbox_out": "FINAL_ANSWER: NOT_FOUND_WITH_DEFAULT_CONSTANTS",
+      "prompt_tokens": 320,
+      "completion_tokens": 916
+    }
+  },
+  {
+    "problem": "B16_Cryptographic_Avalanche_Inversion",
+    "model": "workbuddy/deepseek-v4.1-flash",
+    "model_short": "ds4.1f",
+    "expected": "48291",
+    "uncompressed_baseline": {
+      "passed": false,
+      "extracted": null,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "finish_reason": null,
+      "snippet": ""
+    },
+    "oswyn_compressed": {
+      "passed": false,
+      "extracted": null,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "finish_reason": null,
+      "snippet": ""
+    },
+    "oswyn_ptc": {
+      "passed": false,
+      "extracted": null,
+      "sandbox_out": null,
+      "prompt_tokens": null,
+      "completion_tokens": null
+    }
+  },
+  {
+    "problem": "B17_Exact_10Var_3SAT",
+    "model": "ai-studio/gemini-4-argon",
+    "model_short": "gemini4",
+    "expected": "813",
+    "uncompressed_baseline": {
+      "passed": true,
+      "extracted": "813",
+      "prompt_tokens": 1000,
+      "completion_tokens": 6516,
+      "finish_reason": "stop",
+      "snippet": "ying truth assignment is:\n$$(x_1, x_2, x_3, x_4, x_5, x_6, x_7, x_8, x_9, x_{10}) = (1, 0, 1, 1, 0, 1, 0, 0, 1, 1)$$\n\nComputing the integer value:\n$$\\text{Value} = \\sum_{i=1}^{10} x_i \\cdot 2^{i-1} = 1\\cdot 2^0 + 0\\cdot 2^1 + 1\\cdot 2^2 + 1\\cdot 2^3 + 0\\cdot 2^4 + 1\\cdot 2^5 + 0\\cdot 2^6 + 0\\cdot 2^7 + 1\\cdot 2^8 + 1\\cdot 2^9$$\n$$\\text{Value} = 1 + 4 + 8 + 32 + 256 + 512 = 813$$\n\nFINAL_ANSWER: 813"
+    },
+    "oswyn_compressed": {
+      "passed": true,
+      "extracted": "813",
+      "prompt_tokens": 526,
+      "completion_tokens": 3927,
+      "finish_reason": "stop",
+      "snippet": " **Verification and Calculation:**\n   The assignment $(x_1, x_2, x_3, x_4, x_5, x_6, x_7, x_8, x_9, x_{10}) = (1, 0, 1, 1, 0, 1, 0, 0, 1, 1)$ satisfies all 20 clauses.\n\n   $$\\sum_{i=1}^{10} x_i \\cdot 2^{i-1} = 1\\cdot 2^0 + 0\\cdot 2^1 + 1\\cdot 2^2 + 1\\cdot 2^3 + 0\\cdot 2^4 + 1\\cdot 2^5 + 0\\cdot 2^6 + 0\\cdot 2^7 + 1\\cdot 2^8 + 1\\cdot 2^9$$\n   $$= 1 + 4 + 8 + 32 + 256 + 512 = 813$$\n\nFINAL_ANSWER: 813"
+    },
+    "oswyn_ptc": {
+      "passed": false,
+      "extracted": null,
+      "sandbox_out": "ERROR: Please provide the 20 clauses in the 'clauses' list and re-run.",
+      "prompt_tokens": 312,
+      "completion_tokens": 692
+    }
+  },
+  {
+    "problem": "B17_Exact_10Var_3SAT",
+    "model": "workbuddy/deepseek-v4.1-flash",
+    "model_short": "ds4.1f",
+    "expected": "813",
+    "uncompressed_baseline": {
+      "passed": true,
+      "extracted": "813",
+      "prompt_tokens": 807,
+      "completion_tokens": 5909,
+      "finish_reason": "stop",
+      "snippet": "The unique satisfying assignment is:\n\nx1=1, x2=0, x3=1, x4=1, x5=0, x6=1, x7=0, x8=0, x9=1, x10=1.\n\nComputing:\n\nValue = 1·2^0 + 0·2^1 + 1·2^2 + 1·2^3 + 0·2^4 + 1·2^5 + 0·2^6 + 0·2^7 + 1·2^8 + 1·2^9  \n= 1 + 0 + 4 + 8 + 0 + 32 + 0 + 0 + 256 + 512  \n= 813.\n\nFINAL_ANSWER: 813"
+    },
+    "oswyn_compressed": {
+      "passed": true,
+      "extracted": "813",
+      "prompt_tokens": 369,
+      "completion_tokens": 8821,
+      "finish_reason": "stop",
+      "snippet": "The unique satisfying assignment is:\n\n\\((x_1,\\dots,x_{10})=(1,0,1,1,0,1,0,0,1,1)\\)\n\nIts integer value is:\n\n\\(1\\cdot 2^0 + 1\\cdot 2^2 + 1\\cdot 2^3 + 1\\cdot 2^5 + 1\\cdot 2^8 + 1\\cdot 2^9 = 813\\)\n\nFINAL_ANSWER: 813"
+    },
+    "oswyn_ptc": {
+      "passed": false,
+      "extracted": null,
+      "sandbox_out": null,
+      "prompt_tokens": null,
+      "completion_tokens": null
+    }
+  }
+]

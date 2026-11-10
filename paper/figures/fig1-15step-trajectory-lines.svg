@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 520" width="100%" height="100%" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', sans-serif">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f8fafc"/>
+    </linearGradient>
+  </defs>
+  <rect width="1120" height="520" rx="10" fill="url(#bgGrad)" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Title & Subtitle -->
+  <text x="560" y="34" text-anchor="middle" font-size="17" font-weight="700" fill="#0f172a">
+    图 1：15 步连续 SWE 会话上下文增长与累计计费演进折线图 (模型: DeepSeek 4.1 Flash)
+  </text>
+  <text x="560" y="55" text-anchor="middle" font-size="12" fill="#64748b">
+    左图：单步 Prompt Tokens 演进折线图 (Step 1–15) ｜ 右图：累计实际 API 计费演进折线图 (元 RMB, 实测全量数据)
+  </text>
+
+  <!-- Legend -->
+  <g transform="translate(180, 72)" font-size="11.5" font-weight="600">
+    <line x1="0" y1="6" x2="24" y2="6" stroke="#64748b" stroke-width="2.5" stroke-dasharray="5,3"/>
+    <circle cx="12" cy="6" r="3.5" fill="#64748b"/>
+    <text x="32" y="10" fill="#475569">Baseline (无压缩基线)</text>
+
+    <line x1="260" y1="6" x2="284" y2="6" stroke="#10b981" stroke-width="3"/>
+    <circle cx="272" cy="6" r="4" fill="#10b981"/>
+    <text x="292" y="10" fill="#065f46">OSWYN-Standard (原位微蒸馏)</text>
+
+    <line x1="560" y1="6" x2="584" y2="6" stroke="#f59e0b" stroke-width="2.5"/>
+    <circle cx="572" cy="6" r="3.5" fill="#f59e0b"/>
+    <text x="592" y="10" fill="#92400e">Billion-Context (主动折叠)</text>
+  </g>
+
+  <!-- ================= LEFT PANEL: Prompt Tokens Line Chart (0 to 24000) ================= -->
+  <g transform="translate(70, 115)">
+    <text x="215" y="-12" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">(a) 单步 Prompt Tokens 增长折线图 (Step 1 → 15)</text>
+    <!-- Axes -->
+    <line x1="0" y1="330" x2="430" y2="330" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="0" y1="0" x2="0" y2="330" stroke="#cbd5e1" stroke-width="1.5"/>
+
+    <!-- Gridlines & Y-labels (0 to 24k, height=330, step=4k -> 55px) -->
+    <g stroke="#f1f5f9" stroke-width="1">
+      <line x1="0" y1="275" x2="430" y2="275"/><line x1="0" y1="220" x2="430" y2="220"/>
+      <line x1="0" y1="165" x2="430" y2="165"/><line x1="0" y1="110" x2="430" y2="110"/>
+      <line x1="0" y1="55" x2="430" y2="55"/><line x1="0" y1="0" x2="430" y2="0"/>
+    </g>
+    <g font-size="10" fill="#64748b" text-anchor="end">
+      <text x="-8" y="334">0</text><text x="-8" y="279">4k</text><text x="-8" y="224">8k</text>
+      <text x="-8" y="169">12k</text><text x="-8" y="114">16k</text><text x="-8" y="59">20k</text><text x="-8" y="4">24k</text>
+    </g>
+
+    <!-- X-axis labels (Steps 1..15, dx=430/14=30.71) -->
+    <g font-size="10" fill="#64748b" text-anchor="middle">
+      <text x="0" y="348">S1</text><text x="61.4" y="348">S3</text><text x="122.9" y="348">S5</text>
+      <text x="184.3" y="348">S7</text><text x="245.7" y="348">S9</text><text x="307.1" y="348">S11</text>
+      <text x="368.6" y="348">S13</text><text x="430" y="348">S15</text>
+    </g>
+
+    <!-- Baseline Curve: 1100, 2450, 3980, 5820, 7150, 8900, 10450, 12300, 13800, 15400, 16900, 18500, 19800, 20600, 21445 -->
+    <!-- y = 330 - (val / 24000) * 330 -->
+    <polyline fill="none" stroke="#64748b" stroke-width="2.5" stroke-dasharray="5,3"
+      points="0,314.9 30.7,296.3 61.4,275.3 92.1,249.9 122.9,231.7 153.6,207.6 184.3,186.3 215.0,160.9 245.7,140.3 276.4,118.3 307.1,97.6 337.9,75.6 368.6,57.8 399.3,46.8 430.0,35.1"/>
+    <circle cx="430" cy="35.1" r="4" fill="#64748b"/>
+    <text x="425" y="24" text-anchor="end" font-size="10.5" font-weight="700" fill="#475569">21,445 tok (Baseline)</text>
+
+    <!-- Billion-Context Active: 1100, 2450, 3980, 5820, 7150, 4200, 5800, 7400, 8900, 6100, 7600, 9200, 6800, 8100, 9120 -->
+    <polyline fill="none" stroke="#f59e0b" stroke-width="2.2"
+      points="0,314.9 30.7,296.3 61.4,275.3 92.1,249.9 122.9,231.7 153.6,272.3 184.3,250.3 215.0,228.3 245.7,207.6 276.4,246.1 307.1,225.5 337.9,203.5 368.6,236.5 399.3,218.6 430.0,204.6"/>
+    <circle cx="430" cy="204.6" r="4" fill="#f59e0b"/>
+    <text x="425" y="222" text-anchor="end" font-size="10.5" font-weight="700" fill="#b45309">9,120 tok (BC Active 锯齿折叠)</text>
+
+    <!-- OSWYN-Standard: 1100, 1850, 2400, 3200, 3950, 4800, 5600, 6400, 7100, 7900, 8400, 8900, 9300, 9600, 9868 -->
+    <polyline fill="none" stroke="#10b981" stroke-width="3"
+      points="0,314.9 30.7,304.6 61.4,297.0 92.1,286.0 122.9,275.7 153.6,264.0 184.3,253.0 215.0,242.0 245.7,232.4 276.4,221.4 307.1,214.5 337.9,207.6 368.6,202.1 399.3,198.0 430.0,194.3"/>
+    <circle cx="430" cy="194.3" r="4.5" fill="#10b981"/>
+    <text x="425" y="180" text-anchor="end" font-size="10.5" font-weight="700" fill="#047857">9,868 tok (OSWYN -54.0%)</text>
+  </g>
+
+  <!-- ================= RIGHT PANEL: Cumulative Cost Line Chart (¥0.00 to ¥0.11) ================= -->
+  <g transform="translate(620, 115)">
+    <text x="215" y="-12" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">(b) 累计真实 API 账单演进折线图 (元 RMB)</text>
+    <!-- Axes -->
+    <line x1="0" y1="330" x2="430" y2="330" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="0" y1="0" x2="0" y2="330" stroke="#cbd5e1" stroke-width="1.5"/>
+
+    <!-- Gridlines & Y-labels (0 to 0.11, height=330, step=0.02 -> 60px) -->
+    <g stroke="#f1f5f9" stroke-width="1">
+      <line x1="0" y1="270" x2="430" y2="270"/><line x1="0" y1="210" x2="430" y2="210"/>
+      <line x1="0" y1="150" x2="430" y2="150"/><line x1="0" y1="90" x2="430" y2="90"/>
+      <line x1="0" y1="30" x2="430" y2="30"/>
+    </g>
+    <g font-size="10" fill="#64748b" text-anchor="end">
+      <text x="-8" y="334">¥0.00</text><text x="-8" y="274">¥0.02</text><text x="-8" y="214">¥0.04</text>
+      <text x="-8" y="154">¥0.06</text><text x="-8" y="94">¥0.08</text><text x="-8" y="34">¥0.10</text>
+    </g>
+
+    <!-- X-axis labels (Steps 1, 3, 5, 7, 9, 11, 13, 15: dx=430/7=61.43) -->
+    <g font-size="10" fill="#64748b" text-anchor="middle">
+      <text x="0" y="348">S1</text><text x="61.4" y="348">S3</text><text x="122.9" y="348">S5</text>
+      <text x="184.3" y="348">S7</text><text x="245.7" y="348">S9</text><text x="307.1" y="348">S11</text>
+      <text x="368.6" y="348">S13</text><text x="430" y="348">S15</text>
+    </g>
+
+    <!-- Baseline Cost: 0.002, 0.008, 0.018, 0.031, 0.046, 0.061, 0.071, 0.0782 -->
+    <!-- y = 330 - (val / 0.11) * 330 -->
+    <polyline fill="none" stroke="#64748b" stroke-width="2.5" stroke-dasharray="5,3"
+      points="0,324.0 61.4,306.0 122.9,276.0 184.3,237.0 245.7,192.0 307.1,147.0 368.6,117.0 430.0,95.4"/>
+    <circle cx="430" cy="95.4" r="4" fill="#64748b"/>
+    <text x="425" y="85" text-anchor="end" font-size="10.5" font-weight="700" fill="#475569">¥0.0782 (全缓存基线)</text>
+
+    <!-- Billion-Context Active Cost: 0.002, 0.010, 0.024, 0.042, 0.060, 0.075, 0.085, 0.0926 -->
+    <polyline fill="none" stroke="#f59e0b" stroke-width="2.2"
+      points="0,324.0 61.4,300.0 122.9,258.0 184.3,204.0 245.7,150.0 307.1,105.0 368.6,75.0 430.0,52.2"/>
+    <circle cx="430" cy="52.2" r="4" fill="#f59e0b"/>
+    <text x="425" y="42" text-anchor="end" font-size="10.5" font-weight="700" fill="#b45309">¥0.0926 (折叠前缀失效)</text>
+
+    <!-- OSWYN-Standard Cost: 0.002, 0.011, 0.027, 0.045, 0.063, 0.077, 0.088, 0.0949 -->
+    <polyline fill="none" stroke="#10b981" stroke-width="3"
+      points="0,324.0 61.4,297.0 122.9,249.0 184.3,195.0 245.7,141.0 307.1,99.0 368.6,66.0 430.0,45.3"/>
+    <circle cx="430" cy="45.3" r="4.5" fill="#10b981"/>
+    <text x="425" y="28" text-anchor="end" font-size="10.5" font-weight="700" fill="#047857">¥0.0949 (生成护智围栏)</text>
+  </g>
+</svg>

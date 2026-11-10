@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 480" width="100%" height="100%" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <rect width="1100" height="480" fill="#ffffff" rx="8"/>
+
+  <!-- Title -->
+  <text x="550" y="34" text-anchor="middle" font-size="17" font-weight="bold" fill="#1e293b">
+    图 2：不同任务难度 (L1 简单 / L2 中等 / L3 复杂) 与跨代际模型主动压缩意愿对比
+  </text>
+  <text x="550" y="54" text-anchor="middle" font-size="12" fill="#64748b">
+    左图：5 款模型在无 Nudge (自发) vs. 有 Nudge 下的总体主动压缩率 ｜ 右图：不同任务难度 (L1/L2/L3) 下的认知负荷效应
+  </text>
+
+  <!-- ================= LEFT PANEL: Overall Willingness by Model (Spontaneous vs Nudge) ================= -->
+  <g transform="translate(65, 85)">
+    <text x="215" y="-10" text-anchor="middle" font-size="13" font-weight="bold" fill="#334155">(a) 跨模型总主动压缩意愿 (9 步工具回合汇总)</text>
+    <line x1="0" y1="300" x2="440" y2="300" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="0" y1="0" x2="0" y2="300" stroke="#cbd5e1" stroke-width="1.5"/>
+
+    <g stroke="#f1f5f9" stroke-width="1">
+      <line x1="0" y1="225" x2="440" y2="225"/>
+      <line x1="0" y1="150" x2="440" y2="150"/>
+      <line x1="0" y1="75" x2="440" y2="75"/>
+      <line x1="0" y1="0" x2="440" y2="0"/>
+    </g>
+
+    <g font-size="10" fill="#64748b" text-anchor="end">
+      <text x="-6" y="304">0%</text>
+      <text x="-6" y="229">25%</text>
+      <text x="-6" y="154">50%</text>
+      <text x="-6" y="79">75%</text>
+      <text x="-6" y="4">100%</text>
+    </g>
+
+    <!-- Model 1: ds4.1f (Spont: 22.2% [2/9], Nudge: 77.8% [7/9]) -->
+    <g transform="translate(20, 0)">
+      <rect x="0" y="233.4" width="26" height="66.6" fill="#94a3b8" rx="3"/>
+      <text x="13" y="227" text-anchor="middle" font-size="10" font-weight="bold" fill="#475569">22.2%</text>
+      <rect x="28" y="66.6" width="26" height="233.4" fill="#10b981" rx="3"/>
+      <text x="41" y="60" text-anchor="middle" font-size="10" font-weight="bold" fill="#059669">77.8%</text>
+      <text x="27" y="318" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e293b">DS 4.1 Flash</text>
+      <text x="27" y="331" text-anchor="middle" font-size="9" fill="#64748b">(Budget)</text>
+    </g>
+
+    <!-- Model 2: Gemini 3.8 Flash (Spont: 77.8% [7/9], Nudge: 88.9% [8/9]) -->
+    <g transform="translate(105, 0)">
+      <rect x="0" y="66.6" width="26" height="233.4" fill="#94a3b8" rx="3"/>
+      <text x="13" y="60" text-anchor="middle" font-size="10" font-weight="bold" fill="#475569">77.8%</text>
+      <rect x="28" y="33.3" width="26" height="266.7" fill="#10b981" rx="3"/>
+      <text x="41" y="27" text-anchor="middle" font-size="10" font-weight="bold" fill="#059669">88.9%</text>
+      <text x="27" y="318" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e293b">Gemini 3.8F</text>
+      <text x="27" y="331" text-anchor="middle" font-size="9" fill="#64748b">(Budget)</text>
+    </g>
+
+    <!-- Model 3: Kimi 3.1 Pro (Spont: 100% [9/9], Nudge: 88.9% [8/9]) -->
+    <g transform="translate(190, 0)">
+      <rect x="0" y="0" width="26" height="300" fill="#64748b" rx="3"/>
+      <text x="13" y="-6" text-anchor="middle" font-size="10" font-weight="bold" fill="#334155">100%</text>
+      <rect x="28" y="33.3" width="26" height="266.7" fill="#0ea5e9" rx="3"/>
+      <text x="41" y="27" text-anchor="middle" font-size="10" font-weight="bold" fill="#0284c7">88.9%</text>
+      <text x="27" y="318" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e293b">Kimi 3.1 Pro</text>
+      <text x="27" y="331" text-anchor="middle" font-size="9" fill="#64748b">(Reasoning)</text>
+    </g>
+
+    <!-- Model 4: Hunyuan 4 (Spont: 100% [9/9], Nudge: 100% [9/9]) -->
+    <g transform="translate(275, 0)">
+      <rect x="0" y="0" width="26" height="300" fill="#64748b" rx="3"/>
+      <text x="13" y="-6" text-anchor="middle" font-size="10" font-weight="bold" fill="#334155">100%</text>
+      <rect x="28" y="0" width="26" height="300" fill="#0ea5e9" rx="3"/>
+      <text x="41" y="-6" text-anchor="middle" font-size="10" font-weight="bold" fill="#0284c7">100%</text>
+      <text x="27" y="318" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e293b">Hunyuan 4</text>
+      <text x="27" y="331" text-anchor="middle" font-size="9" fill="#64748b">(Frontier)</text>
+    </g>
+
+    <!-- Model 5: Gemini 4 (Spont: 100% [9/9], Nudge: 88.9% [8/9]) -->
+    <g transform="translate(360, 0)">
+      <rect x="0" y="0" width="26" height="300" fill="#64748b" rx="3"/>
+      <text x="13" y="-6" text-anchor="middle" font-size="10" font-weight="bold" fill="#334155">100%</text>
+      <rect x="28" y="33.3" width="26" height="266.7" fill="#0ea5e9" rx="3"/>
+      <text x="41" y="27" text-anchor="middle" font-size="10" font-weight="bold" fill="#0284c7">88.9%</text>
+      <text x="27" y="318" text-anchor="middle" font-size="10" font-weight="bold" fill="#1e293b">Gemini 4</text>
+      <text x="27" y="331" text-anchor="middle" font-size="9" fill="#64748b">(Frontier)</text>
+    </g>
+  </g>
+
+  <!-- ================= RIGHT PANEL: Willingness by Difficulty L1 / L2 / L3 ================= -->
+  <g transform="translate(590, 85)">
+    <text x="220" y="-10" text-anchor="middle" font-size="13" font-weight="bold" fill="#334155">(b) 任务难度梯度 (L1 简单 → L2 中等 → L3 复杂) 压缩意愿曲线</text>
+    <line x1="0" y1="300" x2="440" y2="300" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="0" y1="0" x2="0" y2="300" stroke="#cbd5e1" stroke-width="1.5"/>
+
+    <g stroke="#f1f5f9" stroke-width="1">
+      <line x1="0" y1="225" x2="440" y2="225"/>
+      <line x1="0" y1="150" x2="440" y2="150"/>
+      <line x1="0" y1="75" x2="440" y2="75"/>
+      <line x1="0" y1="0" x2="440" y2="0"/>
+    </g>
+
+    <g font-size="10" fill="#64748b" text-anchor="end">
+      <text x="-6" y="304">0%</text>
+      <text x="-6" y="229">25%</text>
+      <text x="-6" y="154">50%</text>
+      <text x="-6" y="79">75%</text>
+      <text x="-6" y="4">100%</text>
+    </g>
+
+    <!-- X-axis difficulty positions: L1=60, L2=220, L3=380 -->
+    <g font-size="11" font-weight="bold" fill="#334155" text-anchor="middle">
+      <text x="60" y="320">L1 简单任务</text>
+      <text x="60" y="334" font-size="9" font-weight="normal" fill="#64748b">(2 步常规日志)</text>
+      <text x="220" y="320">L2 中等任务</text>
+      <text x="220" y="334" font-size="9" font-weight="normal" fill="#64748b">(3 步异常栈+常量)</text>
+      <text x="380" y="320">L3 复杂任务</text>
+      <text x="380" y="334" font-size="9" font-weight="normal" fill="#64748b">(4 步分布式死锁诊断)</text>
+    </g>
+
+    <!-- Frontier Flagships Spontaneous (Hunyuan 4 / Gemini 4 / Kimi 3.1 Pro): 100% -> 100% -> 100% -->
+    <polyline fill="none" stroke="#0284c7" stroke-width="3" points="60,0 220,0 380,0"/>
+    <circle cx="60" cy="0" r="4.5" fill="#0284c7"/>
+    <circle cx="220" cy="0" r="4.5" fill="#0284c7"/>
+    <circle cx="380" cy="0" r="4.5" fill="#0284c7"/>
+    <text x="220" y="16" text-anchor="middle" font-size="10" font-weight="bold" fill="#0284c7">旗舰模型自发态 (Hunyuan 4 / Gemini 4 / Kimi 3.1 Pro): 全难度 100%</text>
+
+    <!-- Gemini 3.8 Flash + Nudge: 100% -> 100% -> 75% -->
+    <polyline fill="none" stroke="#8b5cf6" stroke-width="2.5" stroke-dasharray="4,2" points="60,4 220,4 380,75"/>
+    <circle cx="60" cy="4" r="4" fill="#8b5cf6"/>
+    <circle cx="220" cy="4" r="4" fill="#8b5cf6"/>
+    <circle cx="380" cy="75" r="4" fill="#8b5cf6"/>
+
+    <!-- ds4.1f + Nudge: 100% -> 66.7% -> 75.0% -->
+    <polyline fill="none" stroke="#10b981" stroke-width="3" points="60,0 220,99.9 380,75"/>
+    <circle cx="60" cy="0" r="4.5" fill="#10b981"/>
+    <circle cx="220" cy="99.9" r="4.5" fill="#10b981"/>
+    <circle cx="380" cy="75" r="4.5" fill="#10b981"/>
+    <text x="230" y="116" text-anchor="middle" font-size="10" font-weight="bold" fill="#059669">ds4.1f (有 Nudge): 100% → 66.7% → 75.0%</text>
+
+    <!-- ds4.1f Spontaneous (No Nudge): 50% -> 0% -> 25% -->
+    <polyline fill="none" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="5,3" points="60,150 220,300 380,225"/>
+    <circle cx="60" cy="150" r="4.5" fill="#ef4444"/>
+    <circle cx="220" cy="300" r="4.5" fill="#ef4444"/>
+    <circle cx="380" cy="225" r="4.5" fill="#ef4444"/>
+    <text x="220" y="285" text-anchor="middle" font-size="10" font-weight="bold" fill="#dc2626">ds4.1f (无 Nudge 自发态): 50% → 0% → 25% (中间工具步 0%)</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(130, 445)" font-size="11" fill="#334155">
+    <rect x="0" y="-9" width="14" height="12" fill="#94a3b8" rx="2"/>
+    <text x="20" y="0">自发状态 (Spontaneous / 无 Nudge)</text>
+
+    <rect x="230" y="-9" width="14" height="12" fill="#10b981" rx="2"/>
+    <text x="250" y="0">轻量模型 + 单步 Nudge 提醒</text>
+
+    <rect x="440" y="-9" width="14" height="12" fill="#0ea5e9" rx="2"/>
+    <text x="460" y="0">旗舰推理模型 + 单步 Nudge 提醒</text>
+
+    <line x1="660" y1="-3" x2="684" y2="-3" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="5,3"/>
+    <text x="690" y="0">模态抢占退化区 (replyChars = 0)</text>
+  </g>
+</svg>

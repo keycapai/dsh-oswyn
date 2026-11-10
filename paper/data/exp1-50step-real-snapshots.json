@@ -1,0 +1,193 @@
+{
+  "baseSnapshots": {
+    "5": {
+      "step": 5,
+      "cumPromptTokens": 16161,
+      "cumCachedTokens": 10624,
+      "freshPrompt": 5537,
+      "cumCompletionTokens": 256,
+      "totalBilledTokens": 16417,
+      "billedCostCNY": 0.0068,
+      "stepPromptTokens": 5277
+    },
+    "10": {
+      "step": 10,
+      "cumPromptTokens": 59596,
+      "cumCachedTokens": 48384,
+      "freshPrompt": 11212,
+      "cumCompletionTokens": 662,
+      "totalBilledTokens": 60258,
+      "billedCostCNY": 0.0148,
+      "stepPromptTokens": 10979
+    },
+    "15": {
+      "step": 15,
+      "cumPromptTokens": 129809,
+      "cumCachedTokens": 113408,
+      "freshPrompt": 16401,
+      "cumCompletionTokens": 1060,
+      "totalBilledTokens": 130869,
+      "billedCostCNY": 0.0229,
+      "stepPromptTokens": 16246
+    },
+    "30": {
+      "step": 30,
+      "cumPromptTokens": 504794,
+      "cumCachedTokens": 472448,
+      "freshPrompt": 32346,
+      "cumCompletionTokens": 2292,
+      "totalBilledTokens": 507086,
+      "billedCostCNY": 0.051,
+      "stepPromptTokens": 32655
+    },
+    "50": {
+      "step": 50,
+      "cumPromptTokens": 1387924,
+      "cumCachedTokens": 1334144,
+      "freshPrompt": 53780,
+      "cumCompletionTokens": 4035,
+      "totalBilledTokens": 1391959,
+      "billedCostCNY": 0.0966,
+      "stepPromptTokens": 54449
+    }
+  },
+  "oswynSnapshots": {
+    "5": {
+      "step": 5,
+      "cumPromptTokens": 2719,
+      "cumCachedTokens": 1664,
+      "freshPrompt": 1055,
+      "cumCompletionTokens": 271,
+      "totalBilledTokens": 2990,
+      "billedCostCNY": 0.0022,
+      "stepPromptTokens": 924
+    },
+    "10": {
+      "step": 10,
+      "cumPromptTokens": 10250,
+      "cumCachedTokens": 8064,
+      "freshPrompt": 2186,
+      "cumCompletionTokens": 539,
+      "totalBilledTokens": 10789,
+      "billedCostCNY": 0.0045,
+      "stepPromptTokens": 1898
+    },
+    "15": {
+      "step": 15,
+      "cumPromptTokens": 22718,
+      "cumCachedTokens": 19200,
+      "freshPrompt": 3518,
+      "cumCompletionTokens": 986,
+      "totalBilledTokens": 23704,
+      "billedCostCNY": 0.0078,
+      "stepPromptTokens": 2901
+    },
+    "30": {
+      "step": 30,
+      "cumPromptTokens": 91069,
+      "cumCachedTokens": 84224,
+      "freshPrompt": 6845,
+      "cumCompletionTokens": 2236,
+      "totalBilledTokens": 93305,
+      "billedCostCNY": 0.0175,
+      "stepPromptTokens": 5955
+    },
+    "50": {
+      "step": 50,
+      "cumPromptTokens": 255834,
+      "cumCachedTokens": 245120,
+      "freshPrompt": 10714,
+      "cumCompletionTokens": 4440,
+      "totalBilledTokens": 260274,
+      "billedCostCNY": 0.0334,
+      "stepPromptTokens": 10300
+    }
+  },
+  "finalTable": [
+    {
+      "checkpoint": "第 5 步",
+      "basePrompt": 16161,
+      "baseCached": 10624,
+      "baseFresh": 5537,
+      "baseCompl": 256,
+      "baseTokens": 16417,
+      "baseCost": 0.0068,
+      "oswynPrompt": 2719,
+      "oswynCached": 1664,
+      "oswynFresh": 1055,
+      "oswynCompl": 271,
+      "oswynTokens": 2990,
+      "oswynCost": 0.0022,
+      "deltaTokens": "-81.79%",
+      "deltaCost": "-67.65%"
+    },
+    {
+      "checkpoint": "第 10 步",
+      "basePrompt": 59596,
+      "baseCached": 48384,
+      "baseFresh": 11212,
+      "baseCompl": 662,
+      "baseTokens": 60258,
+      "baseCost": 0.0148,
+      "oswynPrompt": 10250,
+      "oswynCached": 8064,
+      "oswynFresh": 2186,
+      "oswynCompl": 539,
+      "oswynTokens": 10789,
+      "oswynCost": 0.0045,
+      "deltaTokens": "-82.10%",
+      "deltaCost": "-69.59%"
+    },
+    {
+      "checkpoint": "第 15 步",
+      "basePrompt": 129809,
+      "baseCached": 113408,
+      "baseFresh": 16401,
+      "baseCompl": 1060,
+      "baseTokens": 130869,
+      "baseCost": 0.0229,
+      "oswynPrompt": 22718,
+      "oswynCached": 19200,
+      "oswynFresh": 3518,
+      "oswynCompl": 986,
+      "oswynTokens": 23704,
+      "oswynCost": 0.0078,
+      "deltaTokens": "-81.89%",
+      "deltaCost": "-65.94%"
+    },
+    {
+      "checkpoint": "第 30 步",
+      "basePrompt": 504794,
+      "baseCached": 472448,
+      "baseFresh": 32346,
+      "baseCompl": 2292,
+      "baseTokens": 507086,
+      "baseCost": 0.051,
+      "oswynPrompt": 91069,
+      "oswynCached": 84224,
+      "oswynFresh": 6845,
+      "oswynCompl": 2236,
+      "oswynTokens": 93305,
+      "oswynCost": 0.0175,
+      "deltaTokens": "-81.60%",
+      "deltaCost": "-65.69%"
+    },
+    {
+      "checkpoint": "第 50 步",
+      "basePrompt": 1387924,
+      "baseCached": 1334144,
+      "baseFresh": 53780,
+      "baseCompl": 4035,
+      "baseTokens": 1391959,
+      "baseCost": 0.0966,
+      "oswynPrompt": 255834,
+      "oswynCached": 245120,
+      "oswynFresh": 10714,
+      "oswynCompl": 4440,
+      "oswynTokens": 260274,
+      "oswynCost": 0.0334,
+      "deltaTokens": "-81.30%",
+      "deltaCost": "-65.42%"
+    }
+  ]
+}
