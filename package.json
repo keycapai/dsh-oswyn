@@ -1,6 +1,6 @@
 {
   "name": "dsh-oswyn",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "DSH-OSWYN (Only See What You Need) — Agent-guided in-band step-boundary context micro-distillation & prompt-cache preserving management for DeepSeek Harness.",
   "type": "module",
   "main": "lib/index.js",
