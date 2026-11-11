@@ -18,7 +18,7 @@ In this paper, we propose and empirically evaluate **OSWYN (Only See What You Ne
 
 We conducted four rigorous controlled experiments comprising over 190 multi-step real sessions across five cross-generational language models (`DeepSeek 4.1 Flash`, `Gemini 3.8 Flash`, `Kimi 3.1 Pro`, `Hunyuan 4`, and `Gemini 4`), evaluating actual billing under official API tiered rate cards (accounting for cache hits, cache misses, and generation output). Our findings establish a **threefold synergistic breakthrough: Token cost reduction, effective context physical capacity expansion, and direct reasoning capability enhancement via attention de-noising**:
 1. **Context Compaction & KV-Cache Preservation**: In a 15-step continuous SWE session, OSWYN compacts resident tool payload by `72.66%–78.09%` and reduces single-step peak prompt tokens by `-53.98%`. Unlike external folding proxies where prefix invalidation drives full-price fresh input tokens up by `+21.01%`, OSWYN strictly preserves prefix continuity and reduces fresh input tokens by `-5.20%`.
-2. **Capability Enhancement via Attention De-noising**: Empirical benchmarks demonstrate that micro-distillation directly addresses reasoning degradation caused by historical noise pollution. Across 17 full-spectrum capability tasks ($B_1$–$B_{17}$), OSWYN achieves a 100.0% pass rate across all standard engineering problems ($B_1$–$B_{10}$, 30 runs, exceeding baseline's 96.7%). In $B_1$ (virtual machine bytecode state tracking), removing historical noise raises accuracy from 66.7% to 100.0%. In combinatorial constraint reasoning ($B_{17}$ 3-SAT), eliminating context fog allows Gemini 4 to cut completion tokens by -39.7%, reduce solve time by -47.4% (1.9x speedup), and maintain 100% accuracy. Overall benchmark pass rate rises from 81.4% to 86.7%. Crucially, we delineate the physical boundary of compression: on intrinsic computational complexity blackholes ($B_{15}$ 20-digit semiprime factorization and $B_{16}$ 8-round ARX avalanche hashing), pure autoregressive mental math hits a 0% ceiling, overcome via synergy with Programmatic Tool Calling (PTC sandboxing).
+2. **Capability Enhancement via Attention De-noising**: Empirical benchmarks demonstrate that micro-distillation directly addresses reasoning degradation caused by historical noise pollution. Across 17 full-spectrum capability tasks ( $B_1$–$B_{17}$ ), OSWYN achieves a 100.0% pass rate across all standard engineering problems ( $B_1$–$B_{10}$, 30 runs, exceeding baseline's 96.7%). In $B_1$ (virtual machine bytecode state tracking), removing historical noise raises accuracy from 66.7% to 100.0%. In combinatorial constraint reasoning ( $B_{17}$ 3-SAT), eliminating context fog allows Gemini 4 to cut completion tokens by -39.7%, reduce solve time by -47.4% (1.9x speedup), and maintain 100% accuracy. Overall benchmark pass rate rises from 81.4% to 86.7%. Crucially, we delineate the physical boundary of compression: on intrinsic computational complexity blackholes ( $B_{15}$ 20-digit semiprime factorization and $B_{16}$ 8-round ARX avalanche hashing), pure autoregressive mental math hits a 0% ceiling, overcome via synergy with Programmatic Tool Calling (PTC sandboxing).
 3. **Real API Billing Boundaries & Pareto Frontier**: Under interactive development and cross-node scheduling, OSWYN yields net API cost savings of `-17.2%` to `-28.1%` over 15 steps, and `-65.4%` to `-69.6%` over 50 steady-state steps. Remarkably, `DeepSeek 4.1 Flash + OSWYN` delivers capability boundary pass rates matching or exceeding frontier flagships at merely **`6.8%`** of `Gemini 4`'s baseline cost.
 
 **Keywords**: Software Engineering Agents; Context Micro-Distillation; KV-Cache Prefix Locality; Capability Boundary Preservation; API Billing Economics
@@ -37,7 +37,7 @@ This quadratic expansion imposes severe bottlenecks on production deployments:
 
 1. **Attention Dilution and the "Lost-in-the-Middle" Phenomenon**: Obsolete stack traces, voluminous test suites, and outdated code versions clutter the context window, degrading the self-attention mechanism's ability to maintain focus on critical state variables, type invariants, and cross-step logical constraints.
 2. **The "Prefix Cache Breakdown Tax" of External Folding**: External proxies, exemplified by `billion-context`, introduce standalone tool calls (e.g., `compress`) to fold historical spans $[s_{\text{start}}, s_{\text{end}}]$ into summary blocks when length thresholds are breached. Modern inference clusters rely heavily on prefix-hashed KV caching (e.g., vLLM PagedAttention, SGLang RadixAttention). Rewriting the middle of a historical sequence invalidates all downstream prefix hashes, causing prompt tokens that otherwise enjoy 90%–98% cache discounts (`cacheHit`) to degrade into full-price fresh inputs (`cacheMiss`). Furthermore, coarse-grained summaries frequently discard vital bitwise masks and exact numeric constants.
-3. **Asymmetric Pricing of Inline Summarization**: If the model is prompted to emit inline summaries, it encounters significant API price asymmetry. Leading cloud providers price generation output (`output`) at $3\times\text{–}5\times$ the price of fresh input (`cacheMiss`), and up to $50\times\text{–}200\times$ the price of cached input (`cacheHit`). In ultra-short sessions, generating verbose summaries can cost more than the cached input tokens saved.
+3. **Asymmetric Pricing of Inline Summarization**: If the model is prompted to emit inline summaries, it encounters significant API price asymmetry. Leading cloud providers price generation output (`output`) at $3\times-5\times$ the price of fresh input (`cacheMiss`), and up to $50\times-200\times$ the price of cached input (`cacheHit`). In ultra-short sessions, generating verbose summaries can cost more than the cached input tokens saved.
 
 ### 1.1 Core Contributions
 
@@ -117,7 +117,7 @@ flowchart TD
 
 ### 3.2 In-Band Micro-Distillation over Surface DAG
 OSWYN operates directly on the DeepSeek Harness session projection layer via a two-tier model:
-1. **Immutable Event Log**: User inputs, tool calls, tool results, and assistant replies are recorded sequentially with monotonically increasing sequence IDs ($\text{seq}$), serving as the immutable Source of Truth.
+1. **Immutable Event Log**: User inputs, tool calls, tool results, and assistant replies are recorded sequentially with monotonically increasing sequence IDs ( $\text{seq}$ ), serving as the immutable Source of Truth.
 2. **Active Surface Projection**: The prompt sequence assembled for the LLM is projected from an active node index sequence $\mathcal{S}_{\text{active}} = [s_1, s_2, \dots, s_m]$.
 
 While generating its reply at step $t$, the agent embeds inline distillation fences (```` ```dsh-result-summary ```` and ```dsh-reply-summary````). At the step boundary, the runtime parses the fence and invokes:
@@ -144,8 +144,8 @@ $$\Delta_{\text{discard}} = (L_{\text{input}} + L_{\text{output}}) - L_{\text{ma
 
 ### 3.4 KV-Cache Prefix Locality Protection Analysis
 Let $[E_1, E_2, \dots, E_n]$ denote the historical event sequence. Server-side cache matching relies on the prefix hash $H(E_1 \Vert \dots \Vert E_k)$.
-- **Global Invalidation in External Proxies**: External folding replaces $[E_i, \dots, E_j]$ ($j < n$) with a summary block $E_{\text{fold}}$. Because $E_i$ is mutated, all downstream prefix hashes for $k \ge i$ collapse, causing total cache misses for the remainder of the context.
-- **Prefix Locality in OSWYN Truncation**: OSWYN mutates only the immediate preceding step ($E_n$). In `truncate keep N lines`, the first $N$ lines are preserved verbatim from byte 0. Thus, the sub-prefix hash $H(E_1 \Vert \dots \Vert E_n[0:K])$ remains identical, maximizing Radix tree cache reuse.
+- **Global Invalidation in External Proxies**: External folding replaces $[E_i, \dots, E_j]$ ( $j < n$ ) with a summary block $E_{\text{fold}}$. Because $E_i$ is mutated, all downstream prefix hashes for $k \ge i$ collapse, causing total cache misses for the remainder of the context.
+- **Prefix Locality in OSWYN Truncation**: OSWYN mutates only the immediate preceding step ( $E_n$ ). In `truncate keep N lines`, the first $N$ lines are preserved verbatim from byte 0. Thus, the sub-prefix hash $H(E_1 \Vert \dots \Vert E_n[0:K])$ remains identical, maximizing Radix tree cache reuse.
 
 ### 3.5 Capability Boundary Triple Safeguards (v2.1)
 To protect reasoning fidelity against lossy compression, OSWYN v2.1 enforces three runtime rules:
@@ -169,11 +169,11 @@ If context distillation increases output tokens by $\Delta N_{\text{out}} > 0$ w
 
 $$\Delta N_{\text{hit}} \cdot P_{\text{hit}} + \Delta N_{\text{miss}} \cdot P_{\text{miss}} > \Delta N_{\text{out}} \cdot P_{\text{out}}$$
 
-Under continuous fully cached sessions ($\Delta N_{\text{miss}} \approx 0$), this simplifies to:
+Under continuous fully cached sessions ( $\Delta N_{\text{miss}} \approx 0$ ), this simplifies to:
 
 $$\frac{\Delta N_{\text{hit}}}{\Delta N_{\text{out}}} > \frac{P_{\text{out}}}{P_{\text{hit}}}$$
 
-For `DeepSeek 4.1 Flash`, $P_{\text{out}} / P_{\text{hit}} = 200$; for `Gemini 3.8 Flash` and `Kimi 3.1 Pro`, the ratio is $50$; for `Hunyuan 4`, it is $59.55$. On models with extreme cache discounts, saving cached input requires a 200-fold reduction in input tokens to offset output costs. However, in interactive or network-switched settings ($\Delta N_{\text{miss}} > 0$), the ratio drops to $P_{\text{out}} / P_{\text{miss}} = 4$, making net savings readily achievable.
+For `DeepSeek 4.1 Flash`, $P_{\text{out}} / P_{\text{hit}} = 200$; for `Gemini 3.8 Flash` and `Kimi 3.1 Pro`, the ratio is $50$; for `Hunyuan 4`, it is $59.55$. On models with extreme cache discounts, saving cached input requires a 200-fold reduction in input tokens to offset output costs. However, in interactive or network-switched settings ( $\Delta N_{\text{miss}} > 0$ ), the ratio drops to $P_{\text{out}} / P_{\text{miss}} = 4$, making net savings readily achievable.
 
 ---
 
@@ -183,13 +183,13 @@ Five models across different capability tiers were evaluated against official ca
 
 **Table 1: Official API Pricing per 1M Tokens across Evaluated Models**
 
-| Model Name & ID | Tier & Positioning | Cache Hit Input $P_{\text{hit}}$ | Fresh Miss Input $P_{\text{miss}}$ | Output $P_{\text{out}}$ | Cache Discount | Price Ratio ($P_{\text{hit}} : P_{\text{miss}} : P_{\text{out}}$) |
+| Model Name & ID | Tier & Positioning | Cache Hit Input (P_hit) | Fresh Miss Input (P_miss) | Output (P_out) | Cache Discount | Price Ratio (Hit:Miss:Out) |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| **DeepSeek 4.1 Flash** (`deepseek-v4.1-flash`) | Lightweight Base | Off-peak `¥0.02` (`\$0.003`)<br>Peak `¥0.04` (`\$0.006`) | Off-peak `¥1.00` (`\$0.15`)<br>Peak `¥2.00` (`\$0.30`) | Off-peak `¥4.00` (`\$0.60`)<br>Peak `¥8.00` (`\$1.20`) | 98% discount | **`1 : 50 : 200`** |
-| **Gemini 3.8 Flash** (`google/gemini-3.8-flash`) | Lightweight Baseline | `\$0.075` (`¥0.54`) | `\$0.75` (`¥5.40`) | `\$3.75` (`¥27.00`) | 90% discount | **`1 : 10 : 50`** |
-| **Kimi 3.1 Pro** (`moonshot/kimi-k3.1-pro`) | Frontier Reasoning | `\$0.20` (`¥1.30`) | `\$2.00` (`¥13.00`) | `\$10.00` (`¥68.00`) | 90% discount | **`1 : 10 : 50`** |
-| **Hunyuan 4** (`tencent/hy4-preview`) | Frontier Flagship | `\$0.042` (`¥0.302`) | `\$0.834` (`¥6.005`) | `\$2.501` (`¥18.007`) | 95% discount | **`1 : 19.86 : 59.55`** |
-| **Gemini 4** (`ai-studio/gemini-4-argon`) | Frontier Flagship | `\$0.10` (`¥0.72`) | `\$2.00` (`¥14.40`) | `\$10.00` (`¥72.00`) | 95% discount | **`1 : 20 : 100`** |
+| **DeepSeek 4.1 Flash**<br>(`deepseek-v4.1-flash`) | Lightweight Base | Off-peak ¥0.02 (USD 0.003)<br>Peak ¥0.04 (USD 0.006) | Off-peak ¥1.00 (USD 0.15)<br>Peak ¥2.00 (USD 0.30) | Off-peak ¥4.00 (USD 0.60)<br>Peak ¥8.00 (USD 1.20) | 98% discount | **1 : 50 : 200** |
+| **Gemini 3.8 Flash**<br>(`gemini-3.8-flash`) | Lightweight Baseline | USD 0.075 (¥0.54) | USD 0.75 (¥5.40) | USD 3.75 (¥27.00) | 90% discount | **1 : 10 : 50** |
+| **Kimi 3.1 Pro**<br>(`kimi-k3.1-pro`) | Frontier Reasoning | USD 0.20 (¥1.30) | USD 2.00 (¥13.00) | USD 10.00 (¥68.00) | 90% discount | **1 : 10 : 50** |
+| **Hunyuan 4**<br>(`hy4-preview`) | Frontier Flagship | USD 0.042 (¥0.302) | USD 0.834 (¥6.005) | USD 2.501 (¥18.007) | 95% discount | **1 : 19.86 : 59.55** |
+| **Gemini 4**<br>(`gemini-4-argon`) | Frontier Flagship | USD 0.10 (¥0.72) | USD 2.00 (¥14.40) | USD 10.00 (¥72.00) | 95% discount | **1 : 20 : 100** |
 
 ---
 
@@ -204,7 +204,7 @@ We evaluated a realistic 15-step SWE trajectory involving 4 large source reads, 
 | Evaluation Metric / Cost Item | `Baseline`<br>(Uncompressed) | `OSWYN-Standard`<br>(In-Band Distillation) | `OSWYN-PTC`<br>(Envelope Distillation) | `BillionContext (Passive)`<br>(Stock Proxy v0.1.211) | `BillionContext (Active)`<br>(Re-architected Folding) | `Synergy`<br>(Dual Stack) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Cumulative Prompt Tokens** | 199,563 | **113,769 (-42.99%)** | **122,343 (-38.69%)** | 144,495 (-27.60%) | 138,200 (-30.75%) | 142,108 (-28.79%) |
-| --- *Cached Input Tokens (`Cached`)* | 157,056 (78.7%) | **73,472 (64.6%)** | **81,664 (66.7%)** | 93,056 (64.4%) | 86,500 (62.6%) | 84,608 (59.5%) |
+| --- Cached Input Tokens (Cached) | 157,056 (78.7%) | **73,472 (64.6%)** | **81,664 (66.7%)** | 93,056 (64.4%) | 86,500 (62.6%) | 84,608 (59.5%) |
 | --- *Fresh Miss Tokens (`Fresh`)* | 42,507 | **40,297 (-5.20%)** | **40,679 (-4.30%)** | 51,439 (+21.01%) | 51,700 (+21.63%) | 57,500 (+35.27%) |
 | **Completion Tokens** | 8,145 | 13,285 (+5,140 fences) | 11,324 (+3,179 fences) | 8,833 (+688) | 9,800 (+1,655) | 12,654 (+4,509) |
 | **Total Billed Tokens** | 207,708 | **127,054 (-38.83%)** | **133,667 (-35.65%)** | 153,328 (-26.18%) | 148,000 (-28.75%) | 154,762 (-25.49%) |
@@ -225,11 +225,11 @@ We evaluated a realistic 15-step SWE trajectory involving 4 large source reads, 
 
 | Step Window | Architecture | Cumulative Prompt Tokens | Cached Tokens | Fresh Tokens | Completion Tokens | Total Billed Tokens | Measured Cost | Relative Reduction (%Δ) |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Step 5** | `Baseline`<br>`OSWYN-Standard` | 16,161<br>**2,719** | 10,624<br>**1,664** | 5,537<br>**1,055** | 256<br>271 | 16,417<br>**2,990** | ¥0.0068<br>**¥0.0022** | Tokens: **-81.79%**<br>Cost: **-67.65%** |
-| **Step 10** | `Baseline`<br>`OSWYN-Standard` | 59,596<br>**10,250** | 48,384<br>**8,064** | 11,212<br>**2,186** | 662<br>539 | 60,258<br>**10,789** | ¥0.0148<br>**¥0.0045** | Tokens: **-82.10%**<br>Cost: **-69.59%** |
-| **Step 15** | `Baseline`<br>`OSWYN-Standard` | 129,809<br>**22,718** | 113,408<br>**19,200** | 16,401<br>**3,518** | 1,060<br>986 | 130,869<br>**23,704** | ¥0.0229<br>**¥0.0078** | Tokens: **-81.89%**<br>Cost: **-65.94%** |
-| **Step 30** | `Baseline`<br>`OSWYN-Standard` | 504,794<br>**91,069** | 472,448<br>**84,224** | 32,346<br>**6,845** | 2,292<br>2,236 | 507,086<br>**93,305** | ¥0.0510<br>**¥0.0175** | Tokens: **-81.60%**<br>Cost: **-65.69%** |
-| **Step 50** | `Baseline`<br>`OSWYN-Standard` | 1,387,924<br>**255,834** | 1,334,144<br>**245,120** | 53,780<br>**10,714** | 4,035<br>4,440 | 1,391,959<br>**260,274** | ¥0.0966<br>**¥0.0334** | Tokens: **-81.30%**<br>Cost: **-65.42%** |
+| **Step 5** | Baseline<br>**OSWYN-Std** | 16,161<br>**2,719** | 10,624<br>**1,664** | 5,537<br>**1,055** | 256<br>271 | 16,417<br>**2,990** | ¥0.0068<br>**¥0.0022** | Tokens: **-81.79%**<br>Cost: **-67.65%** |
+| **Step 10** | Baseline<br>**OSWYN-Std** | 59,596<br>**10,250** | 48,384<br>**8,064** | 11,212<br>**2,186** | 662<br>539 | 60,258<br>**10,789** | ¥0.0148<br>**¥0.0045** | Tokens: **-82.10%**<br>Cost: **-69.59%** |
+| **Step 15** | Baseline<br>**OSWYN-Std** | 129,809<br>**22,718** | 113,408<br>**19,200** | 16,401<br>**3,518** | 1,060<br>986 | 130,869<br>**23,704** | ¥0.0229<br>**¥0.0078** | Tokens: **-81.89%**<br>Cost: **-65.94%** |
+| **Step 30** | Baseline<br>**OSWYN-Std** | 504,794<br>**91,069** | 472,448<br>**84,224** | 32,346<br>**6,845** | 2,292<br>2,236 | 507,086<br>**93,305** | ¥0.0510<br>**¥0.0175** | Tokens: **-81.60%**<br>Cost: **-65.69%** |
+| **Step 50** | Baseline<br>**OSWYN-Std** | 1,387,924<br>**255,834** | 1,334,144<br>**245,120** | 53,780<br>**10,714** | 4,035<br>4,440 | 1,391,959<br>**260,274** | ¥0.0966<br>**¥0.0334** | Tokens: **-81.30%**<br>Cost: **-65.42%** |
 
 ![Figure 2: 50-Step Growth Curves and Billing Trajectory](figures/fig2-50step-growth-lines-en.svg)
 
@@ -279,40 +279,40 @@ We evaluated four system prompt designs on `L2_Medium` (Table 5):
 
 ![Figure 4: Prompt Ablation and Moral Hazard Analysis](figures/fig4-prompt-ablation-barchart-en.svg)
 
-- **The Moral Hazard Collapse ($P_2$)**: Disclosing that the runtime will automatically truncate and discard outputs in the background causes proactive compression willingness to collapse to **0.0%** on both `ds4.1f` and `Gemini 4`. The agent adopts free-riding behavior, leading to uncontrolled prompt bloat.
-- **Superiority of Positive Decision Trees ($P_3$)**: Concealing backend fallbacks while guiding the model through a 3-step decision flow (Rule 1: Failed $\to$ `discard`; Rule 2: Logs $\to$ `truncate`; Rule 3: Search/Code $\to$ `replace`) achieves **100% willingness, 91.2%–93.6% compression, and 3/3 probe recall**, establishing the Pareto optimum for production deployment.
+- **The Moral Hazard Collapse ( $P_2$ )**: Disclosing that the runtime will automatically truncate and discard outputs in the background causes proactive compression willingness to collapse to **0.0%** on both `ds4.1f` and `Gemini 4`. The agent adopts free-riding behavior, leading to uncontrolled prompt bloat.
+- **Superiority of Positive Decision Trees ( $P_3$ )**: Concealing backend fallbacks while guiding the model through a 3-step decision flow (Rule 1: Failed $\to$ `discard`; Rule 2: Logs $\to$ `truncate`; Rule 3: Search/Code $\to$ `replace`) achieves **100% willingness, 91.2%–93.6% compression, and 3/3 probe recall**, establishing the Pareto optimum for production deployment.
 
 ---
 
-### 5.4 Experiment 4: Capability Boundaries ($B_1$–$B_{17}$), Computational Blackholes, and Distillation Limits
+### 5.4 Experiment 4: Capability Boundaries ( $B_1$–$B_{17}$ ), Computational Blackholes, and Distillation Limits
 
 #### 5.4.1 Attention De-noising & Reasoning Amplification
 In multi-step autonomous agent execution, the primary value of context micro-distillation extends beyond token savings to the direct augmentation of reasoning and state tracking:
 1. **Attention Dispersion from Long-Context Noise**:
    In uncompressed append-only baselines, historical traces accumulate hundreds of irrelevant directory listings, compilation warnings, and unproductive grep attempts. This low-signal background degrades self-attention concentration, inducing state drift and hallucinations. In $B_1$ (virtual machine bytecode tracking), the uncompressed baseline model attained only **66.7% (2/3)** accuracy due to noise interference.
 2. **Reasoning Elevation via In-Band De-noising**:
-   Under OSWYN, failed exploratory outputs are cascade-discarded, while non-target searches are distilled into concise state assertions. The active working memory remains within an optimal, high-signal regime (600–800 tokens). Freed from noise interference, `DeepSeek 4.1 Flash + OSWYN` achieved **100.0% (3/3)** on $B_1$. Across all standard engineering tasks ($B_1$–$B_{10}$, 30 runs), OSWYN scored **100.0% (30/30)**, outperforming the uncompressed baseline (**96.7%**, 29/30).
+   Under OSWYN, failed exploratory outputs are cascade-discarded, while non-target searches are distilled into concise state assertions. The active working memory remains within an optimal, high-signal regime (600–800 tokens). Freed from noise interference, `DeepSeek 4.1 Flash + OSWYN` achieved **100.0% (3/3)** on $B_1$. Across all standard engineering tasks ( $B_1$–$B_{10}$, 30 runs), OSWYN scored **100.0% (30/30)**, outperforming the uncompressed baseline (**96.7%**, 29/30).
 
-#### 5.4.2 Combinatorial Search & Frobenius Coin Problem ($B_{14}$)
+#### 5.4.2 Combinatorial Search & Frobenius Coin Problem ( $B_{14}$ )
 For the NP-hard 4-coin Frobenius coin exchange problem $A = \{31, 47, 53, 71\}$, no closed-form algebraic solution exists. Rigorous resolution requires constructing a shortest-path transition graph over residue classes modulo 31 using the Brauer-Shockley theorem. In our evaluations, Gemini 4 completely expanded the shortest-path table across all 30 non-zero residue classes, identified the maximum distance $d(6) = 347$, and correctly computed:
 
 $$g(A) = \max_{r \in [1, 30]} d(r) - 31 = 347 - 31 = 316$$
 
 outputting `FINAL_ANSWER: 316` for a 100.0% pass rate.
 
-#### 5.4.3 Theoretical Limits and Dimensional Constraint Reasoning ($B_{15}$–$B_{17}$)
+#### 5.4.3 Theoretical Limits and Dimensional Constraint Reasoning ( $B_{15}$–$B_{17}$ )
 To systematically delineate the boundary of context compression across distinct computational complexities, we evaluated three theoretical edge-case benchmarks:
 - **$B_{15}$ (20-Digit Semiprime Factorization)**: $N = 433494437 \times 982451653 = 425887293774880361$. As an intrinsic complexity blackhole (RSA foundation), pure autoregressive mental math hits a 0.0% ceiling.
 - **$B_{16}$ (8-Round Non-Linear ARX Hash Inversion)**: Non-linear avalanche diffusion prevents mental inversion (0.0% pass rate).
-- **$B_{17}$ (10-Variable Unique 3-SAT)**: High-dimensional finite discrete constraint satisfaction ($2^{10} = 1024$ assignments). Unlike cryptographic blackholes, 3-SAT possesses structured boolean invariants resolvable via unit propagation.
+- **$B_{17}$ (10-Variable Unique 3-SAT)**: High-dimensional finite discrete constraint satisfaction ( $2^{10} = 1024$ assignments). Unlike cryptographic blackholes, 3-SAT possesses structured boolean invariants resolvable via unit propagation.
 
 **Key Findings**:
-1. **Intrinsic Complexity Blackholes ($B_{15}, B_{16}$)**: Neither compression nor prompt expansion can overcome irreducible mathematical complexity. However, by coupling OSWYN with Programmatic Tool Calling (PTC), the agent generates a 5-line Pollard's rho script executed in a Python sandbox in 0.005 seconds, resolving $B_{15}$ and $B_{16}$ with 100% accuracy.
-2. **Efficiency Multipliers in Discrete Constraints ($B_{17}$)**: Without compression, Gemini 4 consumed 86.30 seconds and 6,516 tokens. With OSWYN eliminating historical noise, the model focused directly on boolean unit propagation: **accuracy remained 100.0%, completion tokens dropped by -39.7% (3,927 tokens), and solve time was halved to 45.38 seconds (1.9x speedup)**.
+1. **Intrinsic Complexity Blackholes ( $B_{15}, B_{16}$ )**: Neither compression nor prompt expansion can overcome irreducible mathematical complexity. However, by coupling OSWYN with Programmatic Tool Calling (PTC), the agent generates a 5-line Pollard's rho script executed in a Python sandbox in 0.005 seconds, resolving $B_{15}$ and $B_{16}$ with 100% accuracy.
+2. **Efficiency Multipliers in Discrete Constraints ( $B_{17}$ )**: Without compression, Gemini 4 consumed 86.30 seconds and 6,516 tokens. With OSWYN eliminating historical noise, the model focused directly on boolean unit propagation: **accuracy remained 100.0%, completion tokens dropped by -39.7% (3,927 tokens), and solve time was halved to 45.38 seconds (1.9x speedup)**.
 
 #### 5.4.4 Full-Spectrum Results Summary
 
-**Table 6: Full-Spectrum Capability Boundary Benchmark ($B_1$–$B_{17}$) Results**
+**Table 6: Full-Spectrum Capability Boundary Benchmark ( $B_1$–$B_{17}$ ) Results**
 
 | Task ID & Benchmark Characteristics | Expected Exact Solution | `DeepSeek Flash Baseline`<br>Pass / AvgTok / Cost | `DeepSeek Flash + OSWYN`<br>Pass / Comp. / Cost | `Gemini 4 Baseline`<br>Pass / AvgTok / Cost | `Gemini 4 + OSWYN`<br>Pass / Comp. / Cost |
 | :--- | :---: | :---: | :---: | :---: | :---: |
@@ -353,8 +353,8 @@ Based on empirical rate card modeling (Tables 1 & 3):
 3. **Continuous Fully Cached Batches on Extreme Discount Models**: On APIs with 98% cache discounts (`ds4.1f`), where $P_{\text{out}} / P_{\text{hit}} = 200$, inline fences add slight cost overhead in sessions under 10 steps. In this setting, the justification for OSWYN is **noise elimination, working-memory preservation, and context-window protection**, rather than gross invoice reduction.
 
 ### 6.2 Production Deployment Guidelines
-1. **Gated Activation**: Disable fence emission for predictable single-shot scripts ($T < 5$); mandate OSWYN for long-horizon loops ($T \ge 12$) or payloads exceeding $15\text{k}$ characters.
-2. **Always Enable Verbatim Safeguards**: Strictly enforce verbatim preservation of arithmetic operators and retain small core source files ($< 3,000$ characters) intact to avoid recall round-trip penalties.
+1. **Gated Activation**: Disable fence emission for predictable single-shot scripts ( $T < 5$ ); mandate OSWYN for long-horizon loops ( $T \ge 12$ ) or payloads exceeding $15\text{k}$ characters.
+2. **Always Enable Verbatim Safeguards**: Strictly enforce verbatim preservation of arithmetic operators and retain small core source files ( $< 3,000$ characters) intact to avoid recall round-trip penalties.
 3. **Conceal Backend Fallbacks**: Deploy the positive decision tree prompt (P₃) to prevent moral hazard.
 4. **Avoid Double-Stacking**: Never combine in-band micro-distillation with external HTTP proxies (e.g., `billion-context`) that mutate historical spans.
 
@@ -394,6 +394,7 @@ We presented **OSWYN (Only See What You Need, v2.1)**, an in-band step-boundary 
 12. Guohao Li, Hasan Abed Al Kader Hammoud, Hani Itani, Dmitrii Khizbullin, and Bernard Ghanem. 2023. CAMEL: Communicative Agents for "Mind" Exploration of Large Language Model Society. In *NeurIPS 2023*.
 13. Yutao Sun, Li Dong, Yi Zhu, Shaohan Huang, Wenhui Wang, Shuming Ma, Quanlu Zhang, Jianyong Wang, and Furu Wei. 2024. You Only Cache Once: Decoder-Decoder Architectures for Language Models. *arXiv preprint arXiv:2405.05254*.
 14. Guangxuan Xiao, Yuandong Tian, Beidi Chen, Song Han, and Mike Lewis. 2024. Efficient Streaming Language Models with Attention Sinks. In *Proceedings of ICLR 2024*.
+15. Billion-Context Contributors. 2025. Model-Driven Incremental Hierarchical Compression: Training-Free Multi-Generational Context Management for Long-Lived Coding Agents. *Technical Whitepaper & Open-Source Specification*, https://github.com/billion-context.
 
 ---
 
