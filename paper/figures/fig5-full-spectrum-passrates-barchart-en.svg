@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 500" width="100%" height="100%" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', sans-serif">
+  <defs>
+    <linearGradient id="bgGrad5" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f8fafc"/>
+    </linearGradient>
+  </defs>
+  <rect width="1120" height="500" rx="10" fill="url(#bgGrad5)" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Title & Subtitle -->
+  <text x="560" y="34" text-anchor="middle" font-size="17" font-weight="700" fill="#0f172a">
+    Figure 5: Full-Spectrum Capability Boundary Benchmark: Pass Rates Across Four Subsets
+  </text>
+  <text x="560" y="55" text-anchor="middle" font-size="12" fill="#64748b">
+    Comparison across Subsets: Standard Engineering, Complex Algorithms & Constraints, PTC Sandboxing, and Grand Total
+  </text>
+
+  <!-- Legend -->
+  <g transform="translate(180, 72)" font-size="11.5" font-weight="600">
+    <rect x="0" y="0" width="15" height="12" rx="3" fill="#64748b"/>
+    <text x="22" y="10" fill="#334155">DS Flash Baseline</text>
+
+    <rect x="180" y="0" width="15" height="12" rx="3" fill="#0284c7"/>
+    <text x="202" y="10" fill="#0369a1">DS Flash + OSWYN</text>
+
+    <rect x="370" y="0" width="15" height="12" rx="3" fill="#8b5cf6"/>
+    <text x="392" y="10" fill="#6d28d9">Gemini 4 Baseline</text>
+
+    <rect x="560" y="0" width="15" height="12" rx="3" fill="#10b981"/>
+    <text x="582" y="10" fill="#047857">Gemini 4 + OSWYN</text>
+  </g>
+
+  <!-- Main Chart Area -->
+  <g transform="translate(70, 115)">
+    <!-- Axes -->
+    <line x1="0" y1="300" x2="980" y2="300" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="0" y1="0" x2="0" y2="300" stroke="#cbd5e1" stroke-width="1.5"/>
+
+    <!-- Gridlines (0% to 100%, step 20% -> 60px) -->
+    <g stroke="#f1f5f9" stroke-width="1">
+      <line x1="0" y1="240" x2="980" y2="240"/><line x1="0" y1="180" x2="980" y2="180"/>
+      <line x1="0" y1="120" x2="980" y2="120"/><line x1="0" y1="60" x2="980" y2="60"/><line x1="0" y1="0" x2="980" y2="0"/>
+    </g>
+    <g font-size="10.5" fill="#64748b" text-anchor="end">
+      <text x="-8" y="304">0%</text><text x="-8" y="244">20%</text><text x="-8" y="184">40%</text>
+      <text x="-8" y="124">60%</text><text x="-8" y="64">80%</text><text x="-8" y="4">100%</text>
+    </g>
+
+    <!-- Group 1: Standard Engineering (B1-B10, 10tasks) -> x center = 130 -->
+    <!-- DS BL: 96.7% (290px), DS OSWYN: 100% (300px), Gem BL: 100% (300px), Gem OSWYN: 100% (300px) -->
+    <g transform="translate(45, 0)">
+      <rect x="0" y="10" width="38" height="290" rx="4" fill="#64748b"/>
+      <text x="19" y="4" text-anchor="middle" font-size="10" font-weight="700" fill="#475569">96.7%</text>
+
+      <rect x="44" y="0" width="38" height="300" rx="4" fill="#0284c7"/>
+      <text x="63" y="-6" text-anchor="middle" font-size="10" font-weight="700" fill="#0369a1">100%</text>
+
+      <rect x="88" y="0" width="38" height="300" rx="4" fill="#8b5cf6"/>
+      <text x="107" y="-6" text-anchor="middle" font-size="10" font-weight="700" fill="#6d28d9">100%</text>
+
+      <rect x="132" y="0" width="38" height="300" rx="4" fill="#10b981"/>
+      <text x="151" y="-6" text-anchor="middle" font-size="10" font-weight="700" fill="#047857">100%</text>
+
+      <text x="85" y="322" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Subset 1: Standard Engineering</text>
+      <text x="85" y="338" text-anchor="middle" font-size="10.5" fill="#64748b">(B1–B10，10 tasks / 80runs)</text>
+    </g>
+
+    <!-- Group 2: Algorithms & ConstraintsReasoning (B11-B14, B17, 5 tasks) -> x center = 390 -->
+    <!-- DS BL: 46.2% (138.6px), DS OSWYN: 53.8% (161.4px), Gem BL: 100% (300px), Gem OSWYN: 100% (300px) -->
+    <g transform="translate(295, 0)">
+      <rect x="0" y="161.4" width="38" height="138.6" rx="4" fill="#64748b"/>
+      <text x="19" y="155" text-anchor="middle" font-size="10" font-weight="700" fill="#475569">46.2%</text>
+
+      <rect x="44" y="138.6" width="38" height="161.4" rx="4" fill="#0284c7"/>
+      <text x="63" y="132" text-anchor="middle" font-size="10" font-weight="700" fill="#0369a1">53.8%</text>
+
+      <rect x="88" y="0" width="38" height="300" rx="4" fill="#8b5cf6"/>
+      <text x="107" y="-6" text-anchor="middle" font-size="10" font-weight="700" fill="#6d28d9">100%</text>
+
+      <rect x="132" y="0" width="38" height="300" rx="4" fill="#10b981"/>
+      <text x="151" y="-6" text-anchor="middle" font-size="10" font-weight="700" fill="#047857">100%</text>
+
+      <text x="85" y="322" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Subset 2: Algorithms & Constraints</text>
+      <text x="85" y="338" text-anchor="middle" font-size="10.5" fill="#64748b">(B11–B14, B17，5 tasks / 36runs)</text>
+    </g>
+
+    <!-- Group 3: PTC Sandboxing Synergy (B15-B16 PTC, 2tasks) -> x center = 640 -->
+    <!-- DS BL: Untested, DS OSWYN: 100% (300px), Gem BL: Untested, Gem OSWYN: 100% (300px) -->
+    <g transform="translate(545, 0)">
+      <rect x="0" y="296" width="38" height="4" rx="2" fill="#cbd5e1"/>
+      <text x="19" y="288" text-anchor="middle" font-size="10" fill="#94a3b8">Untested —</text>
+
+      <rect x="44" y="0" width="38" height="300" rx="4" fill="#0284c7"/>
+      <text x="63" y="-6" text-anchor="middle" font-size="10" font-weight="700" fill="#0369a1">100%</text>
+
+      <rect x="88" y="296" width="38" height="4" rx="2" fill="#cbd5e1"/>
+      <text x="107" y="288" text-anchor="middle" font-size="10" fill="#94a3b8">Untested —</text>
+
+      <rect x="132" y="0" width="38" height="300" rx="4" fill="#10b981"/>
+      <text x="151" y="-6" text-anchor="middle" font-size="10" font-weight="700" fill="#047857">100%</text>
+
+      <text x="85" y="322" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">Subset 3: PTC Sandboxing Synergy</text>
+      <text x="85" y="338" text-anchor="middle" font-size="10.5" fill="#64748b">(B15–B16 PTC Code Execution / 4 runs)</text>
+    </g>
+
+    <!-- Group 4: Full-Spectrum Grand Total -> x center = 890 -->
+    <!-- DS BL: 81.4% (244.2px), DS OSWYN: 86.7% (260.1px), Gem BL: 100% (300px), Gem OSWYN: 100% (300px) -->
+    <g transform="translate(795, 0)">
+      <rect x="0" y="55.8" width="38" height="244.2" rx="4" fill="#64748b"/>
+      <text x="19" y="49" text-anchor="middle" font-size="10" font-weight="700" fill="#475569">81.4%</text>
+
+      <rect x="44" y="39.9" width="38" height="260.1" rx="4" fill="#0284c7"/>
+      <text x="63" y="33" text-anchor="middle" font-size="10" font-weight="700" fill="#0369a1">86.7%</text>
+
+      <rect x="88" y="0" width="38" height="300" rx="4" fill="#8b5cf6"/>
+      <text x="107" y="-6" text-anchor="middle" font-size="10" font-weight="700" fill="#6d28d9">100%</text>
+
+      <rect x="132" y="0" width="38" height="300" rx="4" fill="#10b981"/>
+      <text x="151" y="-6" text-anchor="middle" font-size="10" font-weight="700" fill="#047857">100%</text>
+
+      <text x="85" y="322" text-anchor="middle" font-size="12" font-weight="700" fill="#047857">Full-Spectrum Grand Total</text>
+      <text x="85" y="338" text-anchor="middle" font-size="10.5" font-weight="600" fill="#0f172a">(Effective tested tasks only, non-overlapping)</text>
+    </g>
+  </g>
+</svg>
