@@ -7,6 +7,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { apply } from '../lib/index.js';
+import { collectNudgeCandidates } from '../lib/prompts/nudge.js';
 import { MockSession } from './fixtures/mock-session.js';
 
 function makeCtx() {
@@ -222,3 +223,41 @@ test('pre-step: failed read is auto-discarded even though read is protected', as
   assert.ok(session.log.length > beforeLen, 'failed read must be discarded regardless of protection list');
   assert.match(session.log[session.log.length - 1].data.message.content[0].text, /mode=discard/);
 });
+
+test('pre-step: active fence blocks fallback auto-discard and auto-truncate on seen tool results', async () => {
+  const ctx = makeCtx();
+  apply(ctx, { enabled: true, autoDiscardFailed: true, autoCompressTiered: true, autoCompressMinChars: 200, autoCompressKeepLines: 5 });
+  const hook = ctx._hooks['agent/pre-step'];
+  const session = new MockSession();
+  session.id = 'test_active_first_' + Date.now();
+  session.seed('system/message', { message: { role: 'system', content: [] } }, { surfaceOp: 'append' });
+  session.seed('user/message', { role: 'user', content: [{ type: 'text', text: 'go' }] }, { surfaceOp: 'append' });
+  session.seed('tool/result', {
+    message: { role: 'tool', source: { toolName: 'bash', callId: 'c1' }, isError: true, content: [{ type: 'text', text: 'Error: failed\n' + 'stack\n'.repeat(30) }] }
+  }, { surfaceOp: 'append' });
+  // Assistant explicitly writes an active replace fence (preserving parameters)
+  session.seed('assistant/message', {
+    message: { role: 'assistant', content: [{ type: 'text', text: '```dsh-result-summary\nreplace\n- 失败结论: worker_17 failed with timeout\n```' }] }
+  }, { surfaceOp: 'append' });
+
+  const beforeLen = session.log.length;
+  await hook({ agent: { session }, signal: { aborted: false } }, async () => ({ kind: 'enter', messages: [] }));
+
+  // The active replace should have been processed, and auto-discard should NOT overwrite it with mode=discard
+  const last = session.log[session.log.length - 1];
+  assert.equal(last.surfaceOp.op, 'replace');
+  assert.match(last.data.message.content[0].text, /mode=replace/, 'active replace mode preserved, auto-discard did not overwrite');
+});
+
+test('collectNudgeCandidates collects trailing tool messages even when trailing context message exists', () => {
+  const messages = [
+    { role: 'user', content: [{ type: 'text', text: 'run test' }] },
+    { role: 'assistant', content: [{ type: 'text', text: 'calling bash' }] },
+    { role: 'tool', source: { toolName: 'bash', callId: 'c1' }, content: [{ type: 'text', text: 'line\n'.repeat(50) }] },
+    { role: 'user', source: { kind: 'runtime-context' }, content: [{ type: 'text', text: 'current time: 12:00' }] }
+  ];
+  const candidates = collectNudgeCandidates(messages, { nudgeThresholdChars: 100, nudgeThresholdLines: 5 });
+  assert.equal(candidates.length, 1, 'tool candidate collected despite trailing runtime-context message');
+  assert.equal(candidates[0].toolName, 'bash');
+});
+
