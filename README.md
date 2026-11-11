@@ -56,20 +56,20 @@ OSWYN 深度下沉至智能体思考-动作的**步进边界（Step-Boundary）*
 | **`replace`** | 将长篇复杂输出整体替换为结构化结论事实块（公式与算子逐字保全）。 | 单元测试通过日志、静态分析成功报告。 | 局部尾端改写 |
 | **`discard`** | 级联丢弃该工具结果，并将对应工具调用的入参一并清空为 `'{}'`。 | 命令语法错误、权限拒绝、无匹配项的探测。 | 彻底清除无效噪音 |
 
-```markdown
+````markdown
 ```dsh-result-summary
 truncate keep 10 lines
 FINDINGS:
 - Found 14 matching TypeScript files under src/modules/
 - Target entrypoint is src/modules/auth/service.ts
 ```
-```
+````
 
 ### 2. 助手回复双轨投影机制（`dsh-reply-summary`）
 - **Web UI 视轨**：人类用户在界面中完整阅读格式良好的长篇分析与解释；
 - **模型上下文视轨**：仅提取紧凑备忘注入下一轮上下文，步间上下文膨胀率直降 70%。
 
-```markdown
+````markdown
 人类用户您好，我对用户鉴权模块进行了深度排查……（此处省略详细长文报告）……
 
 ```dsh-reply-summary
@@ -78,7 +78,7 @@ SUMMARY:
 - 执行动作：已重写 verifyToken() 并注入单元测试
 - 下一步：准备调用 run_code 验证测试用例
 ```
-```
+````
 
 ### 3. 不可变事件日志与无损秒级召回（`tool_result_recall`）
 所有剪裁操作仅作用于活跃的 Surface DAG 表面节点。若后续推理需要已被截断的完整历史数据，模型可直接调用原生挂载的 `tool_result_recall(call_id)`，毫秒级取回原始未截断文本，实现有损压缩与确定性事实依赖的完美统一。
