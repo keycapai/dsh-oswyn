@@ -24,6 +24,7 @@ import {
   projectDistilledHistory
 } from '../lib/core/projection.js';
 import { registerRecallTool } from '../lib/tools/recall.js';
+import { registerHistoryRecallTool } from '../lib/tools/history-recall.js';
 
 // ============================================================================
 // Suite 1: Cache Expiration Dynamics (TTL & Idle Detection)
@@ -216,19 +217,19 @@ test('Suite 4 [4.3]: setRoundRecall with mode="both" restores both thinking and 
 });
 
 // ============================================================================
-// Suite 5: tool_result_recall Tool Execution with Round-Based Selectors
+// Suite 5: history_recall Tool Execution with Round and Fine-Grained Step Selectors
 // ============================================================================
 
-test('Suite 5 [5.1]: tool_result_recall executes round-based recall for thinking', async () => {
+test('Suite 5 [5.1]: history_recall executes round-based recall defaulting to thinking only', async () => {
   const registeredTools = {};
   const mockCtx = {
     tools: {
       register: (t) => { registeredTools[t.name] = t; }
     }
   };
-  registerRecallTool(mockCtx);
-  const recallTool = registeredTools['tool_result_recall'];
-  assert.ok(recallTool, 'tool_result_recall must be registered');
+  registerHistoryRecallTool(mockCtx);
+  const historyRecall = registeredTools['history_recall'];
+  assert.ok(historyRecall, 'history_recall must be registered');
 
   const history = makeMultiTurnHistory();
   const session = {
@@ -237,25 +238,79 @@ test('Suite 5 [5.1]: tool_result_recall executes round-based recall for thinking
     activeRecalls: new Map()
   };
 
-  const res = recallTool.execute({ round: 1, mode: 'think' }, { agent: { session } });
+  // mode omitted -> must default to 'think'
+  const res = historyRecall.execute({ round: 1 }, { agent: { session } });
   assert.equal(res.found, true);
   assert.equal(res.round, 1);
-  assert.equal(res.mode, 'think');
+  assert.equal(res.mode, 'think', 'Default recall mode must be think');
   assert.ok(res.text.includes('Assistant Thinking'));
   assert.ok(res.text.includes('Let me run bash to find files'));
-  assert.equal(session.activeRecalls.get(1), 'think', 'Must reinstate activeRecall on session');
+  assert.ok(!res.text.includes('Tool Result [bash]'), 'Thinking mode must NOT include tool results');
+  assert.equal(session.activeRecalls.get(1), 'think', 'Must reinstate activeRecall on session with think mode');
 });
 
-test('Suite 5 [5.2]: tool_result_recall handles invalid round out-of-bounds gracefully', async () => {
+test('Suite 5 [5.2]: history_recall executes fine-grained step recall within a round', async () => {
   const registeredTools = {};
   const mockCtx = { tools: { register: (t) => { registeredTools[t.name] = t; } } };
-  registerRecallTool(mockCtx);
-  const recallTool = registeredTools['tool_result_recall'];
+  registerHistoryRecallTool(mockCtx);
+  const historyRecall = registeredTools['history_recall'];
+
+  const history = makeMultiTurnHistory();
+  const session = {
+    id: 'sess_step_test',
+    deriveMessages: () => history,
+    activeRecalls: new Map()
+  };
+
+  // Round 1 has 2 steps: Step 1 (tool call + tool result), Step 2 (final answer)
+  const resStep1 = historyRecall.execute({ round: 1, step: 1, mode: 'tool' }, { agent: { session } });
+  assert.equal(resStep1.found, true);
+  assert.equal(resStep1.step, 1);
+  assert.equal(resStep1.mode, 'tool');
+  assert.ok(resStep1.text.includes('Tool Calls'));
+  assert.ok(resStep1.text.includes('Tool Result [bash call_1]'));
+
+  // Out-of-bounds step
+  const resOob = historyRecall.execute({ round: 1, step: 99 }, { agent: { session } });
+  assert.equal(resOob.found, false);
+  assert.ok(resOob.reason.includes('Step 99 does not exist'));
+});
+
+test('Suite 5 [5.3]: history_recall handles invalid round out-of-bounds gracefully', async () => {
+  const registeredTools = {};
+  const mockCtx = { tools: { register: (t) => { registeredTools[t.name] = t; } } };
+  registerHistoryRecallTool(mockCtx);
+  const historyRecall = registeredTools['history_recall'];
 
   const history = makeMultiTurnHistory(); // 2 turns
   const session = { id: 'sess_oob', deriveMessages: () => history };
 
-  const res = recallTool.execute({ round: 99 }, { agent: { session } });
+  const res = historyRecall.execute({ round: 99 }, { agent: { session } });
   assert.equal(res.found, false);
   assert.ok(res.reason.includes('does not exist'));
+});
+
+test('Suite 5 [5.4]: tool_result_recall maintains classic seq/call_id recall and rejects round logic', async () => {
+  const registeredTools = {};
+  const mockCtx = { tools: { register: (t) => { registeredTools[t.name] = t; } } };
+  registerRecallTool(mockCtx);
+  const recallTool = registeredTools['tool_result_recall'];
+  assert.ok(recallTool, 'tool_result_recall must be registered');
+
+  // Verify parameters schema: round is NOT a property of classic tool_result_recall
+  assert.equal(recallTool.parameters.properties.round, undefined, 'tool_result_recall must not have round parameter');
+  assert.ok(recallTool.parameters.properties.seq, 'tool_result_recall must require seq parameter');
+  assert.ok(recallTool.parameters.properties.original, 'tool_result_recall must have original parameter');
+  assert.ok(recallTool.parameters.properties.raw, 'tool_result_recall must have raw alias parameter');
+});
+
+test('Suite 5 [5.5]: history_recall supports original/raw parameter schema and defaults to compressed', async () => {
+  const registeredTools = {};
+  const mockCtx = { tools: { register: (t) => { registeredTools[t.name] = t; } } };
+  registerHistoryRecallTool(mockCtx);
+  const historyRecall = registeredTools['history_recall'];
+  assert.ok(historyRecall, 'history_recall must be registered');
+
+  assert.ok(historyRecall.parameters.properties.original, 'history_recall must have original parameter');
+  assert.ok(historyRecall.parameters.properties.raw, 'history_recall must have raw parameter');
 });

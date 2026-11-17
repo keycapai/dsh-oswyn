@@ -15,8 +15,9 @@ process.env.DSH_OSWYN_STORAGE_DIR = dir;
 
 test.after(() => rmSync(dir, { recursive: true, force: true }));
 
-import { appendEvent, loadSession, recordRecall, deriveEntry, loadAllSessions } from '../lib/store/ledger.js';
+import { appendEvent, loadSession, recordRecall, deriveEntry, loadAllSessions, recordSessionTurn } from '../lib/store/ledger.js';
 import { computeMetrics, computeSessionMetrics, entryAccounting, entryMetrics } from '../lib/store/metrics.js';
+import { requestsAliveFrom } from '../lib/store/requests.js';
 
 const CP = 3.5;
 const tok = (chars) => Math.round(chars / CP);
@@ -68,6 +69,93 @@ test('recordRecall accumulates across turns (multi-turn cumulative)', () => {
   assert.equal(recordRecall(sid, 350), 1050); // accumulated, not overwritten
   const s = loadSession(sid);
   assert.equal(s.recallChars, 1050);
+});
+
+test('recordSessionTurn records the highest round only (never regresses)', () => {
+  const sid = 'sess_rounds';
+  assert.equal(recordSessionTurn(sid, 3), 3);
+  assert.equal(recordSessionTurn(sid, 2), 3); // a stale round must not roll it back
+  assert.equal(recordSessionTurn(sid, 7), 7);
+  assert.equal(loadSession(sid).turns, 7);
+  // loadAllSessions() has its own reader — it must not drop the round counter,
+  // otherwise global stats silently lose every round after the last compression.
+  const all = loadAllSessions().find((s) => s.sessionId === sid);
+  assert.equal(all.turns, 7);
+});
+
+test('computeMetrics cumulative: a compressed row keeps saving on every later round', () => {
+  const sid = 'sess_cumulative';
+  // round 2: 7000 -> 700 chars
+  appendEvent(sid, { seq: 10, turn: 2, mode: 'truncate', before: 7000, after: 700, keepChars: 100 });
+  recordSessionTurn(sid, 5);
+  // round 5: 700 -> 70 chars
+  appendEvent(sid, { seq: 40, turn: 5, mode: 'discard', before: 700, after: 70 });
+  recordSessionTurn(sid, 5);
+
+  const m = computeSessionMetrics(loadSession(sid));
+  const row1 = tok(7000 - 700);
+  const row2 = tok(700 - 70);
+  assert.equal(m.totalTokensSaved, row1 + row2);       // one-shot sum: unchanged meaning
+  assert.equal(m.standingTokensSaved, row1 + row2);    // per-round rate equals the compressed bytes
+  assert.equal(m.multiTurnRows, 1);                    // only row1 has survived extra rounds
+  assert.equal(m.cumulativeTokensSaved, row1 * 4 + row2 * 1); // rounds 2..5 for row1, round 5 for row2
+  assert.equal(m.avgRoundsPerRow, 2.5);                // (4 + 1) / 2
+});
+
+test('computeMetrics cumulative: rows from before round-stamping count as one round', () => {
+  const sid = 'sess_legacy_rows';
+  appendEvent(sid, { seq: 1, mode: 'truncate', before: 3500, after: 500 }); // no turn stamp
+  recordSessionTurn(sid, 40); // session is far ahead, must NOT inflate old rows
+  const m = computeSessionMetrics(loadSession(sid));
+  assert.equal(m.cumulativeTokensSaved, m.totalTokensSaved);
+  assert.equal(m.multiTurnRows, 0);
+});
+
+test('computeMetrics cumulative net charges summary + recall exactly once', () => {
+  const sid = 'sess_cumulative_net';
+  appendEvent(sid, { seq: 1, turn: 1, mode: 'truncate', before: 3500, after: 500, keepChars: 100, summary: 's'.repeat(700) });
+  recordSessionTurn(sid, 3);
+  recordRecall(sid, 700);
+  const m = computeSessionMetrics(loadSession(sid));
+  assert.equal(m.cumulativeNetTokensSaved, m.cumulativeTokensSaved - m.totalExtraSummaryTokens - m.totalRecallTokens);
+  assert.ok(m.cumulativeNetTokensSaved > m.totalNetTokensSaved, 'multi-round net must exceed the one-shot net');
+});
+
+test('requestsAliveFrom counts model round-trips at or after a row', () => {
+  assert.equal(requestsAliveFrom([1, 5, 9], 2), 2);   // 5, 9 already carried the reduction
+  assert.equal(requestsAliveFrom([1, 5, 9], 5), 2);   // the compressing request itself counts
+  assert.equal(requestsAliveFrom([1, 5, 9], 9), 1);
+  assert.equal(requestsAliveFrom([1, 5, 9], 10), 0);  // compressed after the session ended
+  assert.equal(requestsAliveFrom([], 3), 0);
+});
+
+test('cumulative uses the request log so each round-trip re-counts the saving', () => {
+  const row = { seq: 2, mode: 'truncate', before: 7000, after: 700 };
+  const live = { sessionId: 'req', updatedAt: Date.now(), turns: 1, requestSeqs: [1, 5, 9], entries: [row] };
+  const m = computeMetrics([live], { now: Date.now() });
+  const one = tok(6300);
+  assert.equal(m.totalTokensSaved, one);              // 累计节省: every tool+reply reduction, once
+  assert.equal(m.cumulativeTokensSaved, one * 2);     // requests 5 and 9 re-save it
+  assert.equal(m.requestBasedRows, 1);
+  assert.equal(m.totalRequests, 3);
+  // Without a request log the multiplier degrades to the turn-based floor (never inflated).
+  const noLog = computeMetrics([{ ...live, requestSeqs: null }], { now: Date.now() });
+  assert.equal(noLog.cumulativeTokensSaved, one);
+  assert.equal(noLog.requestBasedRows, 0);
+});
+
+test('standing splits into active (live) vs archived (finished) sessions', () => {
+  const now = Date.now();
+  const live = { sessionId: 'live', updatedAt: now, turns: 2, entries: [{ seq: 1, turn: 2, mode: 'truncate', before: 7000, after: 700 }] };
+  const dead = { sessionId: 'dead', updatedAt: now - 40 * 24 * 3600 * 1000, turns: 9, entries: [{ seq: 1, turn: 2, mode: 'truncate', before: 7000, after: 700 }] };
+  const m = computeMetrics([live, dead], { now, activeWindowMs: 6 * 3600 * 1000 });
+  const one = tok(6300);
+  assert.equal(m.standingTokensSaved, one * 2);      // stock: every session ever
+  assert.equal(m.activeStandingTokensSaved, one);    // per-round: only sessions still alive
+  assert.equal(m.archivedStandingTokensSaved, one);  // closed sessions never count as "per round"
+  assert.equal(m.activeSessions, 1);
+  // elapsed rounds stay per-session: live row 2..2 = 1, dead row 2..9 = 8
+  assert.equal(m.cumulativeTokensSaved, one * 1 + one * 8);
 });
 
 test('computeMetrics: totals include saved + extra summary + recall, net subtracts both', () => {

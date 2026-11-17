@@ -119,7 +119,7 @@
 | **TTFT 表现** | 冷启动下二次方预填充开销：5,100+ ms | 轻量前缀：2,443–2,529 ms |
 | **注意力质量** | 大海捞针：模型关注过时 GDB 寄存器、旧 mutex ID、陈旧编译栈 | 清净信号：模型关注真实用户意图与事实结论 |
 | **精度风险** | 默认 100% 细节保留 | 未摘要的针状指标可能丢失（可通过模态召回恢复） |
-| **恢复机制** | 无（全有或全无） | 外科式 `tool_result_recall`（按轮次、按模态） |
+| **恢复机制** | 无（全有或全无） | 外科式 `history_recall`（按轮次/步数、按模态） + `tool_result_recall` |
 
 ### 2.2 精炼惩罚的可恢复性
 
@@ -127,7 +127,7 @@
 
 - **默认保留的内容**：模型在其文本回答中提及过的任何事实——结论、建议行动、它已摘要的数值结果——都被保留在精炼文本中。
 - **不召回时可能丢失的内容**：仅存在于工具输出中、从未被语言化的原始指标：如精确 TCP 未确认序列号 `4188201`、查询规划器代价区间 `482.15..1980.40`、被删外键名 `fk_orders_billing_account_id`。
-- **召回成本**：调用 `tool_result_recall(round=2, mode='tool')` 以仅恢复第 2 轮工具输出，仅增加约 2,100 tokens——远小于全量按源服来的方式。
+- **召回成本**：调用 `history_recall(round=2, mode='tool')` 以仅恢复第 2 轮工具输出，仅增加约 2,100 tokens——远小于全量按源服来的方式。若进一步配合细粒度 `step` 参数调用 `history_recall(round=2, step=1, mode='tool')`，开销可进一步下降至数百 tokens。
 
 ---
 
@@ -227,12 +227,12 @@ $$m_{\text{assistant}}.\text{content} \gets \text{"[已完成处理]"}$$
 
 ### 4.2 模态掩码与动态反蒸馏协议
 
-OSWYN v2.3 在 `dsh-oswyn/lib/tools/recall.js` 中实现了统一召回工具：
+OSWYN v2.3 在保持原有 `tool_result_recall`（通过 `seq` / `call_id` / `toolName` 进行单点无损召回）的基础上，独立实现了专用于深层精炼跨轮反蒸馏的原生工具 `history_recall`（置于 `dsh-oswyn/lib/tools/history-recall.js`），支持按轮次、细粒度步骤（`step`）以及多模态定向召回，默认专注于思考链召回：
 
 ```javascript
 {
-  "name": "tool_result_recall",
-  "description": "按轮次召回已被后缓存精炼剥离的历史思考链或工具调用结果，支持定向模态掩码",
+  "name": "history_recall",
+  "description": "按轮次与步骤召回已被后缓存精炼剥离的历史思考链或工具调用结果，支持定向模态掩码（默认召回思考）",
   "parameters": {
     "type": "object",
     "properties": {
@@ -240,11 +240,19 @@ OSWYN v2.3 在 `dsh-oswyn/lib/tools/recall.js` 中实现了统一召回工具：
         "type": "integer",
         "description": "需要召回的目标会话轮次 (1-based index)"
       },
+      "step": {
+        "type": "integer",
+        "description": "目标轮次内的细粒度执行步数 (1-based index，可选，缺省则召回该轮全部步骤)"
+      },
       "mode": {
         "type": "string",
         "enum": ["think", "tool", "both"],
-        "default": "both",
-        "description": "召回模态: 'think' 仅召回思考链; 'tool' 仅召回工具调用与结果; 'both' 全部召回"
+        "default": "think",
+        "description": "召回模态: 'think' 仅召回思考链 (默认); 'tool' 仅召回工具调用与结果; 'both' 全部召回"
+      },
+      "tool_name": {
+        "type": "string",
+        "description": "可选的工具名称过滤（例如 'read', 'bash'）"
       },
       "reinstate": {
         "type": "boolean",
@@ -382,7 +390,7 @@ HC-1 中，按源服来的方式发送 2,448 枚冷 Token，TTFT 高达 **5,106 
 
 #### 6.2.3 通过 `mode:'tool'` 召回实现 100.0% 精度复权
 
-在目标轮次激活 `tool_result_recall(round=N, mode='tool')`，两个 HC 任务均恢复至 **100.0% 准确率**。关键在于，`mode:'tool'` 继续剥离 `<think>` 链，使 Token 开销显著低于完整的按源服来的方式。
+在目标轮次激活 `history_recall(round=N, mode='tool')`，两个 HC 任务均恢复至 **100.0% 准确率**。关键在于，`mode:'tool'` 继续剥离 `<think>` 链，使 Token 开销显著低于完整的按源服来的方式。
 
 由此产生的 **SDR + `mode:'tool'` 帕累托边界**：
 - **–36.7% TTFT**（vs. OSR 宏平均：2,451 ms vs. 3,872 ms）
@@ -440,7 +448,7 @@ HC-1 中，按源服来的方式发送 2,448 枚冷 Token，TTFT 高达 **5,106 
 
 1. **`lib/core/projection.js`**：纯函数式无副作用设计的核心投影算子：`stripThinkingTags`、`partitionMessagesIntoTurns`、`projectDistilledHistory`。**TTL 常量已从 300 s 更新为默认 86,400 s（24 小时）**；可通过 `OSWYN_CACHE_TTL_SECONDS` 环境变量按部署覆盖。
 2. **`lib/session/surface.js`**：动态活动时间戳管理（`recordSessionActivity`）、失效检测（`isCacheExpired`）、内存级召回掩码注册（`setRoundRecall`）。
-3. **`lib/tools/recall.js`**：统一召回工具执行器，支持 `round`、`mode` 与 `reinstate` 三参数接口。
+3. **`lib/tools/history-recall.js` & `lib/tools/recall.js`**：双层召回矩阵——`history_recall` 负责按轮次与细粒度 `step` 召回思考链与工具链（默认专注于思考召回）；`tool_result_recall` 保持原有的经典按 `seq` / `call_id` / `toolName` 单点调用召回。
 4. **`lib/client/settings-panel.js`**：第 7 分组"KV-Cache 失效与后缓存深层精炼（Post-Cache Distill）"，包含 TTL 滑块（1 小时至 24 小时）与各精炼选项开关。
 
 ---

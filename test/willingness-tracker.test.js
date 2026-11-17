@@ -493,7 +493,10 @@ test('Suite 5 [5.2]: buildAdaptiveNudgeNotice formats Tier 2 Contractual notice 
   assert.ok(notice.includes('3200'));
   assert.ok(notice.includes('truncate 或 discard'));
   assert.ok(notice.includes('Step 0 豁免'));
-  assert.ok(notice.includes('<dsh-result-summary mode="...">'));
+  // The nudge now advertises the fenced form only: XML tags used to be suggested
+  // but were never parsed, so models emitted fences that compressed nothing.
+  assert.match(notice, /\u0060\u0060\u0060(?:dsh-)?result-summary/);
+  assert.ok(!notice.includes('mode="..."'));
 });
 
 test('Suite 5 [5.3]: buildAdaptiveNudgeNotice formats Tier 3 Budget notice correctly', () => {

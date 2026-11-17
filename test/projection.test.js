@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { pruneToolCallArgs, discardToolCallArgs } from '../lib/core/projection.js';
+import { pruneToolCallArgs, discardToolCallArgs, stripResultSummaryFences } from '../lib/core/projection.js';
 
 function bigMsg(argsMode) {
   const big = 'x'.repeat(5000);
@@ -111,3 +111,11 @@ test('discardToolCallArgs preserves parameter keys while compacting payloads', (
   assert.equal(discardToolCallArgs(''), '{}');
   assert.equal(discardToolCallArgs(null), '{}');
 });
+
+test('stripResultSummaryFences removes XML fences but keeps trailing prose', () => {
+  const text = '先给结论。\n\n<result-summary mode="replace">- 要点</result-summary>\n\n后面这段必须保留。';
+  const out = stripResultSummaryFences(text);
+  assert.ok(!out.includes('result-summary'), 'fence removed');
+  assert.ok(out.includes('后面这段必须保留'), 'prose after the fence survives');
+});
+

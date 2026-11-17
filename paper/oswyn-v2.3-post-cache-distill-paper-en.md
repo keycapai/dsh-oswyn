@@ -206,7 +206,7 @@ The two approaches represent fundamentally different philosophies about what an 
 | **TTFT behavior** | Quadratic pre-fill overhead over cold tokens: 5,100+ ms at 3,000+ tokens | Lightweight prefix: 2,443–2,529 ms |
 | **Attention quality** | Lost-in-the-Middle: model attends to obsolete GDB registers, old mutex IDs, stale compiler traces | Clean signal: model attends to actual user intents and factual conclusions |
 | **Precision risk** | 100% detail preserved by default | Unsummarized needle metrics may be lost (recoverable via modal recall) |
-| **Recovery mechanism** | None (all-or-nothing) | Surgical `tool_result_recall` by round and modality |
+| **Recovery mechanism** | None (all-or-nothing) | Surgical `history_recall` (by round/step, by modality) + `tool_result_recall` |
 
 ### 3.2 Why the Distillation Penalty Is Recoverable
 
@@ -214,7 +214,7 @@ A naive objection to Spontaneous Distilled Results is: "Won't the model lose tra
 
 - **What is preserved by default**: Any fact that the model mentioned in its own text reply—conclusions, recommended actions, numerical results it summarized—is captured in the distilled text.
 - **What may be lost without recall**: Raw metrics that were only in tool outputs and never verbalized: e.g., the exact TCP unack sequence `4188201`, the query planner cost range `482.15..1980.40`, or the dropped foreign key name `fk_orders_billing_account_id`.
-- **Recall cost**: Invoking `tool_result_recall(round=2, mode='tool')` to restore just Turn 2's tool output adds ~2,100 tokens (restoring one tool log) while keeping all other 7 turns distilled—a far smaller blast radius than full Origin Replay.
+- **Recall cost**: Invoking `history_recall(round=2, mode='tool')` (or `history_recall(round=2, step=1, mode='tool')`) to restore just Turn 2's specific tool output adds only ~2,100 tokens while keeping all other 7 turns distilled—a far smaller blast radius than full Origin Replay.
 
 ---
 
@@ -228,17 +228,19 @@ Prior context compression techniques operated as blunt binary switches: either p
 
 ### 4.2 Protocol Specification
 
-The `tool_result_recall` tool in `dsh-oswyn/lib/tools/recall.js` implements this protocol:
+The dedicated `history_recall` tool in `dsh-oswyn/lib/tools/history-recall.js` implements this protocol (while `tool_result_recall` remains dedicated to classic seq/call_id item recall):
 
 ```javascript
 {
-  "name": "tool_result_recall",
-  "description": "Recall distilled thinking traces or tool call results by round with modal filtering",
+  "name": "history_recall",
+  "description": "Recall distilled thinking traces or tool call results by round and step with modal filtering (defaults to thinking only)",
   "parameters": {
     "type": "object",
     "properties": {
       "round": { "type": "integer", "description": "Target round index (1-based)" },
-      "mode": { "type": "string", "enum": ["think", "tool", "both"], "default": "both" },
+      "step": { "type": "integer", "description": "Target step index within the round (1-based, optional)" },
+      "mode": { "type": "string", "enum": ["think", "tool", "both"], "default": "think" },
+      "tool_name": { "type": "string", "description": "Optional tool name filter (e.g. 'read', 'bash')" },
       "reinstate": { "type": "boolean", "default": true, "description": "Persist un-distill mask on active surface" }
     },
     "required": ["round"]
@@ -368,7 +370,7 @@ This confirms that the accuracy penalty is precisely bounded: **SDR loses only m
 
 #### 6.2.3 Precision Restoration via `mode:'tool'` Recall (100.0%)
 
-Activating `tool_result_recall(round=N, mode='tool')` on the specific turn restores **100.0% accuracy** in both HC tasks. Critically, `mode:'tool'` continues to strip `<think>` chains, keeping the token overhead significantly below full Origin Replay.
+Activating `history_recall(round=N, mode='tool')` on the specific turn restores **100.0% accuracy** in both HC tasks. Critically, `mode:'tool'` continues to strip `<think>` chains, keeping the token overhead significantly below full Origin Replay.
 
 The resulting **SDR + `mode:'tool'` Pareto frontier** is:
 - **–36.7% TTFT** compared to Origin Replay (2,451 ms vs. 3,872 ms macro avg)
@@ -433,7 +435,7 @@ Table 4 reports live empirical measurements across 3-turn, 8-turn, and 15-turn t
 The architecture is implemented in the `feat/post-cache-distill-v2.3` branch and validated across **215 unit tests** (215/215 passing across all suites):
 1. **`lib/core/projection.js`**: Pure functional modules `stripThinkingTags`, `partitionMessagesIntoTurns`, and `projectDistilledHistory`. TTL constant changed from 300 s to **86,400 s** (24 hours); configurable via `OSWYN_CACHE_TTL_SECONDS` environment variable.
 2. **`lib/session/surface.js`**: Dynamic session activity tracking (`recordSessionActivity`), expiration detection (`isCacheExpired`), and in-memory recall registration (`setRoundRecall`).
-3. **`lib/tools/recall.js`**: Unified tool execution for `tool_result_recall` supporting `round`, `mode`, and surface `reinstate`.
+3. **`lib/tools/history-recall.js` & `lib/tools/recall.js`**: Dual recall matrix: `history_recall` for multimodal round and step recall (defaulting to thinking traces), and `tool_result_recall` for classic seq/call_id item recall.
 4. **`lib/client/settings-panel.js`**: Group 7 (`post-cache`) UI settings with bundle build support, including TTL override slider (1 hour to 24 hours).
 
 ---

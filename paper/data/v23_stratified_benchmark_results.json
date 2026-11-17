@@ -2,7 +2,7 @@
   "metadata": {
     "benchmarkVersion": "2.3.0",
     "model": "group/deepseek-v4.1-flash",
-    "timestamp": "2026-11-17T02:30:32.425Z",
+    "timestamp": "2026-11-17T08:11:40.243Z",
     "pricing": {
       "uncachedPromptUsdPerM": 0.15,
       "cachedPromptUsdPerM": 0.003,
@@ -15,26 +15,26 @@
       "name": "Sliding Window Rate Limiter (TypeScript/Python)",
       "v22": {
         "promptTokens": 2309,
-        "completionTokens": 1614,
-        "reasoningTokens": 889,
-        "ttftMs": 2868,
-        "totalTimeMs": 41466,
-        "costUsd": 0.00131475,
-        "accuracy": 0.75
+        "completionTokens": 3518,
+        "reasoningTokens": 2800,
+        "ttftMs": 5124,
+        "totalTimeMs": 56964,
+        "costUsd": 0.00245715,
+        "accuracy": 0.5
       },
       "v23": {
-        "promptTokens": 223,
-        "completionTokens": 1200,
-        "reasoningTokens": 1085,
-        "ttftMs": 2568,
-        "totalTimeMs": 9630,
-        "costUsd": 0.00075345,
-        "accuracy": 0.25
+        "promptTokens": 177,
+        "completionTokens": 1729,
+        "reasoningTokens": 533,
+        "ttftMs": 2586,
+        "totalTimeMs": 39590,
+        "costUsd": 0.00106395,
+        "accuracy": 1
       },
       "improvements": {
-        "tokenReductionPct": 90.34,
-        "ttftSpeedupPct": 10.46,
-        "costSavingsPct": 42.69
+        "tokenReductionPct": 92.33,
+        "ttftSpeedupPct": 49.53,
+        "costSavingsPct": 56.7
       }
     },
     {
@@ -43,25 +43,25 @@
       "v22": {
         "promptTokens": 1858,
         "completionTokens": 1200,
-        "reasoningTokens": 1162,
-        "ttftMs": 2831,
-        "totalTimeMs": 35193,
-        "costUsd": 0.0009987,
-        "accuracy": 0.4
+        "reasoningTokens": 501,
+        "ttftMs": 2560,
+        "totalTimeMs": 14708,
+        "costUsd": 0.00073528,
+        "accuracy": 1
       },
       "v23": {
-        "promptTokens": 167,
+        "promptTokens": 151,
         "completionTokens": 1200,
-        "reasoningTokens": 890,
-        "ttftMs": 2490,
-        "totalTimeMs": 37157,
-        "costUsd": 0.00074505,
+        "reasoningTokens": 862,
+        "ttftMs": 2675,
+        "totalTimeMs": 26029,
+        "costUsd": 0.00074265,
         "accuracy": 0.8
       },
       "improvements": {
-        "tokenReductionPct": 91.01,
-        "ttftSpeedupPct": 12.05,
-        "costSavingsPct": 25.4
+        "tokenReductionPct": 91.87,
+        "ttftSpeedupPct": -4.49,
+        "costSavingsPct": -1
       }
     }
   ],
@@ -71,40 +71,40 @@
       "name": "Microservice Deadlock & Socket Diagnosis",
       "v22": {
         "promptTokens": 2448,
-        "ttftMs": 5106,
-        "costUsd": 0.000903,
+        "ttftMs": 136481,
+        "costUsd": 0.0004273,
         "accuracy": 1,
         "hits": 4,
         "totalNeedles": 4
       },
       "v23NoRecall": {
-        "promptTokens": 242,
-        "ttftMs": 2443,
-        "costUsd": 0.0002307,
+        "promptTokens": 220,
+        "ttftMs": 64655,
+        "costUsd": 0.0002304,
         "accuracy": 0.5,
         "hits": 2,
         "totalNeedles": 4
       },
       "v23RecallTool": {
-        "promptTokens": 2377,
-        "ttftMs": 2378,
-        "costUsd": 0.00078855,
+        "promptTokens": 2405,
+        "ttftMs": 2484,
+        "costUsd": 0.00094635,
         "accuracy": 1,
         "hits": 4,
         "totalNeedles": 4
       },
       "v23RecallThink": {
-        "promptTokens": 313,
-        "ttftMs": 2312,
-        "costUsd": 0.00027375,
+        "promptTokens": 220,
+        "ttftMs": 2295,
+        "costUsd": 0.00018758,
         "accuracy": 0.5,
         "hits": 2,
         "totalNeedles": 4
       },
       "v23RecallBoth": {
-        "promptTokens": 2448,
-        "ttftMs": 2667,
-        "costUsd": 0.0008916,
+        "promptTokens": 2476,
+        "ttftMs": 2555,
+        "costUsd": 0.000747,
         "accuracy": 1,
         "hits": 4,
         "totalNeedles": 4
@@ -114,41 +114,41 @@
       "scenarioId": "HC-2",
       "name": "Database Migration & Execution Plan Audit",
       "v22": {
-        "promptTokens": 1912,
-        "ttftMs": 2637,
-        "costUsd": 0.0004236,
+        "promptTokens": 1922,
+        "ttftMs": 1770,
+        "costUsd": 0.00007686,
         "accuracy": 1,
         "hits": 2,
         "totalNeedles": 2
       },
       "v23NoRecall": {
-        "promptTokens": 202,
-        "ttftMs": 2482,
-        "costUsd": 0.0002115,
+        "promptTokens": 180,
+        "ttftMs": 4590,
+        "costUsd": 0.0002562,
         "accuracy": 0.5,
         "hits": 1,
         "totalNeedles": 2
       },
       "v23RecallTool": {
-        "promptTokens": 1869,
-        "ttftMs": 2524,
-        "costUsd": 0.00040035,
+        "promptTokens": 1897,
+        "ttftMs": 1881,
+        "costUsd": 0.00037995,
         "accuracy": 1,
         "hits": 2,
         "totalNeedles": 2
       },
       "v23RecallThink": {
-        "promptTokens": 255,
-        "ttftMs": 2299,
-        "costUsd": 0.00022845,
+        "promptTokens": 180,
+        "ttftMs": 2412,
+        "costUsd": 0.00022418,
         "accuracy": 0.5,
         "hits": 1,
         "totalNeedles": 2
       },
       "v23RecallBoth": {
-        "promptTokens": 1922,
-        "ttftMs": 2397,
-        "costUsd": 0.0004575,
+        "promptTokens": 1950,
+        "ttftMs": 1828,
+        "costUsd": 0.0003855,
         "accuracy": 1,
         "hits": 2,
         "totalNeedles": 2
@@ -157,11 +157,11 @@
   ],
   "summary": {
     "lowCorrelation": {
-      "avgTokenReductionPct": 90.68,
-      "avgTtftSpeedupPct": 11.26,
-      "avgCostSavingsPct": 34.05,
-      "v22AvgAccuracy": 0.575,
-      "v23AvgAccuracy": 0.525
+      "avgTokenReductionPct": 92.1,
+      "avgTtftSpeedupPct": 22.52,
+      "avgCostSavingsPct": 27.85,
+      "v22AvgAccuracy": 0.75,
+      "v23AvgAccuracy": 0.9
     },
     "highCorrelation": {
       "v22AvgAccuracy": 1,

@@ -60,6 +60,7 @@ test('index: registers protocol section, tools, commands', () => {
   apply(ctx, { enabled: true });
   assert.ok(ctx._sections.find(s => s.name === Config && false) || ctx._sections.length >= 1, 'protocol section registered');
   assert.ok(ctx._tools.find(t => t.name === 'tool_result_recall'), 'recall tool registered');
+  assert.ok(ctx._tools.find(t => t.name === 'history_recall'), 'history_recall tool registered');
   assert.ok(ctx._tools.find(t => t.name === 'oswyn_stats'), 'stats tool registered');
   assert.ok(ctx._tools.find(t => t.name === 'oswyn_protect_tool'), 'protect tool registered');
   assert.ok(ctx._commands.length >= 2, 'commands registered');
