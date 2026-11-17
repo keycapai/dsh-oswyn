@@ -1,0 +1,174 @@
+{
+  "metadata": {
+    "benchmarkVersion": "2.3.0",
+    "model": "group/deepseek-v4.1-flash",
+    "timestamp": "2026-11-17T02:30:32.425Z",
+    "pricing": {
+      "uncachedPromptUsdPerM": 0.15,
+      "cachedPromptUsdPerM": 0.003,
+      "completionUsdPerM": 0.6
+    }
+  },
+  "lowCorrelationResults": [
+    {
+      "scenarioId": "LC-1",
+      "name": "Sliding Window Rate Limiter (TypeScript/Python)",
+      "v22": {
+        "promptTokens": 2309,
+        "completionTokens": 1614,
+        "reasoningTokens": 889,
+        "ttftMs": 2868,
+        "totalTimeMs": 41466,
+        "costUsd": 0.00131475,
+        "accuracy": 0.75
+      },
+      "v23": {
+        "promptTokens": 223,
+        "completionTokens": 1200,
+        "reasoningTokens": 1085,
+        "ttftMs": 2568,
+        "totalTimeMs": 9630,
+        "costUsd": 0.00075345,
+        "accuracy": 0.25
+      },
+      "improvements": {
+        "tokenReductionPct": 90.34,
+        "ttftSpeedupPct": 10.46,
+        "costSavingsPct": 42.69
+      }
+    },
+    {
+      "scenarioId": "LC-2",
+      "name": "Raft vs Paxos Consensus Architectural Comparison",
+      "v22": {
+        "promptTokens": 1858,
+        "completionTokens": 1200,
+        "reasoningTokens": 1162,
+        "ttftMs": 2831,
+        "totalTimeMs": 35193,
+        "costUsd": 0.0009987,
+        "accuracy": 0.4
+      },
+      "v23": {
+        "promptTokens": 167,
+        "completionTokens": 1200,
+        "reasoningTokens": 890,
+        "ttftMs": 2490,
+        "totalTimeMs": 37157,
+        "costUsd": 0.00074505,
+        "accuracy": 0.8
+      },
+      "improvements": {
+        "tokenReductionPct": 91.01,
+        "ttftSpeedupPct": 12.05,
+        "costSavingsPct": 25.4
+      }
+    }
+  ],
+  "highCorrelationResults": [
+    {
+      "scenarioId": "HC-1",
+      "name": "Microservice Deadlock & Socket Diagnosis",
+      "v22": {
+        "promptTokens": 2448,
+        "ttftMs": 5106,
+        "costUsd": 0.000903,
+        "accuracy": 1,
+        "hits": 4,
+        "totalNeedles": 4
+      },
+      "v23NoRecall": {
+        "promptTokens": 242,
+        "ttftMs": 2443,
+        "costUsd": 0.0002307,
+        "accuracy": 0.5,
+        "hits": 2,
+        "totalNeedles": 4
+      },
+      "v23RecallTool": {
+        "promptTokens": 2377,
+        "ttftMs": 2378,
+        "costUsd": 0.00078855,
+        "accuracy": 1,
+        "hits": 4,
+        "totalNeedles": 4
+      },
+      "v23RecallThink": {
+        "promptTokens": 313,
+        "ttftMs": 2312,
+        "costUsd": 0.00027375,
+        "accuracy": 0.5,
+        "hits": 2,
+        "totalNeedles": 4
+      },
+      "v23RecallBoth": {
+        "promptTokens": 2448,
+        "ttftMs": 2667,
+        "costUsd": 0.0008916,
+        "accuracy": 1,
+        "hits": 4,
+        "totalNeedles": 4
+      }
+    },
+    {
+      "scenarioId": "HC-2",
+      "name": "Database Migration & Execution Plan Audit",
+      "v22": {
+        "promptTokens": 1912,
+        "ttftMs": 2637,
+        "costUsd": 0.0004236,
+        "accuracy": 1,
+        "hits": 2,
+        "totalNeedles": 2
+      },
+      "v23NoRecall": {
+        "promptTokens": 202,
+        "ttftMs": 2482,
+        "costUsd": 0.0002115,
+        "accuracy": 0.5,
+        "hits": 1,
+        "totalNeedles": 2
+      },
+      "v23RecallTool": {
+        "promptTokens": 1869,
+        "ttftMs": 2524,
+        "costUsd": 0.00040035,
+        "accuracy": 1,
+        "hits": 2,
+        "totalNeedles": 2
+      },
+      "v23RecallThink": {
+        "promptTokens": 255,
+        "ttftMs": 2299,
+        "costUsd": 0.00022845,
+        "accuracy": 0.5,
+        "hits": 1,
+        "totalNeedles": 2
+      },
+      "v23RecallBoth": {
+        "promptTokens": 1922,
+        "ttftMs": 2397,
+        "costUsd": 0.0004575,
+        "accuracy": 1,
+        "hits": 2,
+        "totalNeedles": 2
+      }
+    }
+  ],
+  "summary": {
+    "lowCorrelation": {
+      "avgTokenReductionPct": 90.68,
+      "avgTtftSpeedupPct": 11.26,
+      "avgCostSavingsPct": 34.05,
+      "v22AvgAccuracy": 0.575,
+      "v23AvgAccuracy": 0.525
+    },
+    "highCorrelation": {
+      "v22AvgAccuracy": 1,
+      "v23NoRecallAvgAccuracy": 0.5,
+      "v23RecallToolAvgAccuracy": 1,
+      "v23RecallThinkAvgAccuracy": 0.5,
+      "v23RecallBothAvgAccuracy": 1
+    }
+  }
+}

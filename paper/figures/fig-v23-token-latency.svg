@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 480" width="100%" height="100%" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', sans-serif">
+  <defs>
+    <linearGradient id="bgGrad2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f8fafc"/>
+    </linearGradient>
+    <linearGradient id="barV22" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#94a3b8"/>
+      <stop offset="100%" stop-color="#64748b"/>
+    </linearGradient>
+    <linearGradient id="barV23" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1000" height="480" rx="10" fill="url(#bgGrad2)" stroke="#cbd5e1" stroke-width="1.5"/>
+
+  <!-- Title -->
+  <text x="500" y="35" text-anchor="middle" font-size="17" font-weight="700" fill="#0f172a">图 2：OSWYN v2.2 与 v2.3 在多轮冷启动场景下的性能全景对比 (DeepSeek 4.1 Flash)</text>
+  <text x="500" y="56" text-anchor="middle" font-size="12" fill="#64748b">
+    低相关性任务与高相关性任务在服务端 KV-Cache 驱逐（冷启动）后的多维度评测数据
+  </text>
+
+  <!-- Legend -->
+  <g transform="translate(380, 75)" font-size="12" font-weight="600">
+    <rect x="0" y="0" width="16" height="12" rx="3" fill="url(#barV22)"/>
+    <text x="24" y="11" fill="#475569">v2.2 Standard (完整保留中间痕迹)</text>
+    <rect x="180" y="0" width="16" height="12" rx="3" fill="url(#barV23)"/>
+    <text x="204" y="11" fill="#065f46">v2.3 Post-Cache Distill (深层精炼)</text>
+  </g>
+
+  <!-- Panel 1: Prompt Tokens (Avg LC) -->
+  <g transform="translate(80, 120)">
+    <text x="110" y="0" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">
+      Prompt Tokens 规模
+    </text>
+    <!-- Axes -->
+    <line x1="20" y1="20" x2="20" y2="240" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="20" y1="240" x2="220" y2="240" stroke="#cbd5e1" stroke-width="1.5"/>
+    <!-- Bars: v2.2 (2083 tok -> h=200), v2.3 (223 tok -> h=21) -->
+    <rect x="50" y="40" width="45" height="200" rx="4" fill="url(#barV22)"/>
+    <text x="72" y="32" text-anchor="middle" font-size="11" font-weight="700" fill="#475569">2,083</text>
+    <text x="72" y="258" text-anchor="middle" font-size="11" fill="#64748b">v2.2</text>
+
+    <rect x="125" y="218" width="45" height="22" rx="4" fill="url(#barV23)"/>
+    <text x="147" y="210" text-anchor="middle" font-size="11" font-weight="700" fill="#047857">223</text>
+    <text x="147" y="258" text-anchor="middle" font-size="11" fill="#047857">v2.3</text>
+
+    <text x="110" y="285" text-anchor="middle" font-size="12" font-weight="700" fill="#059669">
+      -90.68% 规模缩减
+    </text>
+  </g>
+
+  <!-- Panel 2: Cold Cache TTFT (ms) -->
+  <g transform="translate(390, 120)">
+    <text x="110" y="0" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">
+      冷启动首字延迟 TTFT (ms)
+    </text>
+    <line x1="20" y1="20" x2="20" y2="240" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="20" y1="240" x2="220" y2="240" stroke="#cbd5e1" stroke-width="1.5"/>
+    <!-- Bars: v2.2 (2850ms -> h=190), v2.3 (2568ms -> h=171) -->
+    <rect x="50" y="50" width="45" height="190" rx="4" fill="url(#barV22)"/>
+    <text x="72" y="42" text-anchor="middle" font-size="11" font-weight="700" fill="#475569">2,850ms</text>
+    <text x="72" y="258" text-anchor="middle" font-size="11" fill="#64748b">v2.2</text>
+
+    <rect x="125" y="69" width="45" height="171" rx="4" fill="url(#barV23)"/>
+    <text x="147" y="61" text-anchor="middle" font-size="11" font-weight="700" fill="#047857">2,568ms</text>
+    <text x="147" y="258" text-anchor="middle" font-size="11" fill="#047857">v2.3</text>
+
+    <text x="110" y="285" text-anchor="middle" font-size="12" font-weight="700" fill="#059669">
+      -11.26% 延迟优化
+    </text>
+  </g>
+
+  <!-- Panel 3: Cold API Cost ($) -->
+  <g transform="translate(700, 120)">
+    <text x="110" y="0" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">
+      单轮冷启 API 成本 ($)
+    </text>
+    <line x1="20" y1="20" x2="20" y2="240" stroke="#cbd5e1" stroke-width="1.5"/>
+    <line x1="20" y1="240" x2="220" y2="240" stroke="#cbd5e1" stroke-width="1.5"/>
+    <!-- Bars: v2.2 ($0.00115 -> h=180), v2.3 ($0.00075 -> h=117) -->
+    <rect x="50" y="60" width="45" height="180" rx="4" fill="url(#barV22)"/>
+    <text x="72" y="52" text-anchor="middle" font-size="11" font-weight="700" fill="#475569">$0.00115</text>
+    <text x="72" y="258" text-anchor="middle" font-size="11" fill="#64748b">v2.2</text>
+
+    <rect x="125" y="123" width="45" height="117" rx="4" fill="url(#barV23)"/>
+    <text x="147" y="115" text-anchor="middle" font-size="11" font-weight="700" fill="#047857">$0.00075</text>
+    <text x="147" y="258" text-anchor="middle" font-size="11" fill="#047857">v2.3</text>
+
+    <text x="110" y="285" text-anchor="middle" font-size="12" font-weight="700" fill="#059669">
+      -34.05% 成本节省
+    </text>
+  </g>
+
+  <!-- Bottom Annotation Box -->
+  <g transform="translate(80, 420)">
+    <rect width="840" height="40" rx="6" fill="#f1f5f9"/>
+    <text x="420" y="25" text-anchor="middle" font-size="12" fill="#334155">
+      注：上述实测基于官方 DeepSeek 4.1 Flash 真实路由组在线调用统计，涵盖端到端网络 RTT 与完整思维流开销。
+    </text>
+  </g>
+</svg>
