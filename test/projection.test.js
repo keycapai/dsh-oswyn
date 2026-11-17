@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { pruneToolCallArgs } from '../lib/core/projection.js';
+import { pruneToolCallArgs, discardToolCallArgs } from '../lib/core/projection.js';
 
 function bigMsg(argsMode) {
   const big = 'x'.repeat(5000);
@@ -84,4 +84,30 @@ test('spec field is pruned too', () => {
 test('non tool-call message returned unchanged', () => {
   const msg = { role: 'assistant', content: [{ type: 'text', text: 'hi' }] };
   assert.equal(pruneToolCallArgs(msg), msg);
+});
+
+test('discardToolCallArgs preserves parameter keys while compacting payloads', () => {
+  const strArgs = JSON.stringify({
+    code: 'const x = ' + 'a'.repeat(2000),
+    description: 'Long description of program',
+    timeoutMs: 120000,
+    sandbox_permissions: 'danger-full-access'
+  });
+  const discardedStr = discardToolCallArgs(strArgs);
+  const parsed = JSON.parse(discardedStr);
+  assert.equal(parsed.code, '// [oswyn: discarded]');
+  assert.equal(parsed.description, '// [oswyn: discarded]');
+  assert.equal(parsed.timeoutMs, 0);
+  assert.equal(parsed.sandbox_permissions, '// [oswyn: discarded]');
+
+  // Object input
+  const objArgs = { code: 'some code', description: 'desc' };
+  const discardedObj = discardToolCallArgs(objArgs);
+  assert.equal(discardedObj.code, '// [oswyn: discarded]');
+  assert.equal(discardedObj.description, '// [oswyn: discarded]');
+
+  // Empty / invalid input fallback
+  assert.equal(discardToolCallArgs('{}'), '{}');
+  assert.equal(discardToolCallArgs(''), '{}');
+  assert.equal(discardToolCallArgs(null), '{}');
 });
