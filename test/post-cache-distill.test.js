@@ -47,6 +47,24 @@ test('Suite 1 [1.2]: isCacheExpired returns true when idle time breaches TTL thr
   assert.equal(expired, true, '301s idle must trigger 300s TTL expiration');
 });
 
+test('Suite 1 [1.2b]: isCacheExpired evaluates cacheTtlHours defaulting to 24 hours', () => {
+  const session = { id: 'sess_hours' };
+  const now = 1700000000000;
+  const ONE_HOUR = 3600 * 1000;
+
+  // 23 hours idle -> not expired under 24h default
+  recordSessionActivity(session, now - 23 * ONE_HOUR);
+  assert.equal(isCacheExpired(session, { now }), false, '23h idle must not expire under 24h default');
+
+  // 25 hours idle -> expired under 24h default
+  recordSessionActivity(session, now - 25 * ONE_HOUR);
+  assert.equal(isCacheExpired(session, { now }), true, '25h idle must expire under 24h default');
+
+  // Custom cacheTtlHours: 12
+  recordSessionActivity(session, now - 13 * ONE_HOUR);
+  assert.equal(isCacheExpired(session, { now, cacheTtlHours: 12 }), true, '13h idle must expire under 12h TTL');
+});
+
 test('Suite 1 [1.3]: forceCacheExpired override takes immediate precedence', () => {
   const session = { id: 'sess_force', forceCacheExpired: true };
   const now = 1700000000000;

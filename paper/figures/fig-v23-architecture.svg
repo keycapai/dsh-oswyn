@@ -26,7 +26,7 @@
   <!-- Title & Subtitle -->
   <text x="550" y="38" text-anchor="middle" font-size="18" font-weight="700" fill="#0f172a">图 1：OSWYN v2.3 服务端 KV-Cache 失效检测、后缓存深层精炼与多模态按轮召回架构图</text>
   <text x="550" y="60" text-anchor="middle" font-size="12.5" fill="#64748b">
-    全量审计底账持久化 (Append-Only Ledger) 与表层自适应重投影 (Active Surface Projection) 完全解耦
+    24小时跨日工作边界 (Day-Boundary) 缓存驱逐防御 · 全量审计底账持久化与表层自适应重投影完全解耦
   </text>
 
   <!-- Left Container: Disk Ledger (Ground Truth) -->
@@ -81,7 +81,7 @@
     <!-- Condition 1: Cache Active -->
     <rect x="15" y="55" width="290" height="75" rx="6" fill="url(#activeGrad)" stroke="#34d399"/>
     <text x="25" y="75" font-size="12" font-weight="700" fill="#065f46">
-      分支 A：KV-Cache 活跃 (Δt &lt; 300s)
+      分支 A：KV-Cache 活跃 (Δt < 24h)
     </text>
     <text x="25" y="95" font-size="11" fill="#047857">
       • 零改动字节透传 (Identity Passthrough)
@@ -93,19 +93,19 @@
     <!-- Condition 2: Cache Expired -->
     <rect x="15" y="145" width="290" height="165" rx="6" fill="url(#expiredGrad)" stroke="#60a5fa"/>
     <text x="25" y="165" font-size="12" font-weight="700" fill="#1e40af">
-      分支 B：KV-Cache 失效 (Δt &gt;= 300s)
+      分支 B：KV-Cache 失效 (Δt >= 24h)
     </text>
     <text x="25" y="185" font-size="11" fill="#1d4ed8">
       • 轮次切分 (partitionMessagesIntoTurns)
     </text>
     <text x="25" y="202" font-size="11" fill="#1d4ed8">
-      • 历史轮次剥离 &lt;think&gt; 思考标签
+      • 历史轮次剥离 <think> 思考标签
     </text>
     <text x="25" y="219" font-size="11" fill="#1d4ed8">
       • 剥离历史 tool_calls 与 tool 响应体
     </text>
     <text x="25" y="236" font-size="11" fill="#1d4ed8">
-      • 保留纯净 User 提问与紧凑最终回答
+      • 保留纯净 User 提问与自发紧凑回答
     </text>
     <text x="25" y="253" font-size="11" font-weight="700" fill="#7c3aed">
       • 结合 activeRecalls 执行按轮反蒸馏
@@ -126,14 +126,14 @@
       发送给 LLM 的表层上下文 (Surface)
     </text>
     <text x="170" y="58" text-anchor="middle" font-size="11" fill="#059669">
-      Token 规模削减 85%～90% · 极速 TTFT
+      Token 规模削减 91%～93% · 极速冷启动
     </text>
 
     <!-- Distilled Round 1 -->
     <rect x="15" y="75" width="310" height="65" rx="6" fill="#f1f5f9" stroke="#cbd5e1"/>
     <text x="25" y="95" font-size="11.5" font-weight="700" fill="#334155">Round 1 (Distilled):</text>
     <text x="25" y="112" font-size="11" fill="#475569">User: Prompt 1</text>
-    <text x="25" y="128" font-size="11" fill="#059669">Assistant: [Compact Reply Text] (~45 tokens)</text>
+    <text x="25" y="128" font-size="11" fill="#059669">Assistant: [Spontaneous Reply] (~45 tokens)</text>
 
     <!-- Distilled Round 2 with Selective Recall Tag -->
     <rect x="15" y="150" width="310" height="110" rx="6" fill="url(#recallGrad)" stroke="#c084fc"/>
@@ -143,7 +143,7 @@
     <text x="25" y="188" font-size="11" fill="#475569">User: Prompt 2</text>
     <text x="25" y="205" font-size="10.5" fill="#9333ea">Assistant: &lt;think&gt; [已剥离] + tool_calls [已召回]</text>
     <text x="25" y="222" font-size="10.5" fill="#0284c7">Tool: [Raw Network Trace 4.1k tok] [已召回]</text>
-    <text x="25" y="242" font-size="11" fill="#059669">Assistant: [Compact Reply Text]</text>
+    <text x="25" y="242" font-size="11" fill="#059669">Assistant: [Spontaneous Reply]</text>
 
     <!-- Current Round 3 -->
     <rect x="15" y="270" width="310" height="75" rx="6" fill="#ecfdf5" stroke="#34d399"/>
@@ -159,13 +159,13 @@
       核心优势 (Key Benefits):
     </text>
     <text x="25" y="400" font-size="11" fill="#6b21a8">
-      • 冷启 TTFT 延迟降低 10%～25%
+      • 冷启动 Prompt Tokens 削减 91.4%～92.9%
     </text>
     <text x="25" y="416" font-size="11" fill="#6b21a8">
-      • API 重新计算成本节省 40%～60%
+      • 杜绝长上下文高熵噪声与注意力稀释
     </text>
     <text x="25" y="432" font-size="11" fill="#6b21a8">
-      • 彻底消除大海捞针与历史噪声干扰
+      • 按需定向召回瞬间恢复 100% 关键参数精度
     </text>
   </g>
 

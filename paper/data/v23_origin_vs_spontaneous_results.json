@@ -1,0 +1,123 @@
+{
+  "metadata": {
+    "version": "2.3.0",
+    "model": "group/deepseek-v4.1-flash",
+    "timestamp": "2026-11-17T03:02:53.053Z",
+    "pricing": {
+      "uncachedPromptUsdPerM": 0.15,
+      "completionUsdPerM": 0.6
+    }
+  },
+  "scaleComparisons": [
+    {
+      "turns": 3,
+      "label": "Short Session (3 Turns)",
+      "originServer": {
+        "promptTokens": 2944,
+        "completionTokens": 4352,
+        "reasoningTokens": 3012,
+        "ttftMs": 2886,
+        "totalTimeMs": 71144,
+        "singleTurnCostUsd": 0.0030528,
+        "fiveTurnCostUsd": 0.015264
+      },
+      "spontaneousDistilled": {
+        "promptTokens": 253,
+        "completionTokens": 2377,
+        "reasoningTokens": 1551,
+        "ttftMs": 2467,
+        "totalTimeMs": 49294,
+        "singleTurnCostUsd": 0.00146415,
+        "fiveTurnCostUsd": 0.007321
+      },
+      "improvements": {
+        "tokenReductionPct": 91.41,
+        "ttftSpeedupPct": 14.52,
+        "costSavingsPct": 52.04,
+        "cumulativeSavingsUsd": 0.007943
+      }
+    },
+    {
+      "turns": 8,
+      "label": "Medium Session (8 Turns)",
+      "originServer": {
+        "promptTokens": 7759,
+        "completionTokens": 1219,
+        "reasoningTokens": 0,
+        "ttftMs": 2737,
+        "totalTimeMs": 44543,
+        "singleTurnCostUsd": 0.00189525,
+        "fiveTurnCostUsd": 0.009476
+      },
+      "spontaneousDistilled": {
+        "promptTokens": 578,
+        "completionTokens": 4578,
+        "reasoningTokens": 3210,
+        "ttftMs": 5577,
+        "totalTimeMs": 75257,
+        "singleTurnCostUsd": 0.0028335,
+        "fiveTurnCostUsd": 0.014167
+      },
+      "improvements": {
+        "tokenReductionPct": 92.55,
+        "ttftSpeedupPct": -103.76,
+        "costSavingsPct": -49.51,
+        "cumulativeSavingsUsd": -0.004691
+      }
+    },
+    {
+      "turns": 15,
+      "label": "Heavy SWE Session (15 Turns)",
+      "originServer": {
+        "promptTokens": 14520,
+        "completionTokens": 1007,
+        "reasoningTokens": 266,
+        "ttftMs": 3116,
+        "totalTimeMs": 37190,
+        "singleTurnCostUsd": 0.0027822,
+        "fiveTurnCostUsd": 0.013911
+      },
+      "spontaneousDistilled": {
+        "promptTokens": 1035,
+        "completionTokens": 4957,
+        "reasoningTokens": 4191,
+        "ttftMs": 2467,
+        "totalTimeMs": 75747,
+        "singleTurnCostUsd": 0.00312945,
+        "fiveTurnCostUsd": 0.015647
+      },
+      "improvements": {
+        "tokenReductionPct": 92.87,
+        "ttftSpeedupPct": 20.83,
+        "costSavingsPct": -12.48,
+        "cumulativeSavingsUsd": -0.001736
+      }
+    }
+  ],
+  "correlationAblations": {
+    "originServer": {
+      "promptTokens": 4085,
+      "ttftMs": 2393,
+      "costUsd": 0.00047069,
+      "accuracy": 1,
+      "hits": 3,
+      "total": 3
+    },
+    "spontaneousNoRecall": {
+      "promptTokens": 357,
+      "ttftMs": 2351,
+      "costUsd": 0.00066735,
+      "accuracy": 0.3333333333333333,
+      "hits": 1,
+      "total": 3
+    },
+    "spontaneousRecallTool": {
+      "promptTokens": 2143,
+      "ttftMs": 2360,
+      "costUsd": 0.00065685,
+      "accuracy": 1,
+      "hits": 3,
+      "total": 3
+    }
+  }
+}

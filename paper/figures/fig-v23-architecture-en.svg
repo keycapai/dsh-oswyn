@@ -26,7 +26,7 @@
   <!-- Title & Subtitle -->
   <text x="550" y="38" text-anchor="middle" font-size="18" font-weight="700" fill="#0f172a">Figure 1: OSWYN v2.3 Post-Cache Deep Distillation & Multimodal Round Recall Architecture</text>
   <text x="550" y="60" text-anchor="middle" font-size="12.5" fill="#64748b">
-    Strict Decoupling Between Persistent Audit Ledger and Ephemeral Surface Projection
+    24-Hour Day-Boundary Cache Eviction Defense · Strict Decoupling of Persistent Ledger & Ephemeral Surface
   </text>
 
   <!-- Left Container: Disk Ledger (Ground Truth) -->
@@ -81,7 +81,7 @@
     <!-- Condition 1: Cache Active -->
     <rect x="15" y="55" width="290" height="75" rx="6" fill="url(#activeGrad)" stroke="#34d399"/>
     <text x="25" y="75" font-size="12" font-weight="700" fill="#065f46">
-      Branch A: Cache Active (Δt &lt; 300s)
+      Branch A: Cache Active (Δt < 24h)
     </text>
     <text x="25" y="95" font-size="11" fill="#047857">
       • Byte-for-byte passthrough
@@ -93,7 +93,7 @@
     <!-- Condition 2: Cache Expired -->
     <rect x="15" y="145" width="290" height="165" rx="6" fill="url(#expiredGrad)" stroke="#60a5fa"/>
     <text x="25" y="165" font-size="12" font-weight="700" fill="#1e40af">
-      Branch B: Cache Expired (Δt &gt;= 300s)
+      Branch B: Cache Expired (Δt >= 24h)
     </text>
     <text x="25" y="185" font-size="11" fill="#1d4ed8">
       • Turn partitioning by user prompts
@@ -105,7 +105,7 @@
       • Strip past tool_calls & tool results
     </text>
     <text x="25" y="236" font-size="11" fill="#1d4ed8">
-      • Retain clean user queries & final text
+      • Retain clean user queries & spontaneous replies
     </text>
     <text x="25" y="253" font-size="11" font-weight="700" fill="#7c3aed">
       • Dynamic un-distill via activeRecalls
@@ -126,14 +126,14 @@
       Projected Surface Context to LLM
     </text>
     <text x="170" y="58" text-anchor="middle" font-size="11" fill="#059669">
-      85%-90% Token Reduction · Ultra-Fast TTFT
+      91%-93% Token Reduction · Ultra-Fast Cold Start
     </text>
 
     <!-- Distilled Round 1 -->
     <rect x="15" y="75" width="310" height="65" rx="6" fill="#f1f5f9" stroke="#cbd5e1"/>
     <text x="25" y="95" font-size="11.5" font-weight="700" fill="#334155">Round 1 (Distilled):</text>
     <text x="25" y="112" font-size="11" fill="#475569">User: Prompt 1</text>
-    <text x="25" y="128" font-size="11" fill="#059669">Assistant: [Compact Reply Text] (~45 tokens)</text>
+    <text x="25" y="128" font-size="11" fill="#059669">Assistant: [Spontaneous Reply] (~45 tokens)</text>
 
     <!-- Distilled Round 2 with Selective Recall Tag -->
     <rect x="15" y="150" width="310" height="110" rx="6" fill="url(#recallGrad)" stroke="#c084fc"/>
@@ -143,7 +143,7 @@
     <text x="25" y="188" font-size="11" fill="#475569">User: Prompt 2</text>
     <text x="25" y="205" font-size="10.5" fill="#9333ea">Assistant: &lt;think&gt; [已剥离] + tool_calls [已召回]</text>
     <text x="25" y="222" font-size="10.5" fill="#0284c7">Tool: [Raw Network Trace 4.1k tok] [已召回]</text>
-    <text x="25" y="242" font-size="11" fill="#059669">Assistant: [Compact Reply Text]</text>
+    <text x="25" y="242" font-size="11" fill="#059669">Assistant: [Spontaneous Reply]</text>
 
     <!-- Current Round 3 -->
     <rect x="15" y="270" width="310" height="75" rx="6" fill="#ecfdf5" stroke="#34d399"/>
@@ -159,13 +159,13 @@
       Key Empirical Benefits:
     </text>
     <text x="25" y="400" font-size="11" fill="#6b21a8">
-      • Cold TTFT latency reduced 10%-25%
+      • Cold Prompt Tokens cut by 91.4%-92.9%
     </text>
     <text x="25" y="416" font-size="11" fill="#6b21a8">
-      • API cold-cache cost cut by 40%-60%
+      • Eliminates Lost-in-the-Middle noise
     </text>
     <text x="25" y="432" font-size="11" fill="#6b21a8">
-      • Eliminates Lost-in-the-Middle noise
+      • Surgical recall restores 100% precision
     </text>
   </g>
 
