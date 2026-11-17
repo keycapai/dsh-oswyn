@@ -1,0 +1,417 @@
+{
+  "metadata": {
+    "generatedAt": "2026-11-13T09:24:55.068Z",
+    "isDryRun": false,
+    "apiUrl": "http://127.0.0.1:3425/v1/chat/completions",
+    "model": "group/deepseek-v4.1-flash",
+    "scenariosEvaluated": [
+      "swe_bug_investigation"
+    ],
+    "armsEvaluated": [
+      "Optimized Dynamic Tiered"
+    ]
+  },
+  "metricsSummary": [
+    {
+      "scenarioId": "swe_bug_investigation",
+      "armId": 5,
+      "armName": "Optimized Dynamic Tiered",
+      "totalTurns": 15,
+      "noisyTurnsCount": 7,
+      "noisyEmittedCount": 7,
+      "exemptTurnsCount": 2,
+      "correctAbstentions": 2,
+      "willingnessRate": 100,
+      "netCompressionRatio": 71.7,
+      "abstentionAccuracy": 100,
+      "totalRawChars": 33952,
+      "totalCompressedChars": 9600,
+      "finalSurfaceChars": 9600,
+      "rawEstimatedPromptTokens": 97434,
+      "actualPromptTokens": 116648,
+      "estimatedTokenSavings": 0,
+      "tokenSavingsPct": 0,
+      "progression": [
+        {
+          "turn": 1,
+          "isNoisy": true,
+          "isExemptTarget": false,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "cumulativeSurfaceChars": 956,
+          "cumulativeRawChars": 4381,
+          "promptTokens": 2664,
+          "rawPromptTokens": 1500
+        },
+        {
+          "turn": 2,
+          "isNoisy": false,
+          "isExemptTarget": true,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "cumulativeSurfaceChars": 1455,
+          "cumulativeRawChars": 4880,
+          "promptTokens": 2969,
+          "rawPromptTokens": 2752
+        },
+        {
+          "turn": 3,
+          "isNoisy": true,
+          "isExemptTarget": false,
+          "hasSummaryFence": true,
+          "summaryMode": "replace",
+          "cumulativeSurfaceChars": 1787,
+          "cumulativeRawChars": 10017,
+          "promptTokens": 4673,
+          "rawPromptTokens": 2894
+        },
+        {
+          "turn": 4,
+          "isNoisy": false,
+          "isExemptTarget": false,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "cumulativeSurfaceChars": 2227,
+          "cumulativeRawChars": 10457,
+          "promptTokens": 4863,
+          "rawPromptTokens": 4362
+        },
+        {
+          "turn": 5,
+          "isNoisy": true,
+          "isExemptTarget": false,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "cumulativeSurfaceChars": 4062,
+          "cumulativeRawChars": 16084,
+          "promptTokens": 6345,
+          "rawPromptTokens": 4488
+        },
+        {
+          "turn": 6,
+          "isNoisy": false,
+          "isExemptTarget": false,
+          "hasSummaryFence": true,
+          "summaryMode": "replace",
+          "cumulativeSurfaceChars": 4442,
+          "cumulativeRawChars": 16614,
+          "promptTokens": 6569,
+          "rawPromptTokens": 6095
+        },
+        {
+          "turn": 7,
+          "isNoisy": false,
+          "isExemptTarget": true,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "cumulativeSurfaceChars": 4688,
+          "cumulativeRawChars": 16860,
+          "promptTokens": 6718,
+          "rawPromptTokens": 6247
+        },
+        {
+          "turn": 8,
+          "isNoisy": true,
+          "isExemptTarget": false,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "cumulativeSurfaceChars": 6161,
+          "cumulativeRawChars": 20855,
+          "promptTokens": 7965,
+          "rawPromptTokens": 6317
+        },
+        {
+          "turn": 9,
+          "isNoisy": true,
+          "isExemptTarget": false,
+          "hasSummaryFence": true,
+          "summaryMode": "replace",
+          "cumulativeSurfaceChars": 6790,
+          "cumulativeRawChars": 24615,
+          "promptTokens": 9204,
+          "rawPromptTokens": 7459
+        },
+        {
+          "turn": 10,
+          "isNoisy": false,
+          "isExemptTarget": false,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "cumulativeSurfaceChars": 7210,
+          "cumulativeRawChars": 25035,
+          "promptTokens": 9377,
+          "rawPromptTokens": 8533
+        },
+        {
+          "turn": 11,
+          "isNoisy": false,
+          "isExemptTarget": false,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "cumulativeSurfaceChars": 7463,
+          "cumulativeRawChars": 25288,
+          "promptTokens": 9538,
+          "rawPromptTokens": 8653
+        },
+        {
+          "turn": 12,
+          "isNoisy": true,
+          "isExemptTarget": false,
+          "hasSummaryFence": true,
+          "summaryMode": "discard",
+          "cumulativeSurfaceChars": 7463,
+          "cumulativeRawChars": 28974,
+          "promptTokens": 10858,
+          "rawPromptTokens": 8725
+        },
+        {
+          "turn": 13,
+          "isNoisy": false,
+          "isExemptTarget": false,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "cumulativeSurfaceChars": 7567,
+          "cumulativeRawChars": 29078,
+          "promptTokens": 10888,
+          "rawPromptTokens": 9778
+        },
+        {
+          "turn": 14,
+          "isNoisy": false,
+          "isExemptTarget": false,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "cumulativeSurfaceChars": 7619,
+          "cumulativeRawChars": 29130,
+          "promptTokens": 10970,
+          "rawPromptTokens": 9808
+        },
+        {
+          "turn": 15,
+          "isNoisy": true,
+          "isExemptTarget": false,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "cumulativeSurfaceChars": 9600,
+          "cumulativeRawChars": 33952,
+          "promptTokens": 13047,
+          "rawPromptTokens": 9823
+        }
+      ]
+    }
+  ],
+  "trajectories": [
+    {
+      "scenarioId": "swe_bug_investigation",
+      "scenarioName": "Distributed Deadlock & Gateway Connection Timeout Investigation",
+      "armId": 5,
+      "armName": "Optimized Dynamic Tiered",
+      "nudgeStrategy": "dynamic",
+      "trajectory": [
+        {
+          "turn": 1,
+          "step": 1,
+          "promptTokens": 2664,
+          "completionTokens": 440,
+          "hasToolCall": false,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "compressedChars": 956,
+          "latencyMs": 5977,
+          "isExemptTarget": false,
+          "isAbstentionCorrect": true
+        },
+        {
+          "turn": 2,
+          "step": 2,
+          "promptTokens": 2969,
+          "completionTokens": 358,
+          "hasToolCall": true,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "compressedChars": 499,
+          "latencyMs": 4750,
+          "isExemptTarget": true,
+          "isAbstentionCorrect": true
+        },
+        {
+          "turn": 3,
+          "step": 3,
+          "promptTokens": 4673,
+          "completionTokens": 377,
+          "hasToolCall": true,
+          "hasSummaryFence": true,
+          "summaryMode": "replace",
+          "compressedChars": 332,
+          "latencyMs": 4172,
+          "isExemptTarget": false,
+          "isAbstentionCorrect": true
+        },
+        {
+          "turn": 4,
+          "step": 4,
+          "promptTokens": 4863,
+          "completionTokens": 645,
+          "hasToolCall": true,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "compressedChars": 440,
+          "latencyMs": 5796,
+          "isExemptTarget": false,
+          "isAbstentionCorrect": false
+        },
+        {
+          "turn": 5,
+          "step": 5,
+          "promptTokens": 6345,
+          "completionTokens": 1459,
+          "hasToolCall": false,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "compressedChars": 1835,
+          "latencyMs": 10959,
+          "isExemptTarget": false,
+          "isAbstentionCorrect": true
+        },
+        {
+          "turn": 6,
+          "step": 6,
+          "promptTokens": 6569,
+          "completionTokens": 816,
+          "hasToolCall": true,
+          "hasSummaryFence": true,
+          "summaryMode": "replace",
+          "compressedChars": 380,
+          "latencyMs": 7038,
+          "isExemptTarget": false,
+          "isAbstentionCorrect": true
+        },
+        {
+          "turn": 7,
+          "step": 7,
+          "promptTokens": 6718,
+          "completionTokens": 2048,
+          "hasToolCall": false,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "compressedChars": 246,
+          "latencyMs": 16520,
+          "isExemptTarget": true,
+          "isAbstentionCorrect": true
+        },
+        {
+          "turn": 8,
+          "step": 8,
+          "promptTokens": 7965,
+          "completionTokens": 1718,
+          "hasToolCall": false,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "compressedChars": 1473,
+          "latencyMs": 13502,
+          "isExemptTarget": false,
+          "isAbstentionCorrect": true
+        },
+        {
+          "turn": 9,
+          "step": 9,
+          "promptTokens": 9204,
+          "completionTokens": 1458,
+          "hasToolCall": false,
+          "hasSummaryFence": true,
+          "summaryMode": "replace",
+          "compressedChars": 629,
+          "latencyMs": 11540,
+          "isExemptTarget": false,
+          "isAbstentionCorrect": true
+        },
+        {
+          "turn": 10,
+          "step": 10,
+          "promptTokens": 9377,
+          "completionTokens": 2048,
+          "hasToolCall": false,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "compressedChars": 420,
+          "latencyMs": 16619,
+          "isExemptTarget": false,
+          "isAbstentionCorrect": false
+        },
+        {
+          "turn": 11,
+          "step": 11,
+          "promptTokens": 9538,
+          "completionTokens": 96,
+          "hasToolCall": true,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "compressedChars": 253,
+          "latencyMs": 3830,
+          "isExemptTarget": false,
+          "isAbstentionCorrect": false
+        },
+        {
+          "turn": 12,
+          "step": 12,
+          "promptTokens": 10858,
+          "completionTokens": 325,
+          "hasToolCall": true,
+          "hasSummaryFence": true,
+          "summaryMode": "discard",
+          "compressedChars": 0,
+          "latencyMs": 3775,
+          "isExemptTarget": false,
+          "isAbstentionCorrect": true
+        },
+        {
+          "turn": 13,
+          "step": 13,
+          "promptTokens": 10888,
+          "completionTokens": 145,
+          "hasToolCall": true,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "compressedChars": 104,
+          "latencyMs": 2752,
+          "isExemptTarget": false,
+          "isAbstentionCorrect": false
+        },
+        {
+          "turn": 14,
+          "step": 14,
+          "promptTokens": 10970,
+          "completionTokens": 381,
+          "hasToolCall": true,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "compressedChars": 52,
+          "latencyMs": 4277,
+          "isExemptTarget": false,
+          "isAbstentionCorrect": false
+        },
+        {
+          "turn": 15,
+          "step": 15,
+          "promptTokens": 13047,
+          "completionTokens": 1078,
+          "hasToolCall": false,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "compressedChars": 1981,
+          "latencyMs": 10211,
+          "isExemptTarget": false,
+          "isAbstentionCorrect": true
+        }
+      ],
+      "state": {
+        "consecutiveUncompressed": 0,
+        "accumulatedPayload": 0,
+        "lastSummaryTurn": 15,
+        "lastNudgeTurn": 15,
+        "surfaceResidentChars": 9600,
+        "rawCumulativeChars": 33952
+      }
+    }
+  ]
+}

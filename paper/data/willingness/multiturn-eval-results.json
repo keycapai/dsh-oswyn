@@ -1,0 +1,545 @@
+{
+  "metadata": {
+    "generatedAt": "2026-11-16T01:03:43.566Z",
+    "isDryRun": true,
+    "apiUrl": "[OFFLINE SIMULATION]",
+    "model": "[OFFLINE SIMULATION]",
+    "scenariosEvaluated": [
+      "swe_bug_investigation"
+    ],
+    "armsEvaluated": [
+      "Baseline Unnudged",
+      "Static Periodic Nudge",
+      "Static Suffix Nudge",
+      "Dynamic Adaptive Nudge",
+      "Dynamic + Exemption Guard",
+      "Optimized Dynamic Tiered"
+    ]
+  },
+  "metricsSummary": [
+    {
+      "scenarioId": "swe_bug_investigation",
+      "armId": 0,
+      "armName": "Baseline Unnudged",
+      "totalTurns": 2,
+      "noisyTurnsCount": 1,
+      "noisyEmittedCount": 1,
+      "exemptTurnsCount": 1,
+      "correctAbstentions": 1,
+      "willingnessRate": 100,
+      "netCompressionRatio": 68.8,
+      "abstentionAccuracy": 100,
+      "totalRawChars": 4880,
+      "totalCompressedChars": 1524,
+      "finalSurfaceChars": 1524,
+      "rawEstimatedPromptTokens": 4252,
+      "actualPromptTokens": 3293,
+      "estimatedTokenSavings": 959,
+      "tokenSavingsPct": 22.6,
+      "progression": [
+        {
+          "turn": 1,
+          "isNoisy": true,
+          "isExemptTarget": false,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "cumulativeSurfaceChars": 1025,
+          "cumulativeRawChars": 4381,
+          "promptTokens": 1500,
+          "rawPromptTokens": 1500
+        },
+        {
+          "turn": 2,
+          "isNoisy": false,
+          "isExemptTarget": true,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "cumulativeSurfaceChars": 1524,
+          "cumulativeRawChars": 4880,
+          "promptTokens": 1793,
+          "rawPromptTokens": 2752
+        }
+      ]
+    },
+    {
+      "scenarioId": "swe_bug_investigation",
+      "armId": 1,
+      "armName": "Static Periodic Nudge",
+      "totalTurns": 2,
+      "noisyTurnsCount": 1,
+      "noisyEmittedCount": 1,
+      "exemptTurnsCount": 1,
+      "correctAbstentions": 1,
+      "willingnessRate": 100,
+      "netCompressionRatio": 68.8,
+      "abstentionAccuracy": 100,
+      "totalRawChars": 4880,
+      "totalCompressedChars": 1524,
+      "finalSurfaceChars": 1524,
+      "rawEstimatedPromptTokens": 4252,
+      "actualPromptTokens": 3293,
+      "estimatedTokenSavings": 959,
+      "tokenSavingsPct": 22.6,
+      "progression": [
+        {
+          "turn": 1,
+          "isNoisy": true,
+          "isExemptTarget": false,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "cumulativeSurfaceChars": 1025,
+          "cumulativeRawChars": 4381,
+          "promptTokens": 1500,
+          "rawPromptTokens": 1500
+        },
+        {
+          "turn": 2,
+          "isNoisy": false,
+          "isExemptTarget": true,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "cumulativeSurfaceChars": 1524,
+          "cumulativeRawChars": 4880,
+          "promptTokens": 1793,
+          "rawPromptTokens": 2752
+        }
+      ]
+    },
+    {
+      "scenarioId": "swe_bug_investigation",
+      "armId": 2,
+      "armName": "Static Suffix Nudge",
+      "totalTurns": 2,
+      "noisyTurnsCount": 1,
+      "noisyEmittedCount": 1,
+      "exemptTurnsCount": 1,
+      "correctAbstentions": 0,
+      "willingnessRate": 100,
+      "netCompressionRatio": 68.8,
+      "abstentionAccuracy": 0,
+      "totalRawChars": 4880,
+      "totalCompressedChars": 1524,
+      "finalSurfaceChars": 1524,
+      "rawEstimatedPromptTokens": 4252,
+      "actualPromptTokens": 3293,
+      "estimatedTokenSavings": 959,
+      "tokenSavingsPct": 22.6,
+      "progression": [
+        {
+          "turn": 1,
+          "isNoisy": true,
+          "isExemptTarget": false,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "cumulativeSurfaceChars": 1025,
+          "cumulativeRawChars": 4381,
+          "promptTokens": 1500,
+          "rawPromptTokens": 1500
+        },
+        {
+          "turn": 2,
+          "isNoisy": false,
+          "isExemptTarget": true,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "cumulativeSurfaceChars": 1524,
+          "cumulativeRawChars": 4880,
+          "promptTokens": 1793,
+          "rawPromptTokens": 2752
+        }
+      ]
+    },
+    {
+      "scenarioId": "swe_bug_investigation",
+      "armId": 3,
+      "armName": "Dynamic Adaptive Nudge",
+      "totalTurns": 2,
+      "noisyTurnsCount": 1,
+      "noisyEmittedCount": 1,
+      "exemptTurnsCount": 1,
+      "correctAbstentions": 1,
+      "willingnessRate": 100,
+      "netCompressionRatio": 68.8,
+      "abstentionAccuracy": 100,
+      "totalRawChars": 4880,
+      "totalCompressedChars": 1524,
+      "finalSurfaceChars": 1524,
+      "rawEstimatedPromptTokens": 4252,
+      "actualPromptTokens": 3293,
+      "estimatedTokenSavings": 959,
+      "tokenSavingsPct": 22.6,
+      "progression": [
+        {
+          "turn": 1,
+          "isNoisy": true,
+          "isExemptTarget": false,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "cumulativeSurfaceChars": 1025,
+          "cumulativeRawChars": 4381,
+          "promptTokens": 1500,
+          "rawPromptTokens": 1500
+        },
+        {
+          "turn": 2,
+          "isNoisy": false,
+          "isExemptTarget": true,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "cumulativeSurfaceChars": 1524,
+          "cumulativeRawChars": 4880,
+          "promptTokens": 1793,
+          "rawPromptTokens": 2752
+        }
+      ]
+    },
+    {
+      "scenarioId": "swe_bug_investigation",
+      "armId": 4,
+      "armName": "Dynamic + Exemption Guard",
+      "totalTurns": 2,
+      "noisyTurnsCount": 1,
+      "noisyEmittedCount": 1,
+      "exemptTurnsCount": 1,
+      "correctAbstentions": 1,
+      "willingnessRate": 100,
+      "netCompressionRatio": 68.8,
+      "abstentionAccuracy": 100,
+      "totalRawChars": 4880,
+      "totalCompressedChars": 1524,
+      "finalSurfaceChars": 1524,
+      "rawEstimatedPromptTokens": 4252,
+      "actualPromptTokens": 3293,
+      "estimatedTokenSavings": 959,
+      "tokenSavingsPct": 22.6,
+      "progression": [
+        {
+          "turn": 1,
+          "isNoisy": true,
+          "isExemptTarget": false,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "cumulativeSurfaceChars": 1025,
+          "cumulativeRawChars": 4381,
+          "promptTokens": 1500,
+          "rawPromptTokens": 1500
+        },
+        {
+          "turn": 2,
+          "isNoisy": false,
+          "isExemptTarget": true,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "cumulativeSurfaceChars": 1524,
+          "cumulativeRawChars": 4880,
+          "promptTokens": 1793,
+          "rawPromptTokens": 2752
+        }
+      ]
+    },
+    {
+      "scenarioId": "swe_bug_investigation",
+      "armId": 5,
+      "armName": "Optimized Dynamic Tiered",
+      "totalTurns": 2,
+      "noisyTurnsCount": 1,
+      "noisyEmittedCount": 1,
+      "exemptTurnsCount": 1,
+      "correctAbstentions": 1,
+      "willingnessRate": 100,
+      "netCompressionRatio": 68.8,
+      "abstentionAccuracy": 100,
+      "totalRawChars": 4880,
+      "totalCompressedChars": 1524,
+      "finalSurfaceChars": 1524,
+      "rawEstimatedPromptTokens": 4252,
+      "actualPromptTokens": 3293,
+      "estimatedTokenSavings": 959,
+      "tokenSavingsPct": 22.6,
+      "progression": [
+        {
+          "turn": 1,
+          "isNoisy": true,
+          "isExemptTarget": false,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "cumulativeSurfaceChars": 1025,
+          "cumulativeRawChars": 4381,
+          "promptTokens": 1500,
+          "rawPromptTokens": 1500
+        },
+        {
+          "turn": 2,
+          "isNoisy": false,
+          "isExemptTarget": true,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "cumulativeSurfaceChars": 1524,
+          "cumulativeRawChars": 4880,
+          "promptTokens": 1793,
+          "rawPromptTokens": 2752
+        }
+      ]
+    }
+  ],
+  "trajectories": [
+    {
+      "scenarioId": "swe_bug_investigation",
+      "scenarioName": "Distributed Deadlock & Gateway Connection Timeout Investigation",
+      "armId": 0,
+      "armName": "Baseline Unnudged",
+      "nudgeStrategy": "none",
+      "trajectory": [
+        {
+          "turn": 1,
+          "step": 1,
+          "promptTokens": 1500,
+          "completionTokens": 160,
+          "hasToolCall": true,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "compressedChars": 1025,
+          "latencyMs": 460,
+          "isExemptTarget": false,
+          "isAbstentionCorrect": true
+        },
+        {
+          "turn": 2,
+          "step": 2,
+          "promptTokens": 1793,
+          "completionTokens": 85,
+          "hasToolCall": true,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "compressedChars": 499,
+          "latencyMs": 340,
+          "isExemptTarget": true,
+          "isAbstentionCorrect": true
+        }
+      ],
+      "state": {
+        "consecutiveUncompressed": 0,
+        "accumulatedPayload": 0,
+        "lastSummaryTurn": 1,
+        "lastNudgeTurn": -999,
+        "surfaceResidentChars": 1524,
+        "rawCumulativeChars": 4880
+      }
+    },
+    {
+      "scenarioId": "swe_bug_investigation",
+      "scenarioName": "Distributed Deadlock & Gateway Connection Timeout Investigation",
+      "armId": 1,
+      "armName": "Static Periodic Nudge",
+      "nudgeStrategy": "static-periodic",
+      "trajectory": [
+        {
+          "turn": 1,
+          "step": 1,
+          "promptTokens": 1500,
+          "completionTokens": 160,
+          "hasToolCall": true,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "compressedChars": 1025,
+          "latencyMs": 460,
+          "isExemptTarget": false,
+          "isAbstentionCorrect": true
+        },
+        {
+          "turn": 2,
+          "step": 2,
+          "promptTokens": 1793,
+          "completionTokens": 85,
+          "hasToolCall": true,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "compressedChars": 499,
+          "latencyMs": 340,
+          "isExemptTarget": true,
+          "isAbstentionCorrect": true
+        }
+      ],
+      "state": {
+        "consecutiveUncompressed": 0,
+        "accumulatedPayload": 0,
+        "lastSummaryTurn": 1,
+        "lastNudgeTurn": -999,
+        "surfaceResidentChars": 1524,
+        "rawCumulativeChars": 4880
+      }
+    },
+    {
+      "scenarioId": "swe_bug_investigation",
+      "scenarioName": "Distributed Deadlock & Gateway Connection Timeout Investigation",
+      "armId": 2,
+      "armName": "Static Suffix Nudge",
+      "nudgeStrategy": "static-suffix",
+      "trajectory": [
+        {
+          "turn": 1,
+          "step": 1,
+          "promptTokens": 1500,
+          "completionTokens": 160,
+          "hasToolCall": true,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "compressedChars": 1025,
+          "latencyMs": 460,
+          "isExemptTarget": false,
+          "isAbstentionCorrect": true
+        },
+        {
+          "turn": 2,
+          "step": 2,
+          "promptTokens": 1793,
+          "completionTokens": 140,
+          "hasToolCall": true,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "compressedChars": 499,
+          "latencyMs": 380,
+          "isExemptTarget": true,
+          "isAbstentionCorrect": false
+        }
+      ],
+      "state": {
+        "consecutiveUncompressed": 0,
+        "accumulatedPayload": 0,
+        "lastSummaryTurn": 2,
+        "lastNudgeTurn": -999,
+        "surfaceResidentChars": 1524,
+        "rawCumulativeChars": 4880
+      }
+    },
+    {
+      "scenarioId": "swe_bug_investigation",
+      "scenarioName": "Distributed Deadlock & Gateway Connection Timeout Investigation",
+      "armId": 3,
+      "armName": "Dynamic Adaptive Nudge",
+      "nudgeStrategy": "dynamic",
+      "trajectory": [
+        {
+          "turn": 1,
+          "step": 1,
+          "promptTokens": 1500,
+          "completionTokens": 160,
+          "hasToolCall": true,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "compressedChars": 1025,
+          "latencyMs": 460,
+          "isExemptTarget": false,
+          "isAbstentionCorrect": true
+        },
+        {
+          "turn": 2,
+          "step": 2,
+          "promptTokens": 1793,
+          "completionTokens": 85,
+          "hasToolCall": true,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "compressedChars": 499,
+          "latencyMs": 340,
+          "isExemptTarget": true,
+          "isAbstentionCorrect": true
+        }
+      ],
+      "state": {
+        "consecutiveUncompressed": 0,
+        "accumulatedPayload": 0,
+        "lastSummaryTurn": 1,
+        "lastNudgeTurn": -999,
+        "surfaceResidentChars": 1524,
+        "rawCumulativeChars": 4880
+      }
+    },
+    {
+      "scenarioId": "swe_bug_investigation",
+      "scenarioName": "Distributed Deadlock & Gateway Connection Timeout Investigation",
+      "armId": 4,
+      "armName": "Dynamic + Exemption Guard",
+      "nudgeStrategy": "dynamic",
+      "trajectory": [
+        {
+          "turn": 1,
+          "step": 1,
+          "promptTokens": 1500,
+          "completionTokens": 160,
+          "hasToolCall": true,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "compressedChars": 1025,
+          "latencyMs": 460,
+          "isExemptTarget": false,
+          "isAbstentionCorrect": true
+        },
+        {
+          "turn": 2,
+          "step": 2,
+          "promptTokens": 1793,
+          "completionTokens": 85,
+          "hasToolCall": true,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "compressedChars": 499,
+          "latencyMs": 340,
+          "isExemptTarget": true,
+          "isAbstentionCorrect": true
+        }
+      ],
+      "state": {
+        "consecutiveUncompressed": 0,
+        "accumulatedPayload": 0,
+        "lastSummaryTurn": 1,
+        "lastNudgeTurn": -999,
+        "surfaceResidentChars": 1524,
+        "rawCumulativeChars": 4880
+      }
+    },
+    {
+      "scenarioId": "swe_bug_investigation",
+      "scenarioName": "Distributed Deadlock & Gateway Connection Timeout Investigation",
+      "armId": 5,
+      "armName": "Optimized Dynamic Tiered",
+      "nudgeStrategy": "dynamic",
+      "trajectory": [
+        {
+          "turn": 1,
+          "step": 1,
+          "promptTokens": 1500,
+          "completionTokens": 160,
+          "hasToolCall": true,
+          "hasSummaryFence": true,
+          "summaryMode": "truncate",
+          "compressedChars": 1025,
+          "latencyMs": 460,
+          "isExemptTarget": false,
+          "isAbstentionCorrect": true
+        },
+        {
+          "turn": 2,
+          "step": 2,
+          "promptTokens": 1793,
+          "completionTokens": 85,
+          "hasToolCall": true,
+          "hasSummaryFence": false,
+          "summaryMode": null,
+          "compressedChars": 499,
+          "latencyMs": 340,
+          "isExemptTarget": true,
+          "isAbstentionCorrect": true
+        }
+      ],
+      "state": {
+        "consecutiveUncompressed": 0,
+        "accumulatedPayload": 0,
+        "lastSummaryTurn": 1,
+        "lastNudgeTurn": -999,
+        "surfaceResidentChars": 1524,
+        "rawCumulativeChars": 4880
+      }
+    }
+  ]
+}
