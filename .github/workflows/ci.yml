@@ -25,14 +25,30 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: npm install --no-audit --no-fund
+
+      # A leaked API key once reached this public repository and stayed there for
+      # several commits. Catch the next one here rather than in a screenshot.
+      # Patterns are narrow on purpose: real provider prefixes plus a long random
+      # tail, so documentation placeholders and the REDACTED_KEY marker stay quiet.
+      - name: Scan for committed credentials
+        run: |
+          PATTERNS='sk-[A-Za-z0-9]{20,}|sk-ant-[A-Za-z0-9_-]{20,}|AIza[0-9A-Za-z_-]{30,}|ghp_[A-Za-z0-9]{30,}|gh[opsu]_[A-Za-z0-9]{30,}|npm_[A-Za-z0-9]{30,}|xox[baprs]-[A-Za-z0-9-]{10,}'
+          HITS=$(git grep -nEI "$PATTERNS" -- ':!*.lock' ':!package-lock.json' ':!*.md' || true)
+          if [ -n "$HITS" ]; then
+            echo "::error::Possible committed credential(s) found (values masked):"
+            echo "$HITS" | sed -E 's/([A-Za-z0-9_-]{6})[A-Za-z0-9_-]+/\1.../g'
+            exit 1
+          fi
+          echo "No credential-shaped strings found."
+
       # The client bundle is generated, so a stale lib/client.js would let tests
-      # pass against code that is not what ships. Build first, then test.
+      # pass against code that is not what ships. Build first, then compare.
       - name: Build client bundle
         run: node lib/client/build.js
       - name: Verify the committed bundle matches the sources
         run: |
           if ! git diff --quiet -- lib/client.js; then
-            echo "::error::lib/client.js is out of date. Run `npm run build:client` and commit the result."
+            echo "::error::lib/client.js is out of date; run npm run build:client and commit the result."
             git diff --stat -- lib/client.js
             exit 1
           fi

@@ -180,7 +180,10 @@ function resolveApiKey(apiUrl) {
   } catch {
     // ignore
   }
-  return 'REDACTED_KEY';
+  throw new Error(
+    'No DeepSeek API key available. Set DEEPSEEK_API_KEY in the environment, ' +
+      'or add a DEEPSEEK_API_KEY entry to ~/.dsh/.credentials.yaml.',
+  );
 }
 
 async function callDeepSeekAPI({ apiUrl, apiKey, model, messages, tools, retries = 3 }) {

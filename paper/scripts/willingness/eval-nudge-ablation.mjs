@@ -38,7 +38,10 @@ function loadApiKey() {
   } catch (err) {
     console.warn(`[WARN] Could not read credentials: ${err.message}`);
   }
-  return 'REDACTED_KEY';
+  throw new Error(
+    'No DeepSeek API key available. Set DEEPSEEK_API_KEY in the environment, ' +
+      'or add a DEEPSEEK_API_KEY entry to ~/.dsh/.credentials.yaml.',
+  );
 }
 
 const API_KEY = loadApiKey();
