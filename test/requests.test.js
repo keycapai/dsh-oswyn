@@ -3,7 +3,13 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { zstdCompressSync } from 'node:zlib';
+import * as zlib from 'node:zlib';
+
+// zstd landed in Node 22.15/23.8. Importing the name statically makes this whole
+// file fail to load on Node 20 with a SyntaxError, which hides the real state of
+// the other suites. Read it off the namespace instead and skip honestly below.
+const zstdCompressSync = zlib.zstdCompressSync;
+const NO_ZSTD = 'zstd is unavailable before Node 22.15; nothing to compress with';
 
 const root = mkdtempSync(join(tmpdir(), 'dsh-oswyn-requests-'));
 process.env.DSH_OSWYN_SESSIONS_ROOT = root;
@@ -11,7 +17,7 @@ const { clearRequestCache, readRequestSeqs, readTurnMarks, turnForSeq } = await 
 
 test.after(() => rmSync(root, { recursive: true, force: true }));
 
-test('a session log created after the first lookup is picked up on retry', () => {
+test('a session log created after the first lookup is picked up on retry', { skip: typeof zstdCompressSync === 'function' ? false : NO_ZSTD }, () => {
   clearRequestCache();
   const id = 'late-session';
   assert.deepEqual(readRequestSeqs(id), []);          // miss, must NOT be cached
