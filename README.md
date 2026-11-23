@@ -1,8 +1,8 @@
 # DSH-OSWYN: Only See What You Need
 
-### DeepSeek Harness 原生步边界内联上下文微蒸馏与推理增强引擎 (v2.1)
+### **Scaling in for better scaling out** — DeepSeek Harness 原生上下文精炼与多信号轮次蒸馏引擎 (v2.4)
 
-[![Version](https://img.shields.io/badge/version-2.1.1-blue.svg)](https://www.npmjs.com/package/dsh-oswyn)
+[![Version](https://img.shields.io/badge/version-2.4.0-blue.svg)](https://www.npmjs.com/package/dsh-oswyn)
 [![npm](https://img.shields.io/npm/v/dsh-oswyn.svg)](https://www.npmjs.com/package/dsh-oswyn)
 [![Tests](https://img.shields.io/badge/unit_tests-163_passed_%28100%25%29-brightgreen.svg)](test)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -16,6 +16,8 @@
 > - **中文学术论文（理论推导、架构哲学、5 款模型官方 API 价格审计与实证分析）**：[**`paper/oswyn-paper.md`**](paper/oswyn-paper.md)
 > - **Academic Research Paper (English Version)**: [**`paper/oswyn-paper-en.md`**](paper/oswyn-paper-en.md)
 > - **180+ 组完整评测数据集与自动化脚本**：[`paper/data/`](paper/data/) 及 [`paper/scripts/`](paper/scripts/)
+> - **v2.3 专题论文（后缓存深层精炼 · 多模态按轮召回）**：[**`paper/oswyn-v2.3-post-cache-distill-paper.md`**](paper/oswyn-v2.3-post-cache-distill-paper.md)
+> - **v2.4 专题论文（多信号触发 · 粘滞锁存 · 即时执行，含体积/轮次/上限/防抖下限的实证标定）**：[**`paper/oswyn-v2.4-multi-signal-trigger-paper.md`**](paper/oswyn-v2.4-multi-signal-trigger-paper.md)
 >
 > *注：本 README 聚焦于工程架构、核心原语、快速上手与生产配置。完整的数学推导、理论假说、消融实验与基准评测请参阅上述论文。*
 
@@ -23,11 +25,14 @@
 
 ## 💡 核心价值（Key Value Propositions）
 
-在自主软件工程（SWE）长程多步代理中，工具输出、错误堆栈与构建日志的二次方堆积是制约智能体生产落地的关键瓶颈。**DSH-OSWYN (Only See What You Need)** 依托步边界内联微蒸馏，实现了三大核心突破：
+> **Scaling in for better scaling out.**
+> 在智能体走向更长程、更多工具调用与更深推理链的路上，单纯堆大上下文窗口只会放大成本、延迟与注意力稀释。OSWYN 先向内收敛（**Scaling in**）——在步边界微蒸馏工具噪声、在跨轮边界多信号深度蒸馏历史轨迹——从而为向外扩展（**Scaling out**）到超长任务与复杂自主工程打下高信噪比、低延迟、高缓存命中的上下文底座。
 
-1. 💰 **大幅降低 Token 计费**：长程会话稳态运行账单平均压降 **65.4%**。彻底规避传统外部代理折叠造成的 KV-Cache 前缀击穿（全价未命中 Token 同步降低 `-5.2%`）。
-2. 📈 **有效扩充上下文容量**：单步感知载荷净压缩率达 **72.7%**，将多步工作记忆持续锚定在 600–800 Tokens 的极高信噪比窗口，使有限上下文能够承载数倍于以往的长程交互轮次。
-3. 🧠 **直接强化复杂推理能力（降噪护智）**：彻底清除早期试错与冗余输出引发的“注意力稀释（Lost-in-the-Middle）”。在虚拟机状态追踪（B₁）中准确率从基线 66.7% 跃升至 **100%**，常规工程任务达成 **100% (30/30)** 满分通过，并在 3-SAT 组合约束求解（B₁₇）中将推导耗时缩短 **47.4%（提速 1.9 倍）**。
+在自主软件工程（SWE）长程多步代理中，工具输出、错误堆栈与历史推理轨迹的二次方堆积是制约智能体生产落地的关键瓶颈。**DSH-OSWYN (Only See What You Need)** 依托「步边界微蒸馏 + 跨轮多信号深度蒸馏」双层架构，实现了三大核心突破：
+
+1. 💰 **大幅降低 Token 计费**：步边界微蒸馏使长程会话稳态账单平均压降 **65.4%**；叠加 v2.4 轮次深度蒸馏，在 293 个真实会话滚动检查点实验与真实模型端到端实测中，总费用再降 **48.8%–48.9%**，提示 Token 减少 **49.1%**（后半程减少 **83.9%**）。
+2. ⚡ **缩短任务时长与扩充有效容量**：单步感知载荷净压缩率达 **72.7%**，端到端真实长任务耗时缩短 **36.0%**，让有限上下文能够以更低首字延迟（TTFT）承载数倍于以往的长程交互轮次。
+3. 🧠 **直接强化复杂推理能力（降噪护智）**：彻底清除早期试错与冗余输出引发的“注意力稀释（Lost-in-the-Middle）”。在虚拟机状态追踪（B₁）中准确率从基线 66.7% 跃升至 **100%**，常规工程任务达成 **100% (30/30)** 满分通过，在 3-SAT 组合约束求解（B₁₇）中提速 **1.9 倍**，且 v2.4 轮次蒸馏端到端实测准确率与精确召回率 **100% 持平**。
 
 ---
 
@@ -88,6 +93,12 @@ SUMMARY:
 - **`autoDiscardFailed`**：自动识别非零退出码与异常堆栈并执行丢弃；
 - **`autoCompressTiered`**：对未声明围栏且超限（默认 4000 字符）的非保护工具按前缀截断；
 - **`autoCompressPtcSubcalls`**：对程序化代码沙箱（`run_code`）多子调用聚合结果进行结构化折叠。
+
+### 5. v2.4 轮次深度蒸馏与多信号触发（Turn-Level Deep Distillation）
+在步内微蒸馏之外，v2.4 对已完成的历史轮次执行跨轮整体瘦身（折叠历史思考链与工具调用过程为紧凑结论），满足任意触发条件即立刻执行：
+- **四维信号触发**：体积阈值（未蒸馏历史可剥离冗余 ≥ `64K` tok，不含系统提示词）、轮次阈值（连续未蒸馏满 `8` 轮）、缓存空闲超时（`24` 小时）或总上下文上限安全阀（`256K` tok，绕过 `4K` 最小收益门槛）。
+- **无损按轮召回（`history_recall`）**：采用原生 `oswyn-compaction` 检查点替换，不破坏会话日志兼容性，原始思考与工具过程永久留在底层日志，模型可随时按轮次与模态（`think` / `tool` / `both`）无损召回。
+- **透明上下文拆解与手动命令**：底部浮窗、设置面板会话详情与 `/oswyn` 实时展示**已压缩量（含系统提示词）**与**未压缩量**；随时输入 `/oswyn-distill` 可立即执行手动轮次蒸馏（独立计为 `manual`）并刷新界面「已轮次蒸馏」标记。
 
 ---
 
@@ -164,6 +175,17 @@ await ctx.start();
 | `autoCompressTieredProtectedTools` | `string[]` | 详见下方 | **受保护工具白名单**：严禁被自动截断的核心工具（如代码读写编辑）。 |
 | `autoCompressMinChars` | `number` | `4000` | 分级兜底自动截断触发的最小字符数门槛。 |
 | `autoCompressKeepLines` | `number` | `30` | 分级兜底与裸 `truncate` 指令默认保留的前缀行数。 |
+| `postCacheDistillEnabled` | `boolean` | `true` | v2.4 轮次深度蒸馏总开关。 |
+| `triggerVolumeTokens` | `number` | `64000` | 体积触发门槛（仅计未蒸馏历史可剥离冗余，不含系统提示词）。 |
+| `triggerRounds` | `number` | `8` | 连续未蒸馏轮次触发门槛。 |
+| `triggerMinSurplusTokens` | `number` | `4000` | 最小收益门槛，可省量低于此值时跳过以避免白打断缓存。 |
+| `triggerCeilingTokens` | `number` | `256000` | 最大上下文安全阀，总上下文超限时强制触发并绕过最小收益门槛。 |
+| `cacheTtlHours` | `number` | `24` | 缓存空闲超时时长（小时），超时后自动触发蒸馏。 |
+| `deepTurnBadge` | `boolean` | `true` | 是否在已完成轮次蒸馏的历史轮次下方显示「已轮次蒸馏」标记条。 |
+
+### 斜杠命令（Slash Commands）
+- **`/oswyn`**：查看全局与当前会话压缩账本、轮次蒸馏状态，以及当前上下文的**已压缩量（含系统提示词）**与**未压缩量**。
+- **`/oswyn-distill`**：立即对当前会话已完成轮次执行手动轮次蒸馏（记为 `manual`），无需等待下一轮消息。
 
 > 🛡️ **默认受保护工具白名单**：
 > `run_code`, `read`, `write`, `edit`, `apply_patch`, `notebook`, `read_image`, `todo_write`, `ask_user_question`, `skill`, `tool_search`, `tool_result_recall`, `oswyn_stats`, `oswyn_protect_tool`

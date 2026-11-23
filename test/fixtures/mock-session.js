@@ -43,6 +43,7 @@ export class MockSession {
       seq: this.log.length,
       time: Date.now(),
       data: JSON.parse(JSON.stringify(data)), // snapshot, like the kernel
+      ...(opts.ignorable === undefined ? {} : { ignorable: opts.ignorable }),
       ...(opts.sourceEventSeqs === undefined ? {} : { sourceEventSeqs: opts.sourceEventSeqs }),
       ...(opts.surfaceOp === undefined ? {} : { surfaceOp: opts.surfaceOp })
     };

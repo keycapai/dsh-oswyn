@@ -261,3 +261,129 @@ test('collectNudgeCandidates collects trailing tool messages even when trailing 
   assert.equal(candidates[0].toolName, 'bash');
 });
 
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Suite 9 — reentrancy: fences must survive the kernel's append publication window
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * MockSession that enforces the real kernel rule: appending while an append is being
+ * published throws. Without this guard a test cannot see the bug that lost 29,630
+ * characters on a real session.
+ */
+function makeReentrancyGuardedSession() {
+  const session = new MockSession();
+  session.id = 'test_reentrancy_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+  session.seed('system/message', { message: { role: 'system', content: [] } }, { surfaceOp: 'append' });
+  session.seed('user/message', { message: { role: 'user', content: [{ type: 'text', text: 'go' }] } }, { surfaceOp: 'append' });
+  session.seed('tool/result', {
+    message: {
+      role: 'tool',
+      source: { toolName: 'bash', callId: 'c1' },
+      content: [{ type: 'text', text: 'log line\n'.repeat(400) }]
+    }
+  }, { surfaceOp: 'append' });
+
+  let publishing = false;
+  const rawAppend = session.append.bind(session);
+  session.append = (type, data, opts) => {
+    if (publishing) throw new Error('session append cannot reenter while another append is being published');
+    publishing = true;
+    try {
+      const ev = rawAppend(type, data, opts);
+      // The kernel invokes session/event observers INSIDE the publication window.
+      if (typeof session._onPublish === 'function') session._onPublish(ev);
+      return ev;
+    } finally {
+      publishing = false;
+    }
+  };
+  return session;
+}
+
+test('Suite 9 [9.1]: a fence observed during publication still lands at the step boundary', async () => {
+  const ctx = makeCtx();
+  apply(ctx, { enabled: true, autoApply: true });
+  const session = makeReentrancyGuardedSession();
+
+  const originalSeq = 2;
+  const beforeLen = session.eventAt(originalSeq).data.message.content[0].text.length;
+
+  // Publish the assistant fence exactly like the kernel: observers run inside append().
+  session._onPublish = (ev) => {
+    if (ev.type === 'assistant/message') ctx._hooks['session/event'](session, ev);
+  };
+
+  // This must NOT throw the reentrancy error even though a fence is present.
+  assert.doesNotThrow(() => {
+    session.append('assistant/message', {
+      message: {
+        role: 'assistant',
+        content: [{ type: 'text', text: 'done\n```result-summary\ntruncate keep 5 lines\n- tests passed\n```' }]
+      }
+    }, { surfaceOp: 'append' });
+  }, 'the observer must not append while the assistant message is being published');
+
+  // No compression happened yet — it is parked.
+  assert.equal(session.log.length, 4, 'nothing appended during publication');
+
+  // The step boundary is legal ground; the parked fence is applied here.
+  await ctx._hooks['agent/pre-step'](
+    { agent: { session }, turn: 1, step: 2, signal: { aborted: false } },
+    async () => ({ kind: 'enter', messages: [] })
+  );
+
+  const replaces = session.log.filter((e) => e.surfaceOp && e.surfaceOp.op === 'replace');
+  assert.equal(replaces.length, 1, 'exactly one surface replacement landed');
+  assert.equal(replaces[0].surfaceOp.startSeq, originalSeq);
+
+  const newText = replaces[0].data.message.content.map((b) => b.text).join('');
+  assert.ok(newText.length < beforeLen, 'the tool result really shrank');
+  assert.match(newText, /\[oswyn-meta: before=\d+ after=\d+/, 'marker embedded');
+});
+
+test('Suite 9 [9.2]: a parked fence is applied only once even across repeated step boundaries', async () => {
+  const ctx = makeCtx();
+  apply(ctx, { enabled: true, autoApply: true });
+  const session = makeReentrancyGuardedSession();
+  session._onPublish = (ev) => {
+    if (ev.type === 'assistant/message') ctx._hooks['session/event'](session, ev);
+  };
+
+  session.append('assistant/message', {
+    message: {
+      role: 'assistant',
+      content: [{ type: 'text', text: 'done\n```result-summary\ntruncate keep 5 lines\n- ok\n```' }]
+    }
+  }, { surfaceOp: 'append' });
+
+  const preStep = ctx._hooks['agent/pre-step'];
+  for (let step = 2; step <= 4; step++) {
+    await preStep({ agent: { session }, turn: 1, step, signal: { aborted: false } }, async () => ({ kind: 'enter', messages: [] }));
+  }
+
+  const replaces = session.log.filter((e) => e.surfaceOp && e.surfaceOp.op === 'replace');
+  assert.equal(replaces.length, 1, 'the fence must not be re-applied on later boundaries');
+});
+
+test('Suite 9 [9.3]: session/event never appends while a message is being published', () => {
+  const ctx = makeCtx();
+  apply(ctx, { enabled: true, autoApply: true });
+  const session = makeReentrancyGuardedSession();
+  session._onPublish = (ev) => {
+    if (ev.type === 'assistant/message') ctx._hooks['session/event'](session, ev);
+  };
+
+  const lenBefore = session.log.length;
+  assert.doesNotThrow(() => {
+    session.append('assistant/message', {
+      message: {
+        role: 'assistant',
+        content: [{ type: 'text', text: 'done\n```result-summary\ndiscard\n- gone\n```' }]
+      }
+    }, { surfaceOp: 'append' });
+  });
+  assert.equal(session.log.length, lenBefore + 1, 'only the assistant message itself was appended');
+});
+

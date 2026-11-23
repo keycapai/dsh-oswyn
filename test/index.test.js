@@ -66,14 +66,24 @@ test('index: registers protocol section, tools, commands', () => {
   assert.ok(ctx._commands.length >= 2, 'commands registered');
 });
 
-test('index: session/event on assistant message compresses tool output (negative delta) + records ledger', async () => {
+test('index: session/event parks the fence and the step boundary applies it', async () => {
   const ctx = makeCtx();
   apply(ctx, { enabled: true, replySummaryEnabled: true });
   const session = makeSession();
   const beforeLen = session.log[2].data.message.content[0].text.length;
-  // fire the session/event hook like the real runtime
+  const logLenBefore = session.log.length;
+
+  // session/event fires while the kernel is still publishing the assistant message, so
+  // it must NOT append (the real Session rejects reentrant appends). It only parks.
   ctx._hooks['session/event'](session, session.log[3]);
-  // a new tool/result replace event should have been appended
+  assert.equal(session.log.length, logLenBefore, 'no append from inside an append');
+
+  // The step boundary is where appending is legal; that is where the fence lands.
+  await ctx._hooks['agent/pre-step'](
+    { agent: { session }, turn: 1, step: 2, signal: { aborted: false } },
+    async () => ({ kind: 'enter', messages: [] })
+  );
+
   const last = session.log[session.log.length - 1];
   assert.equal(last.type, 'tool/result');
   const newText = last.data.message.content.map(b => b.text).join('');

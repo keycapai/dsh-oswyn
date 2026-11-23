@@ -257,7 +257,7 @@ test('Client DOM: reply fence is FOLDED into a 已压缩 chip (not fully hidden)
   assert.equal(wrap.getAttribute('data-oswyn-folded'), '1', 'block marked folded');
   assert.equal(wrap.getAttribute('data-oswyn-open'), '0', 'collapsed by default');
 });
-test('Client DOM: folded reply chip EXPANDS on click and stays expanded across a re-sync (regression)', async () => {
+test('Client DOM: folded reply chip opens a memo POPOVER on click and never reveals the raw fence', async () => {
   const doc = makeDoc();
   const mod = loadClient(doc);
   const wrap = new El('div'); wrap._cls.add('code-block');
@@ -271,15 +271,13 @@ test('Client DOM: folded reply chip EXPANDS on click and stays expanded across a
   const chip = doc.querySelector('.dsh-oswyn-fold-chip');
   assert.ok(chip, 'chip exists');
   assert.equal(wrap.style.display, 'none', 'collapsed by default');
-  // Click the chip -> expand.
   (chip._listeners.click || []).forEach((fn) => fn({ stopPropagation() {} }));
-  assert.equal(wrap.getAttribute('data-oswyn-open'), '1', 'open flag set after click');
-  // Force another sync pass (mutation) — must NOT re-collapse.
-  const chip2 = doc.querySelector('.dsh-oswyn-fold-chip');
-  (chip2 && (chip2._listeners.click || [])).forEach(() => {});
+  assert.equal(doc.querySelectorAll('[data-oswyn-detail]').length, 1, 'click opens the memo popover');
+  assert.equal(wrap.style.display, 'none', 'raw fence stays collapsed behind the popover');
+  assert.equal(wrap.getAttribute('data-oswyn-open'), '0', 'block is never expanded inline');
+  // A later sync pass must not close the popover or reveal the block.
   await new Promise((r) => setTimeout(r, 600));
-  assert.equal(wrap.getAttribute('data-oswyn-open'), '1', 'still open after re-sync');
-  assert.notEqual(wrap.style.display, 'none', 'block visible after re-sync');
+  assert.equal(wrap.style.display, 'none', 'still collapsed after re-sync');
 });
 test('Client DOM: ordinary user-facing content is NEVER folded (no fence language)', async () => {
   const doc = makeDoc();
@@ -577,3 +575,474 @@ test('Client DOM: reply-summary fold chip displays before→after character stat
   const hintAfter = groupHeader.querySelector('.dsh-oswyn-group-hint').textContent;
   assert.equal(hintAfter, hintBefore, 'expanding nested subcall must NEVER change or flicker group header stats');
 });
+
+test('Client DOM: turn-tail pill borrows the footer typography (no own size/padding/underline, no 压缩 prefix)', () => {
+  const src = fs.readFileSync(path.join(__dirname, '..', 'lib', 'client.js'), 'utf8');
+  const rule = (src.match(/'\.dsh-oswyn-turn-pill \{[^']*\}'/) || [])[0] || '';
+  assert.ok(rule, 'turn pill base rule exists');
+  assert.match(rule, /font:\s*inherit/, 'pill inherits the footer font shorthand');
+  assert.match(rule, /font-size:\s*inherit/, 'pill must not set its own size');
+  assert.match(rule, /color:\s*inherit/, 'pill must not set its own colour');
+  assert.match(rule, /padding:\s*0/, 'pill must not pad itself like a chip');
+  assert.match(rule, /border-radius:\s*0/, 'pill must not draw a rounded chip');
+  assert.ok(!/font-size:\s*12px/.test(rule), 'pill must not pin a 12px size (it looked larger than the footer)');
+
+  const hover = (src.match(/'\.dsh-oswyn-turn-pill:hover[^']*\}'/) || [])[0] || '';
+  assert.ok(hover, 'hover rule exists');
+  assert.ok(!/text-decoration:\s*underline/.test(hover), 'hover must not underline');
+  assert.match(hover, /text-decoration:\s*none/, 'hover keeps the footer look');
+
+  // The visible label is a bare value; "压缩" may only survive inside a tooltip.
+  // Match the pill's own assignment, not the popover heading (压缩统计) or the reply
+  // fold chip (已压缩), both of which legitimately contain the word.
+  const pillLabel = src.match(/chip\.textContent = \(m\.before > 0 && pct > 0\)[\s\S]{0,80}?;/);
+  assert.ok(pillLabel, 'pill label assignment found');
+  assert.ok(!/压缩/.test(pillLabel[0]), 'pill label must not carry a 压缩 prefix');
+  assert.match(pillLabel[0], /−' \+ pct/, 'pill shows a bare percentage');
+  assert.match(src, /title: '本轮压缩/, 'tooltip still explains what the number means');
+});
+
+test('Client DOM: reply marker never blinks — ledger refresh cannot un-fold an already folded reply memo', async () => {
+  const doc = makeDoc();
+  let ledger = { ok: true, config: { hideReplySummaryInUi: true, foldReplySummary: true }, sessions: [] };
+  const mod = loadClient(doc, ledger);
+  // Fake host exposes the current conversation marker, so the plugin can tell
+  // "ledger not loaded yet" apart from "this conversation has no reply summaries".
+  const marker = new El('div'); marker.setAttribute('data-conversation-session', 's1'); doc.body.appendChild(marker);
+
+  const msg = new El('div');
+  const prose = new El('p'); prose._text = 'Done. Summary below.'; msg.appendChild(prose);
+  const wrap = new El('div'); wrap._cls.add('code-block');
+  const pre = new El('pre');
+  const code = new El('code'); code.setAttribute('data-lang', 'dsh-reply-summary'); code._text = '- 改动：折叠粘性'; pre.appendChild(code);
+  wrap.appendChild(pre); msg.appendChild(wrap);
+  doc.body.appendChild(msg);
+
+  const ctx = { effect(fn) { return fn(); }, get() {}, on() {}, logger: { info() {}, warn() {}, debug() {} } };
+  mod.apply(ctx);
+  await new Promise((r) => setTimeout(r, 500));
+
+  assert.equal(doc.querySelectorAll('.dsh-oswyn-fold-chip').length, 1, 'reply memo is folded into exactly one chip');
+  assert.equal(wrap.style.display, 'none', 'raw fence stays collapsed');
+
+  // Ledger poll returns an EMPTY / partial ledger (older conversation scrolled out).
+  // It must not un-fold the block nor drop the chip.
+  ledger.sessions = [];
+  await new Promise((r) => setTimeout(r, 400));
+  assert.equal(doc.querySelectorAll('.dsh-oswyn-fold-chip').length, 1, 'chip survives a ledger refresh');
+  assert.equal(wrap.style.display, 'none', 'folded block is not re-revealed by a ledger refresh');
+  assert.equal(wrap.getAttribute('data-oswyn-fence-kind'), 'reply', 'fence classification is sticky');
+
+  // A ledger that finally reports a TOOL summary with the same body must not flip it either.
+  ledger.sessions = [{ sessionId: 's1', history: [{ mode: 'truncate', summary: '- 改动：折叠粘性', before: 100, after: 20 }] }];
+  await new Promise((r) => setTimeout(r, 400));
+  assert.equal(wrap.getAttribute('data-oswyn-fence-kind'), 'reply', 'tool ledger entry cannot reclassify a reply memo');
+  assert.equal(wrap.style.display, 'none', 'still folded after a contradictory ledger entry');
+  assert.equal(doc.querySelectorAll('.dsh-oswyn-fold-chip').length, 1, 'still exactly one chip');
+});
+
+test('Client DOM: ledger-backed reply chip is not created or destroyed before the ledger covers this conversation', async () => {
+  const doc = makeDoc();
+  const ledger = { ok: true, config: { hideReplySummaryInUi: true, foldReplySummary: true }, sessions: [] };
+  const mod = loadClient(doc, ledger);
+  const marker = new El('div'); marker.setAttribute('data-conversation-session', 's2'); doc.body.appendChild(marker);
+
+  const turn = new El('div'); turn.setAttribute('data-chat-turn', '1');
+  const body = new El('div'); body._text = 'answer body'; turn.appendChild(body);
+  const actions = new El('div'); actions._cls.add('Xhh_actions');
+  const branch = new El('button'); branch._cls.add('Xhh_branch'); actions.appendChild(branch);
+  turn.appendChild(actions); doc.body.appendChild(turn);
+
+  const ctx = { effect(fn) { return fn(); }, get() {}, on() {}, logger: { info() {}, warn() {}, debug() {} } };
+  mod.apply(ctx);
+  await new Promise((r) => setTimeout(r, 450));
+  assert.equal(doc.querySelectorAll('[data-oswyn-reply-fallback-wrap]').length, 0, 'no chip before the ledger knows this conversation');
+
+  // The conversation now appears in the ledger with one reply summary.
+  ledger.sessions = [{ sessionId: 's2', history: [{ mode: 'reply', summary: '- memo', before: 800, after: 120 }] }];
+  await new Promise((r) => setTimeout(r, 400));
+  assert.equal(doc.querySelectorAll('[data-oswyn-reply-fallback-wrap]').length, 0, 'ledger reply chip is not invented out of thin air');
+
+  // Another poll without the conversation must not remove an existing chip either.
+  ledger.sessions = [];
+  await new Promise((r) => setTimeout(r, 400));
+  assert.equal(doc.querySelectorAll('[data-oswyn-reply-fallback-wrap]').length, 0, 'stable across polls');
+});
+
+test('Client DOM: ONE turn renders exactly ONE reply marker even though DSH stamps data-chat-turn on every flow node AND the step-process group', async () => {
+  const doc = makeDoc();
+  const ledger = {
+    ok: true,
+    config: { hideReplySummaryInUi: true, foldReplySummary: true },
+    globalStats: { totalTokensSaved: 0, totalTruncations: 0, totalReplacements: 0, totalDiscards: 0, totalPruneCalls: 0, totalReplySummaries: 1 },
+    sessions: [{
+      sessionId: 's_dup',
+      history: [{ turn: 1, mode: 'reply', before: 2000, after: 400, summary: '- memo one' }]
+    }]
+  };
+  const mod = loadClient(doc, ledger);
+  const marker = new El('div'); marker.setAttribute('data-conversation-session', 's_dup'); doc.body.appendChild(marker);
+
+  // One turn = the assistant flow node PLUS a nested step-process group, both
+  // carrying data-chat-turn (this mirrors DSH's real markup).
+  const turn = new El('div'); turn.setAttribute('data-chat-turn', '1');
+  const group = new El('div'); group.setAttribute('data-chat-turn', '1'); group.setAttribute('data-step-process', 'true');
+  const body = new El('div'); body._text = 'answer body'; group.appendChild(body);
+  const gActions = new El('div'); gActions._cls.add('Xhh_actions');
+  const gBranch = new El('button'); gBranch._cls.add('Xhh_branch'); gBranch.setAttribute('data-action', 'branch'); gActions.appendChild(gBranch);
+  group.appendChild(gActions); turn.appendChild(group);
+  const tActions = new El('div'); tActions._cls.add('Xhh_actions');
+  const tBranch = new El('button'); tBranch._cls.add('Xhh_branch'); tBranch.setAttribute('data-action', 'branch'); tActions.appendChild(tBranch);
+  turn.appendChild(tActions);
+  doc.body.appendChild(turn);
+
+  const ctx = { effect(fn) { return fn(); }, get() {}, on() {}, logger: { info() {}, warn() {}, debug() {} } };
+  mod.apply(ctx);
+  await new Promise((r) => setTimeout(r, 600));
+  assert.equal(doc.querySelectorAll('[data-oswyn-reply-fallback-wrap]').length, 1, 'exactly one ledger reply chip for the turn');
+
+  await new Promise((r) => setTimeout(r, 500));
+  assert.equal(doc.querySelectorAll('[data-oswyn-reply-fallback-wrap]').length, 1, 'still exactly one chip after another sync');
+});
+
+test('Client DOM: a folded reply fence suppresses the ledger chip for the SAME turn even when they sit in different subtrees', async () => {
+  const doc = makeDoc();
+  const ledger = {
+    ok: true,
+    config: { hideReplySummaryInUi: true, foldReplySummary: true },
+    globalStats: { totalTokensSaved: 0, totalTruncations: 0, totalReplacements: 0, totalDiscards: 0, totalPruneCalls: 0, totalReplySummaries: 1 },
+    sessions: [{
+      sessionId: 's_mix',
+      history: [{ turn: 2, mode: 'reply', before: 1800, after: 300, summary: '- memo two' }]
+    }]
+  };
+  const mod = loadClient(doc, ledger);
+  const marker = new El('div'); marker.setAttribute('data-conversation-session', 's_mix'); doc.body.appendChild(marker);
+
+  const turn = new El('div'); turn.setAttribute('data-chat-turn', '2');
+  const body = new El('div');
+  const wrap = new El('div'); wrap._cls.add('code-block');
+  const pre = new El('pre');
+  const code = new El('code'); code.setAttribute('data-lang', 'dsh-reply-summary'); code._text = '- memo two';
+  pre.appendChild(code); wrap.appendChild(pre); body.appendChild(wrap);
+  turn.appendChild(body);
+  const actions = new El('div'); actions._cls.add('Xhh_actions');
+  const branch = new El('button'); branch._cls.add('Xhh_branch'); branch.setAttribute('data-action', 'branch'); actions.appendChild(branch);
+  turn.appendChild(actions);
+  doc.body.appendChild(turn);
+
+  const ctx = { effect(fn) { return fn(); }, get() {}, on() {}, logger: { info() {}, warn() {}, debug() {} } };
+  mod.apply(ctx);
+  await new Promise((r) => setTimeout(r, 700));
+
+  assert.equal(doc.querySelectorAll('.dsh-oswyn-fold-chip').length, 1, 'only the DOM fold chip exists');
+  assert.equal(doc.querySelectorAll('[data-oswyn-reply-fallback-wrap]').length, 0, 'no second, ledger-backed marker for the same turn');
+  assert.equal(wrap.style.display, 'none', 'fence stays folded');
+});
+
+test('Client DOM: reply memo with free-form bullets (no known key words) still folds into a chip', async () => {
+  const doc = makeDoc();
+  const mod = loadClient(doc);
+  const msg = new El('div'); msg.setAttribute('data-chat-flow-kind', 'message');
+  const wrap = new El('div'); wrap._cls.add('code-block');
+  const banner = new El('div'); banner.setAttribute('data-code-block-banner', 'true');
+  const info = new El('div'); info._cls.add('infostring'); info._text = '代码块'; banner.appendChild(info); wrap.appendChild(banner);
+  const pre = new El('pre');
+  const code = new El('code');
+  code._text = '- 移植核心洞察：本地 CLI 的硬编码路径\n- 用户所说的 "Potato Mode" 实为风格指令\n- 已装：dsh-oswyn 插件';
+  pre.appendChild(code); wrap.appendChild(pre); msg.appendChild(wrap);
+  doc.body.appendChild(msg);
+
+  const ctx = { effect(fn) { return fn(); }, get() {}, on() {}, logger: { info() {}, warn() {}, debug() {} } };
+  mod.apply(ctx);
+  await new Promise((r) => setTimeout(r, 600));
+  assert.equal(doc.querySelectorAll('.dsh-oswyn-fold-chip').length, 1, 'free-form bullet memo folds');
+  assert.equal(wrap.style.display, 'none', 'raw fence hidden');
+});
+
+test('Client DOM: reply memo inside a step-process group still folds (group no longer blocks reply detection)', async () => {
+  const doc = makeDoc();
+  const mod = loadClient(doc);
+  const group = new El('div'); group.setAttribute('data-step-process', 'true');
+  const wrap = new El('div'); wrap._cls.add('code-block');
+  const banner = new El('div'); banner.setAttribute('data-code-block-banner', 'true');
+  const info = new El('div'); info._cls.add('infostring'); info._text = '代码块'; banner.appendChild(info); wrap.appendChild(banner);
+  const pre = new El('pre');
+  const code = new El('code'); code._text = '- 结论：分组容器内的回复备忘\n- 关键细节：仍然要折叠';
+  pre.appendChild(code); wrap.appendChild(pre); group.appendChild(wrap);
+  doc.body.appendChild(group);
+
+  const ctx = { effect(fn) { return fn(); }, get() {}, on() {}, logger: { info() {}, warn() {}, debug() {} } };
+  mod.apply(ctx);
+  await new Promise((r) => setTimeout(r, 600));
+  assert.equal(doc.querySelectorAll('.dsh-oswyn-fold-chip').length, 1, 'chip created inside step-process group');
+  assert.equal(wrap.style.display, 'none', 'fence folded');
+});
+
+test('Client DOM: tool fences stay hidden across repeated sync passes (sticky tool verdict must not unmark)', async () => {
+  const doc = makeDoc();
+  const mod = loadClient(doc);
+  const wrap = new El('div'); wrap._cls.add('code-block');
+  const banner = new El('div'); banner.setAttribute('data-code-block-banner', 'true');
+  const info = new El('div'); info._cls.add('infostring'); info._text = '代码块'; banner.appendChild(info); wrap.appendChild(banner);
+  const pre = new El('pre');
+  const code = new El('code'); code._text = 'truncate keep 8 lines\n- kept prefix';
+  pre.appendChild(code); wrap.appendChild(pre);
+  doc.body.appendChild(wrap);
+
+  const ctx = { effect(fn) { return fn(); }, get() {}, on() {}, logger: { info() {}, warn() {}, debug() {} } };
+  mod.apply(ctx);
+  await new Promise((r) => setTimeout(r, 500));
+  assert.equal(wrap.style.display, 'none', 'tool fence hidden on first pass');
+  assert.equal(wrap.getAttribute('data-oswyn-fence-kind'), 'tool', 'classified as tool');
+
+  await new Promise((r) => setTimeout(r, 900));
+  assert.equal(wrap.style.display, 'none', 'tool fence stays hidden after more sync passes');
+  assert.equal(wrap.getAttribute('data-oswyn-fence-kind'), 'tool', 'verdict stays tool');
+});
+
+test('Client DOM: reply chip keeps its before→after figure when no ledger entry exists (measured from the message body)', async () => {
+  const doc = makeDoc();
+  const mod = loadClient(doc); // empty ledger on purpose
+  const msg = new El('div');
+  const prose = new El('p'); prose._text = '这是一段很长的回复正文，用来验证压缩前的字符数可以从消息容器里量出来。'.repeat(4);
+  msg.appendChild(prose);
+  const wrap = new El('div'); wrap._cls.add('code-block');
+  const pre = new El('pre');
+  const code = new El('code'); code.setAttribute('data-lang', 'dsh-reply-summary');
+  code._text = '- 改动：把浮窗恢复\n- 验证：标记显示正常';
+  pre.appendChild(code); wrap.appendChild(pre); msg.appendChild(wrap);
+  doc.body.appendChild(msg);
+
+  const ctx = { effect(fn) { return fn(); }, get() {}, on() {}, logger: { info() {}, warn() {}, debug() {} } };
+  mod.apply(ctx);
+  await new Promise((r) => setTimeout(r, 600));
+  const chip = doc.querySelector('.dsh-oswyn-fold-chip');
+  assert.ok(chip, 'chip exists');
+  assert.match(chip.textContent, /已压缩\s+[\d,]+→[\d,]+\s*字符/, 'chip shows before→after characters');
+  assert.match(chip.textContent, /-\d+%/, 'chip shows the reduction percentage');
+});
+
+test('Client DOM: fence body extraction ignores CodeToolbar chrome when no content wrapper exists', async () => {
+  const doc = makeDoc();
+  const mod = loadClient(doc);
+  const wrap = new El('div'); wrap._cls.add('md-code-block');
+  const banner = new El('div'); banner.setAttribute('data-code-block-banner', 'true');
+  const info = new El('div'); info._cls.add('infostring'); info._text = '代码块'; banner.appendChild(info);
+  const copy = new El('button'); copy._text = '复制'; banner.appendChild(copy);
+  wrap.appendChild(banner);
+  const pre = new El('pre');
+  const code = new El('code'); code._text = '- 改动：没有 content 包装时也不能把工具栏当正文\n- 验证：仍要折叠';
+  pre.appendChild(code); wrap.appendChild(pre);
+  doc.body.appendChild(wrap);
+
+  const ctx = { effect(fn) { return fn(); }, get() {}, on() {}, logger: { info() {}, warn() {}, debug() {} } };
+  mod.apply(ctx);
+  await new Promise((r) => setTimeout(r, 600));
+  assert.equal(doc.querySelectorAll('.dsh-oswyn-fold-chip').length, 1, 'chip still created');
+  assert.equal(wrap.style.display, 'none', 'block folded');
+});
+
+test('Client DOM: a chip created before the toolbar renders survives the toolbar appearing later', async () => {
+  const doc = makeDoc();
+  const mod = loadClient(doc);
+  const wrap = new El('div'); wrap._cls.add('md-code-block');
+  const pre = new El('pre');
+  const code = new El('code'); code._text = '- 结论：先折叠后渲染工具栏\n- 关键细节：标记不能消失';
+  pre.appendChild(code); wrap.appendChild(pre);
+  doc.body.appendChild(wrap);
+
+  const ctx = { effect(fn) { return fn(); }, get() {}, on() {}, logger: { info() {}, warn() {}, debug() {} } };
+  mod.apply(ctx);
+  await new Promise((r) => setTimeout(r, 500));
+  assert.equal(doc.querySelectorAll('.dsh-oswyn-fold-chip').length, 1, 'chip created on first pass');
+
+  // Toolbar arrives on a later React render.
+  const banner = new El('div'); banner.setAttribute('data-code-block-banner', 'true');
+  const info = new El('div'); info._cls.add('infostring'); info._text = '代码块'; banner.appendChild(info);
+  const copy = new El('button'); copy._text = '复制'; banner.appendChild(copy);
+  wrap.insertBefore(banner, pre);
+
+  await new Promise((r) => setTimeout(r, 900));
+  assert.equal(doc.querySelectorAll('.dsh-oswyn-fold-chip').length, 1, 'chip survives the toolbar render');
+  assert.equal(wrap.style.display, 'none', 'block remains folded');
+  assert.equal(wrap.getAttribute('data-oswyn-fence-kind'), 'reply', 'classification unchanged');
+});
+
+test('Client DOM: leading fence wrapped in a seat element BEFORE answer prose NEVER shows a 已压缩 chip before the answer', async () => {
+  const doc = makeDoc();
+  const mod = loadClient(doc);
+  const turn = new El('div'); turn.setAttribute('data-chat-turn', '1');
+  const mdRoot = new El('div'); mdRoot._cls.add('markdown-body');
+
+  // Leading fence wrapped in its own DSH seat element (nextElementSibling of wrap is null!)
+  const leadSeat = new El('div'); leadSeat._cls.add('seat');
+  const leadWrap = new El('div'); leadWrap._cls.add('md-code-block');
+  const leadBanner = new El('div'); leadBanner.setAttribute('data-code-block-banner', 'true');
+  const leadInfo = new El('div'); leadInfo._cls.add('infostring'); leadInfo._text = '代码块'; leadBanner.appendChild(leadInfo);
+  leadWrap.appendChild(leadBanner);
+  const leadPre = new El('pre');
+  const leadCode = new El('code'); leadCode._text = '- 工具摘要：已读取 state.js\n- 关键发现：定位到重复标记';
+  leadPre.appendChild(leadCode); leadWrap.appendChild(leadPre);
+  leadSeat.appendChild(leadWrap);
+  mdRoot.appendChild(leadSeat);
+
+  // Answer prose AFTER the leading fence
+  const proseSeat = new El('div'); proseSeat._cls.add('seat');
+  const prose = new El('p'); prose._text = '问题已经定位：isTrailingFence 只检查了同级兄弟节点，没有穿透包装层。';
+  proseSeat.appendChild(prose);
+  mdRoot.appendChild(proseSeat);
+
+  // Trailing reply-summary fence at the END of the answer
+  const tailSeat = new El('div'); tailSeat._cls.add('seat');
+  const tailWrap = new El('div'); tailWrap._cls.add('md-code-block');
+  const tailBanner = new El('div'); tailBanner.setAttribute('data-code-block-banner', 'true');
+  const tailInfo = new El('div'); tailInfo._cls.add('infostring'); tailInfo._text = '代码块'; tailBanner.appendChild(tailInfo);
+  tailWrap.appendChild(tailBanner);
+  const tailPre = new El('pre');
+  const tailCode = new El('code'); tailCode._text = '- 结论：修复了回答前面出现重复标记的问题\n- 改动：lib/client/fence-fold.js';
+  tailPre.appendChild(tailCode); tailWrap.appendChild(tailPre);
+  tailSeat.appendChild(tailWrap);
+  mdRoot.appendChild(tailSeat);
+
+  turn.appendChild(mdRoot);
+  doc.body.appendChild(turn);
+
+  const ctx = { effect(fn) { return fn(); }, get() {}, on() {}, logger: { info() {}, warn() {}, debug() {} } };
+  mod.apply(ctx);
+  await new Promise((r) => setTimeout(r, 600));
+
+  const chips = doc.querySelectorAll('.dsh-oswyn-fold-chip');
+  assert.equal(chips.length, 1, 'only ONE reply chip should exist in the turn (at the end of the answer)');
+  assert.equal(leadSeat.querySelectorAll('.dsh-oswyn-fold-chip').length, 0, 'NO chip before the answer prose');
+  assert.equal(tailSeat.querySelectorAll('.dsh-oswyn-fold-chip').length, 1, 'chip sits at the trailing reply-summary');
+});
+
+test('Client DOM: streaming prose arriving after an early fence removes any premature chip before the answer', async () => {
+  const doc = makeDoc();
+  const mod = loadClient(doc);
+  const turn = new El('div'); turn.setAttribute('data-chat-turn', '3');
+  const mdRoot = new El('div'); mdRoot._cls.add('markdown-body');
+
+  // Step 1: only the leading fence has streamed so far
+  const leadSeat = new El('div'); leadSeat._cls.add('seat');
+  const leadWrap = new El('div'); leadWrap._cls.add('md-code-block');
+  const leadPre = new El('pre');
+  const leadCode = new El('code'); leadCode._text = '- 读取结果：state.js 已检查\n- 结论：准备修复';
+  leadPre.appendChild(leadCode); leadWrap.appendChild(leadPre);
+  leadSeat.appendChild(leadWrap);
+  mdRoot.appendChild(leadSeat);
+  turn.appendChild(mdRoot);
+  doc.body.appendChild(turn);
+
+  const ctx = { effect(fn) { return fn(); }, get() {}, on() {}, logger: { info() {}, warn() {}, debug() {} } };
+  mod.apply(ctx);
+  await new Promise((r) => setTimeout(r, 200));
+  assert.equal(leadSeat.querySelectorAll('.dsh-oswyn-fold-chip').length, 1, 'chip appears transiently while the early fence is still at the tail');
+
+  // Step 2: answer prose and trailing reply-summary stream in AFTER the leading fence
+  const proseSeat = new El('div'); proseSeat._cls.add('seat');
+  const prose = new El('p'); prose._text = '这是流式输出后到达的正文回答内容，长度足够长以代表真正的回答。';
+  proseSeat.appendChild(prose);
+  mdRoot.appendChild(proseSeat);
+
+  const tailSeat = new El('div'); tailSeat._cls.add('seat');
+  const tailWrap = new El('div'); tailWrap._cls.add('md-code-block');
+  const tailPre = new El('pre');
+  const tailCode = new El('code'); tailCode.setAttribute('data-lang', 'dsh-reply-summary');
+  tailCode._text = '- 最终备忘：修复完成';
+  tailPre.appendChild(tailCode); tailWrap.appendChild(tailPre);
+  tailSeat.appendChild(tailWrap);
+  mdRoot.appendChild(tailSeat);
+
+  // Wait for the follow-up sync pass (at 400ms) after the DOM mutation
+  await new Promise((r) => setTimeout(r, 400));
+  const leadChips = leadSeat.querySelectorAll('.dsh-oswyn-fold-chip');
+  assert.equal(leadChips.length, 0, 'premature chip before the answer must be removed once answer prose arrives');
+  assert.equal(tailSeat.querySelectorAll('.dsh-oswyn-fold-chip').length, 1, 'trailing reply-summary keeps its single chip');
+});
+
+test('Client DOM: fallback reply chip attaches to the final answer action bar, never inside a preceding step-process group', async () => {
+  const doc = makeDoc();
+  const ledger = {
+    ok: true,
+    config: { hideReplySummaryInUi: true, foldReplySummary: true },
+    globalStats: { totalTokensSaved: 0, totalTruncations: 0, totalReplacements: 0, totalDiscards: 0, totalPruneCalls: 0, totalReplySummaries: 1 },
+    sessions: [{
+      sessionId: 's_tail',
+      history: [{ turn: 1, mode: 'reply', before: 2000, after: 400, summary: '- memo tail' }]
+    }]
+  };
+  const mod = loadClient(doc, ledger);
+  const marker = new El('div'); marker.setAttribute('data-conversation-session', 's_tail'); doc.body.appendChild(marker);
+
+  const turn = new El('div'); turn.setAttribute('data-chat-turn', '1');
+  const group = new El('div'); group.setAttribute('data-chat-turn', '1'); group.setAttribute('data-step-process', 'true');
+  const gActions = new El('div'); gActions._cls.add('Xhh_actions');
+  const gBranch = new El('button'); gBranch.setAttribute('data-action', 'branch'); gActions.appendChild(gBranch);
+  group.appendChild(gActions);
+  turn.appendChild(group);
+
+  const answer = new El('p'); answer._text = 'Final answer text'; turn.appendChild(answer);
+  const tActions = new El('div'); tActions._cls.add('Xhh_actions');
+  const tBranch = new El('button'); tBranch.setAttribute('data-action', 'branch'); tActions.appendChild(tBranch);
+  turn.appendChild(tActions);
+  doc.body.appendChild(turn);
+
+  const ctx = { effect(fn) { return fn(); }, get() {}, on() {}, logger: { info() {}, warn() {}, debug() {} } };
+  mod.apply(ctx);
+  await new Promise((r) => setTimeout(r, 600));
+
+  assert.equal(group.querySelectorAll('[data-oswyn-reply-fallback-wrap]').length, 0, 'fallback chip must NOT appear inside step-process before the answer');
+  assert.equal(turn.querySelectorAll('[data-oswyn-reply-fallback-wrap]').length, 1, 'fallback chip appears once at the turn footer after the answer');
+  const wrapIdx = turn.children.findIndex((c) => c.hasAttribute('data-oswyn-reply-fallback-wrap'));
+  const answerIdx = turn.children.indexOf(answer);
+  assert.ok(wrapIdx > answerIdx, 'fallback chip must appear AFTER the answer, not before it');
+});
+
+test('Client DOM: v2.4 turn-level deep distillation renders a per-turn 已轮次蒸馏 chip and turn-tail marker', async () => {
+  const doc = makeDoc();
+  const ledger = {
+    ok: true,
+    config: { hideReplySummaryInUi: true, foldReplySummary: true, perTurnStats: true },
+    globalStats: { totalTokensSaved: 0, totalTruncations: 0, totalReplacements: 0, totalDiscards: 0, totalPruneCalls: 0, totalReplySummaries: 0 },
+    sessions: [{
+      sessionId: 's_deep_ui',
+      history: [],
+      distill: {
+        events: 1,
+        rawTokens: 20000,
+        distTokens: 2000,
+        surplusTokens: 18000,
+        turns: {
+          '1': { reason: 'volume', rawTokens: 20000, distTokens: 2000, surplusTokens: 18000, at: Date.now() }
+        }
+      }
+    }]
+  };
+  const mod = loadClient(doc, ledger);
+  const marker = new El('div'); marker.setAttribute('data-conversation-session', 's_deep_ui'); doc.body.appendChild(marker);
+
+  const turn = new El('div'); turn.setAttribute('data-chat-turn', '1');
+  const answer = new El('p'); answer._text = 'Turn 1 final answer'; turn.appendChild(answer);
+  const actions = new El('div'); actions._cls.add('Xhh_actions');
+  const branch = new El('button'); branch.setAttribute('data-action', 'branch'); actions.appendChild(branch);
+  turn.appendChild(actions);
+  doc.body.appendChild(turn);
+
+  const ctx = { effect(fn) { return fn(); }, get() {}, on() {}, logger: { info() {}, warn() {}, debug() {} } };
+  mod.apply(ctx);
+  await new Promise((r) => setTimeout(r, 600));
+
+  const deepChip = doc.querySelector('[data-oswyn-deep-turn-chip="1"]');
+  assert.ok(deepChip, 'per-turn 2.4 deep-distill chip must render');
+  assert.match(deepChip.textContent, /已轮次蒸馏/, 'chip label indicates turn distillation');
+  assert.match(deepChip.textContent, /-90%/, 'chip shows token reduction percentage');
+
+  const turnPill = turn.querySelector('[data-oswyn-turn-tail]');
+  assert.ok(turnPill, 'turn-tail pill renders for deep-distilled turn even with 0 row-level compressions');
+  assert.equal(turnPill.getAttribute('data-oswyn-deep-turn'), 'true');
+  assert.ok(!/轮次蒸馏/.test(turnPill.textContent), 'branch-side turn pill omits 轮次蒸馏 wording');
+  assert.match(turnPill.textContent, /−90%/);
+});
+

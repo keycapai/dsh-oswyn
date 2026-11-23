@@ -1,0 +1,244 @@
+{
+  "meta": {
+    "seeds": 20,
+    "sessions": 293,
+    "ttft": {
+      "a": 1525.9,
+      "b": 0.0088718
+    }
+  },
+  "configs": {
+    "coalesced": {
+      "perSeed": [
+        {
+          "usd": 27.75,
+          "resetsPer100": 2.59,
+          "uncachedMTok": 176.9
+        },
+        {
+          "usd": 27.04,
+          "resetsPer100": 2.89,
+          "uncachedMTok": 172.4
+        },
+        {
+          "usd": 26.82,
+          "resetsPer100": 2.83,
+          "uncachedMTok": 170.9
+        },
+        {
+          "usd": 27.27,
+          "resetsPer100": 2.86,
+          "uncachedMTok": 173.9
+        },
+        {
+          "usd": 26.48,
+          "resetsPer100": 2.49,
+          "uncachedMTok": 168.6
+        },
+        {
+          "usd": 27.19,
+          "resetsPer100": 2.81,
+          "uncachedMTok": 173.5
+        },
+        {
+          "usd": 26.68,
+          "resetsPer100": 2.62,
+          "uncachedMTok": 170
+        },
+        {
+          "usd": 26.48,
+          "resetsPer100": 2.75,
+          "uncachedMTok": 168.5
+        },
+        {
+          "usd": 27.59,
+          "resetsPer100": 2.69,
+          "uncachedMTok": 176.1
+        },
+        {
+          "usd": 27.12,
+          "resetsPer100": 2.68,
+          "uncachedMTok": 173.2
+        },
+        {
+          "usd": 27.71,
+          "resetsPer100": 2.72,
+          "uncachedMTok": 176.9
+        },
+        {
+          "usd": 26.49,
+          "resetsPer100": 2.81,
+          "uncachedMTok": 168.4
+        },
+        {
+          "usd": 27.22,
+          "resetsPer100": 2.81,
+          "uncachedMTok": 173.6
+        },
+        {
+          "usd": 27.12,
+          "resetsPer100": 2.77,
+          "uncachedMTok": 173
+        },
+        {
+          "usd": 27,
+          "resetsPer100": 2.62,
+          "uncachedMTok": 172.1
+        },
+        {
+          "usd": 27.81,
+          "resetsPer100": 2.8,
+          "uncachedMTok": 177.8
+        },
+        {
+          "usd": 27.68,
+          "resetsPer100": 2.72,
+          "uncachedMTok": 176.7
+        },
+        {
+          "usd": 27.36,
+          "resetsPer100": 2.68,
+          "uncachedMTok": 174.5
+        },
+        {
+          "usd": 27.29,
+          "resetsPer100": 2.91,
+          "uncachedMTok": 174.1
+        },
+        {
+          "usd": 27.7,
+          "resetsPer100": 2.71,
+          "uncachedMTok": 176.9
+        }
+      ],
+      "meanUsd": 27.19,
+      "sdUsd": 0.43,
+      "ci95": [
+        27,
+        27.38
+      ],
+      "ttftP50": 1589,
+      "ttftP99": 3516,
+      "ttftMax": 5413
+    },
+    "eager": {
+      "perSeed": [
+        {
+          "usd": 26.95,
+          "resetsPer100": 3.96,
+          "uncachedMTok": 172.8
+        },
+        {
+          "usd": 26.3,
+          "resetsPer100": 3.97,
+          "uncachedMTok": 168.4
+        },
+        {
+          "usd": 26.02,
+          "resetsPer100": 3.95,
+          "uncachedMTok": 166.5
+        },
+        {
+          "usd": 26.54,
+          "resetsPer100": 3.95,
+          "uncachedMTok": 170
+        },
+        {
+          "usd": 25.79,
+          "resetsPer100": 3.96,
+          "uncachedMTok": 165
+        },
+        {
+          "usd": 26.54,
+          "resetsPer100": 3.95,
+          "uncachedMTok": 170
+        },
+        {
+          "usd": 25.95,
+          "resetsPer100": 3.95,
+          "uncachedMTok": 166
+        },
+        {
+          "usd": 25.73,
+          "resetsPer100": 3.95,
+          "uncachedMTok": 164.5
+        },
+        {
+          "usd": 26.88,
+          "resetsPer100": 3.95,
+          "uncachedMTok": 172.3
+        },
+        {
+          "usd": 26.52,
+          "resetsPer100": 3.95,
+          "uncachedMTok": 169.9
+        },
+        {
+          "usd": 26.96,
+          "resetsPer100": 3.95,
+          "uncachedMTok": 172.9
+        },
+        {
+          "usd": 25.69,
+          "resetsPer100": 3.96,
+          "uncachedMTok": 164.3
+        },
+        {
+          "usd": 26.43,
+          "resetsPer100": 3.96,
+          "uncachedMTok": 169.3
+        },
+        {
+          "usd": 26.4,
+          "resetsPer100": 3.95,
+          "uncachedMTok": 169.1
+        },
+        {
+          "usd": 26.28,
+          "resetsPer100": 3.95,
+          "uncachedMTok": 168.3
+        },
+        {
+          "usd": 27.18,
+          "resetsPer100": 3.95,
+          "uncachedMTok": 174.4
+        },
+        {
+          "usd": 26.95,
+          "resetsPer100": 3.96,
+          "uncachedMTok": 172.8
+        },
+        {
+          "usd": 26.6,
+          "resetsPer100": 3.95,
+          "uncachedMTok": 170.4
+        },
+        {
+          "usd": 26.54,
+          "resetsPer100": 3.96,
+          "uncachedMTok": 170
+        },
+        {
+          "usd": 27.06,
+          "resetsPer100": 3.95,
+          "uncachedMTok": 173.5
+        }
+      ],
+      "meanUsd": 26.47,
+      "sdUsd": 0.44,
+      "ci95": [
+        26.27,
+        26.66
+      ],
+      "ttftP50": 1584,
+      "ttftP99": 3511,
+      "ttftMax": 5413
+    }
+  },
+  "verdict": {
+    "deltaUsd": -0.72,
+    "deltaPct": -2.65,
+    "overlappingCI": false,
+    "p99DeltaMs": -5
+  }
+}

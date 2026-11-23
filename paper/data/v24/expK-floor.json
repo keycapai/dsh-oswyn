@@ -1,0 +1,563 @@
+{
+  "meta": {
+    "ttft": {
+      "a": 1525.9,
+      "b": 0.0088718
+    },
+    "sessions": 293
+  },
+  "origin": {
+    "cfg": {
+      "policy": "none"
+    },
+    "seeds": 5,
+    "usd": 306.95,
+    "usdPerReplay": 61.39,
+    "uncachedMTokPerReplay": 378.4,
+    "uncachedMTok": 1891.8,
+    "hitRate": 0.8033,
+    "ttft": {
+      "p50": 1609,
+      "p90": 2636,
+      "p95": 4101,
+      "p99": 8517
+    },
+    "surfaceMTok": {
+      "p50": 0.182,
+      "p90": 0.689,
+      "p99": 1.435
+    },
+    "meanSurfaceMTok": 0.283,
+    "meanHistMTok": 0.273,
+    "resetsPer100Turns": 0,
+    "overCeilingTurnPct": 0,
+    "meanFireTurn": null,
+    "sessionFirePct": 0
+  },
+  "rows": [
+    {
+      "label": "origin",
+      "cfg": {
+        "policy": "none"
+      },
+      "seeds": 5,
+      "usd": 306.95,
+      "usdPerReplay": 61.39,
+      "uncachedMTokPerReplay": 378.4,
+      "uncachedMTok": 1891.8,
+      "hitRate": 0.8033,
+      "ttft": {
+        "p50": 1609,
+        "p90": 2636,
+        "p95": 4101,
+        "p99": 8517
+      },
+      "surfaceMTok": {
+        "p50": 0.182,
+        "p90": 0.689,
+        "p99": 1.435
+      },
+      "meanSurfaceMTok": 0.283,
+      "meanHistMTok": 0.273,
+      "resetsPer100Turns": 0,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": null,
+      "sessionFirePct": 0
+    },
+    {
+      "label": "R=1 no-floor",
+      "cfg": {
+        "policy": "rounds",
+        "R": 1,
+        "coalesce": false,
+        "Vhard": null,
+        "minSurplus": 0
+      },
+      "seeds": 5,
+      "usd": 132.26,
+      "usdPerReplay": 26.45,
+      "uncachedMTokPerReplay": 169.4,
+      "uncachedMTok": 847.2,
+      "hitRate": 0.6712,
+      "ttft": {
+        "p50": 1584,
+        "p90": 2160,
+        "p95": 2570,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 4.31,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 1,
+      "sessionFirePct": 100
+    },
+    {
+      "label": "R=2 no-floor",
+      "cfg": {
+        "policy": "rounds",
+        "R": 2,
+        "coalesce": false,
+        "Vhard": null,
+        "minSurplus": 0
+      },
+      "seeds": 5,
+      "usd": 132.26,
+      "usdPerReplay": 26.45,
+      "uncachedMTokPerReplay": 169.4,
+      "uncachedMTok": 847.2,
+      "hitRate": 0.6712,
+      "ttft": {
+        "p50": 1584,
+        "p90": 2160,
+        "p95": 2570,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 4.31,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 2,
+      "sessionFirePct": 100
+    },
+    {
+      "label": "R=3 no-floor",
+      "cfg": {
+        "policy": "rounds",
+        "R": 3,
+        "coalesce": false,
+        "Vhard": null,
+        "minSurplus": 0
+      },
+      "seeds": 5,
+      "usd": 132.3,
+      "usdPerReplay": 26.46,
+      "uncachedMTokPerReplay": 169.5,
+      "uncachedMTok": 847.4,
+      "hitRate": 0.6711,
+      "ttft": {
+        "p50": 1584,
+        "p90": 2160,
+        "p95": 2570,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 4.31,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 3,
+      "sessionFirePct": 100
+    },
+    {
+      "label": "R=5 no-floor",
+      "cfg": {
+        "policy": "rounds",
+        "R": 5,
+        "coalesce": false,
+        "Vhard": null,
+        "minSurplus": 0
+      },
+      "seeds": 5,
+      "usd": 133.35,
+      "usdPerReplay": 26.67,
+      "uncachedMTokPerReplay": 170.9,
+      "uncachedMTok": 854.5,
+      "hitRate": 0.6689,
+      "ttft": {
+        "p50": 1584,
+        "p90": 2164,
+        "p95": 2579,
+        "p99": 3606
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.357
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 3.93,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 5,
+      "sessionFirePct": 91.1
+    },
+    {
+      "label": "R=1 floor=2k",
+      "cfg": {
+        "policy": "rounds",
+        "R": 1,
+        "coalesce": false,
+        "Vhard": null,
+        "minSurplus": 2000
+      },
+      "seeds": 5,
+      "usd": 135.44,
+      "usdPerReplay": 27.09,
+      "uncachedMTokPerReplay": 173.7,
+      "uncachedMTok": 868.7,
+      "hitRate": 0.6629,
+      "ttft": {
+        "p50": 1586,
+        "p90": 2183,
+        "p95": 2585,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 3.39,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 6.06,
+      "sessionFirePct": 78.5
+    },
+    {
+      "label": "R=2 floor=2k",
+      "cfg": {
+        "policy": "rounds",
+        "R": 2,
+        "coalesce": false,
+        "Vhard": null,
+        "minSurplus": 2000
+      },
+      "seeds": 5,
+      "usd": 135.44,
+      "usdPerReplay": 27.09,
+      "uncachedMTokPerReplay": 173.7,
+      "uncachedMTok": 868.7,
+      "hitRate": 0.6629,
+      "ttft": {
+        "p50": 1586,
+        "p90": 2183,
+        "p95": 2585,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 3.39,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 6.06,
+      "sessionFirePct": 78.5
+    },
+    {
+      "label": "R=3 floor=2k",
+      "cfg": {
+        "policy": "rounds",
+        "R": 3,
+        "coalesce": false,
+        "Vhard": null,
+        "minSurplus": 2000
+      },
+      "seeds": 5,
+      "usd": 135.44,
+      "usdPerReplay": 27.09,
+      "uncachedMTokPerReplay": 173.7,
+      "uncachedMTok": 868.7,
+      "hitRate": 0.6629,
+      "ttft": {
+        "p50": 1586,
+        "p90": 2183,
+        "p95": 2585,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 3.39,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 6.06,
+      "sessionFirePct": 78.5
+    },
+    {
+      "label": "R=5 floor=2k",
+      "cfg": {
+        "policy": "rounds",
+        "R": 5,
+        "coalesce": false,
+        "Vhard": null,
+        "minSurplus": 2000
+      },
+      "seeds": 5,
+      "usd": 135.71,
+      "usdPerReplay": 27.14,
+      "uncachedMTokPerReplay": 174.1,
+      "uncachedMTok": 870.5,
+      "hitRate": 0.6628,
+      "ttft": {
+        "p50": 1586,
+        "p90": 2183,
+        "p95": 2588,
+        "p99": 3600
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.357
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 3.37,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 6.11,
+      "sessionFirePct": 78.2
+    },
+    {
+      "label": "R=3 floor=0",
+      "cfg": {
+        "policy": "rounds",
+        "R": 3,
+        "coalesce": false,
+        "Vhard": null,
+        "minSurplus": 0
+      },
+      "seeds": 5,
+      "usd": 132.3,
+      "usdPerReplay": 26.46,
+      "uncachedMTokPerReplay": 169.5,
+      "uncachedMTok": 847.4,
+      "hitRate": 0.6711,
+      "ttft": {
+        "p50": 1584,
+        "p90": 2160,
+        "p95": 2570,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 4.31,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 3,
+      "sessionFirePct": 100
+    },
+    {
+      "label": "R=3 floor=500",
+      "cfg": {
+        "policy": "rounds",
+        "R": 3,
+        "coalesce": false,
+        "Vhard": null,
+        "minSurplus": 500
+      },
+      "seeds": 5,
+      "usd": 135.39,
+      "usdPerReplay": 27.08,
+      "uncachedMTokPerReplay": 173.7,
+      "uncachedMTok": 868.4,
+      "hitRate": 0.663,
+      "ttft": {
+        "p50": 1586,
+        "p90": 2183,
+        "p95": 2585,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 3.42,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 5.91,
+      "sessionFirePct": 79.2
+    },
+    {
+      "label": "R=3 floor=1000",
+      "cfg": {
+        "policy": "rounds",
+        "R": 3,
+        "coalesce": false,
+        "Vhard": null,
+        "minSurplus": 1000
+      },
+      "seeds": 5,
+      "usd": 135.4,
+      "usdPerReplay": 27.08,
+      "uncachedMTokPerReplay": 173.7,
+      "uncachedMTok": 868.5,
+      "hitRate": 0.663,
+      "ttft": {
+        "p50": 1586,
+        "p90": 2183,
+        "p95": 2585,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 3.4,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 5.94,
+      "sessionFirePct": 78.8
+    },
+    {
+      "label": "R=3 floor=2000",
+      "cfg": {
+        "policy": "rounds",
+        "R": 3,
+        "coalesce": false,
+        "Vhard": null,
+        "minSurplus": 2000
+      },
+      "seeds": 5,
+      "usd": 135.44,
+      "usdPerReplay": 27.09,
+      "uncachedMTokPerReplay": 173.7,
+      "uncachedMTok": 868.7,
+      "hitRate": 0.6629,
+      "ttft": {
+        "p50": 1586,
+        "p90": 2183,
+        "p95": 2585,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 3.39,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 6.06,
+      "sessionFirePct": 78.5
+    },
+    {
+      "label": "R=3 floor=4000",
+      "cfg": {
+        "policy": "rounds",
+        "R": 3,
+        "coalesce": false,
+        "Vhard": null,
+        "minSurplus": 4000
+      },
+      "seeds": 5,
+      "usd": 135.5,
+      "usdPerReplay": 27.1,
+      "uncachedMTokPerReplay": 173.8,
+      "uncachedMTok": 869.2,
+      "hitRate": 0.6628,
+      "ttft": {
+        "p50": 1586,
+        "p90": 2183,
+        "p95": 2585,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 3.33,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 6.17,
+      "sessionFirePct": 77.1
+    },
+    {
+      "label": "R=3 floor=8000",
+      "cfg": {
+        "policy": "rounds",
+        "R": 3,
+        "coalesce": false,
+        "Vhard": null,
+        "minSurplus": 8000
+      },
+      "seeds": 5,
+      "usd": 135.78,
+      "usdPerReplay": 27.16,
+      "uncachedMTokPerReplay": 174.2,
+      "uncachedMTok": 871,
+      "hitRate": 0.6624,
+      "ttft": {
+        "p50": 1587,
+        "p90": 2183,
+        "p95": 2585,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 3.28,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 6.36,
+      "sessionFirePct": 76.1
+    },
+    {
+      "label": "R=3 floor=16000",
+      "cfg": {
+        "policy": "rounds",
+        "R": 3,
+        "coalesce": false,
+        "Vhard": null,
+        "minSurplus": 16000
+      },
+      "seeds": 5,
+      "usd": 136.22,
+      "usdPerReplay": 27.24,
+      "uncachedMTokPerReplay": 174.8,
+      "uncachedMTok": 873.9,
+      "hitRate": 0.662,
+      "ttft": {
+        "p50": 1588,
+        "p90": 2183,
+        "p95": 2585,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 3.18,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 6.73,
+      "sessionFirePct": 73.7
+    }
+  ]
+}

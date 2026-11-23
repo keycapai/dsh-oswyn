@@ -1,0 +1,86 @@
+name: Release
+
+# Tag-driven: pushing vX.Y.Z publishes that exact version to npm with a signed
+# provenance attestation, then attaches the tarball to a GitHub Release.
+# Authentication is OIDC (npm Trusted Publishing) — no long-lived npm token.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Build and pack but do not publish'
+        type: boolean
+        default: true
+
+permissions:
+  contents: write   # create the GitHub Release
+  id-token: write   # mint the OIDC token npm exchanges for a publish credential
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      # Trusted Publishing needs a recent npm; the runner's bundled one is too old
+      # to speak the OIDC exchange and fails with an opaque auth error.
+      - name: Upgrade npm
+        run: npm install -g npm@latest
+
+      - name: Install
+        run: npm install --no-audit --no-fund
+
+      - name: Test
+        run: node --test test/*.test.js
+
+      # A tag that disagrees with package.json would publish the wrong version
+      # under the right name, and npm does not allow reusing a version number.
+      - name: Check the tag matches package.json
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          PKG="$(node -p "require('./package.json').version")"
+          echo "tag=$TAG package.json=$PKG"
+          if [ "$TAG" != "$PKG" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match package.json version $PKG."
+            exit 1
+          fi
+
+      # Generated bundle: make sure what ships is what the sources produce.
+      - name: Build client bundle
+        run: node lib/client/build.js
+
+      - name: Pack
+        id: pack
+        run: |
+          npm pack --silent
+          TARBALL="$(ls dsh-oswyn-*.tgz | head -1)"
+          echo "tarball=$TARBALL" >> "$GITHUB_OUTPUT"
+          echo "Packed $TARBALL"
+
+      - name: Publish to npm
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: npm publish "${{ steps.pack.outputs.tarball }}" --provenance --access public
+
+      - name: Publish (dry run)
+        if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        run: npm publish "${{ steps.pack.outputs.tarball }}" --provenance --access public --dry-run
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.pack.outputs.tarball }}
+          generate_release_notes: true

@@ -676,4 +676,326 @@ test('Suite 6 [6.5]: session/event updates tracker step via deriveMessages when 
 
   assert.equal(tracker.consecutiveUncompressedSteps, 1, 'Tracker must inspect derived messages and increment uncompressed steps');
   assert.ok(tracker.accumulatedUncompressedChars > 600, 'Accumulated uncompressed chars must be counted from derived messages');
+
+  // Even after queueMicrotask(run) flushes, the same event.seq must not double-increment
+  await Promise.resolve();
+  assert.equal(tracker.consecutiveUncompressedSteps, 1, 'Microtask re-run must not double-count the same event.seq');
 });
+
+test('Suite 6 [6.6]: compression in step N suppresses nudge in step N+1 even when session.step is undefined', async () => {
+  const ctx = makeMockCtx();
+  apply(ctx, {
+    enabled: true,
+    adaptiveNudgeEnabled: true,
+    coldStartSteps: 0,
+    accumulatedPayloadThreshold: 2000
+  });
+
+  const preStep = ctx._hooks['agent/pre-step'];
+  const onEvent = ctx._hooks['session/event'];
+  const session = {
+    id: 'sess_step_sync_regression',
+    totalTokens: 9000
+    // Intentionally omit session.step to mirror real DSH runtime
+  };
+
+  // Step 5 pre-step syncs step=5 into tracker
+  await preStep(
+    { agent: { session }, turn: 3, step: 5, signal: { aborted: false } },
+    async () => ({ kind: 'enter', messages: [{ role: 'user', content: [{ type: 'text', text: 'continue' }] }] })
+  );
+
+  // Assistant compresses during step 5 -> session/event fires without session.step
+  onEvent(session, {
+    seq: 20,
+    type: 'assistant/message',
+    data: {
+      message: {
+        role: 'assistant',
+        content: [{ type: 'text', text: '```result-summary\ntruncate keep 10 lines\n- compacted\n```' }]
+      }
+    }
+  });
+
+  const tracker = getSessionTracker(session);
+  assert.equal(tracker.lastCompressStep, 5, 'lastCompressStep must inherit synced step 5 instead of defaulting to 1');
+
+  // Step 6 arrives with a >2000-char tool output: Guard 3 (ALREADY_COMPRESSED) must suppress nudge
+  const step6Messages = [
+    { role: 'user', content: [{ type: 'text', text: 'next' }] },
+    { role: 'tool', toolName: 'bash', content: [{ type: 'text', text: 'y'.repeat(2500) }] }
+  ];
+  const decision = await preStep(
+    { agent: { session }, turn: 3, step: 6, signal: { aborted: false } },
+    async () => ({ kind: 'enter', messages: step6Messages })
+  );
+
+  assert.equal(decision.messages.length, step6Messages.length, 'Must NOT nudge on step 6 right after compression on step 5');
+});
+
+test('Suite 6 [6.7]: auto-compression resets WillingnessTracker and suppresses immediate nudge', () => {
+  const tracker = new WillingnessTracker({ coldStartSteps: 0, accumulatedPayloadThreshold: 2000 });
+  tracker.consecutiveUncompressedSteps = 3;
+  tracker.accumulatedUncompressedChars = 5000;
+  tracker.syncStep(2, 4);
+
+  // Simulate auto-policy compression on step 4 (no fence in assistant message)
+  tracker.updateStep({
+    turn: 2,
+    step: 4,
+    outgoingMessages: [{ role: 'tool', toolName: 'bash', content: 'x'.repeat(2500) }],
+    incomingDecision: { role: 'assistant', content: 'No fence written by model' },
+    compressed: true,
+    eventSeq: 41
+  });
+
+  assert.equal(tracker.consecutiveUncompressedSteps, 0);
+  assert.equal(tracker.accumulatedUncompressedChars, 0);
+  assert.equal(tracker.lastCompressStep, 4);
+
+  const dec = tracker.evaluateNudgeNeeded({
+    turn: 2,
+    step: 5,
+    outgoingMessages: [{ role: 'tool', toolName: 'bash', content: 'z'.repeat(3000) }],
+    session: { totalTokens: 8000 }
+  });
+  assert.equal(dec.shouldNudge, false);
+  assert.equal(dec.reason, 'ALREADY_COMPRESSED');
+});
+
+test('Suite 6 [6.8]: updateStep inspects prior tool outputs even when newly appended assistant message is at tail', () => {
+  const tracker = new WillingnessTracker({ minChars: 600 });
+  const derivedWithTrailingAssistant = [
+    { role: 'user', content: [{ type: 'text', text: 'check logs' }] },
+    { role: 'tool', toolName: 'bash', content: [{ type: 'text', text: 'L'.repeat(1200) }] },
+    { role: 'assistant', content: [{ type: 'text', text: 'Checking next step without fence.' }] }
+  ];
+
+  tracker.updateStep({
+    turn: 2,
+    step: 3,
+    outgoingMessages: derivedWithTrailingAssistant,
+    incomingDecision: derivedWithTrailingAssistant[2],
+    eventSeq: 55
+  });
+
+  assert.equal(tracker.consecutiveUncompressedSteps, 1);
+  assert.equal(tracker.accumulatedUncompressedChars, 1200);
+});
+
+// ============================================================================
+// Suite 7: Regression — nudge cadence after compliance
+// ============================================================================
+
+function payloadMessages(chars, toolName = 'read') {
+  return [
+    { role: 'user', content: [{ type: 'text', text: 'go' }] },
+    { role: 'assistant', content: [{ type: 'text', text: 'reading' }] },
+    { role: 'tool', toolName, content: [{ type: 'text', text: 'Z'.repeat(chars) }] }
+  ];
+}
+
+test('Suite 7 [7.1]: ALREADY_COMPRESSED stays silent for two steps after a compression', () => {
+  const tracker = new WillingnessTracker();
+  tracker.recordCompression(9);
+
+  const atStep10 = tracker.evaluateNudgeNeeded({
+    turn: 2, step: 10, outgoingMessages: payloadMessages(9493), session: { totalTokens: 60000 }
+  });
+  assert.equal(atStep10.shouldNudge, false);
+  assert.equal(atStep10.reason, 'ALREADY_COMPRESSED');
+
+  const atStep11 = tracker.evaluateNudgeNeeded({
+    turn: 2, step: 11, outgoingMessages: payloadMessages(9493), session: { totalTokens: 60000 }
+  });
+  assert.equal(atStep11.shouldNudge, false, 'one intervening tool call must not re-arm the nudge');
+  assert.equal(atStep11.reason, 'ALREADY_COMPRESSED');
+});
+
+test('Suite 7 [7.2]: recordNudgeEmitted clears accumulated backlog so the same chars are not re-reported', () => {
+  const tracker = new WillingnessTracker();
+  tracker.accumulatedUncompressedChars = 5000;
+  tracker.consecutiveUncompressedSteps = 3;
+  tracker.recordNudgeEmitted(7);
+
+  assert.equal(tracker.accumulatedUncompressedChars, 0);
+  assert.equal(tracker.consecutiveUncompressedSteps, 0);
+
+  const dec = tracker.evaluateNudgeNeeded({
+    turn: 3, step: 9, outgoingMessages: payloadMessages(255), session: { totalTokens: 60000 }
+  });
+  assert.equal(dec.shouldNudge, false, 'small payload right after a nudge must stay silent');
+});
+
+test('Suite 7 [7.3]: budget tier reports accumulated + current chars, not only current candidates', () => {
+  const tracker = new WillingnessTracker();
+  tracker.accumulatedUncompressedChars = 1800;
+  const dec = tracker.evaluateNudgeNeeded({
+    turn: 3, step: 12, outgoingMessages: payloadMessages(255), session: { totalTokens: 60000 }
+  });
+  assert.equal(dec.shouldNudge, true);
+  assert.equal(dec.tier, 'budget');
+  assert.equal(dec.reportedChars, 2055);
+
+  const text = buildAdaptiveNudgeNotice(dec.tier, dec.candidateTargets, { reportedChars: dec.reportedChars });
+  assert.match(text, /已达 2055 字符/);
+  assert.ok(!/已达 255 字符/.test(text));
+});
+
+test('Suite 7 [7.4]: inertia trigger requires a minimum pending payload', () => {
+  const tracker = new WillingnessTracker({ uncompressedStepThreshold: 2, minChars: 600 });
+  tracker.consecutiveUncompressedSteps = 5;
+
+  const tiny = tracker.evaluateNudgeNeeded({
+    turn: 3, step: 12, outgoingMessages: payloadMessages(70), session: { totalTokens: 60000 }
+  });
+  assert.equal(tiny.shouldNudge, false, '70 chars of pending output must not trigger contractual inertia');
+
+  const big = tracker.evaluateNudgeNeeded({
+    turn: 3, step: 13, outgoingMessages: payloadMessages(1500), session: { totalTokens: 60000 }
+  });
+  assert.equal(big.shouldNudge, true);
+  assert.equal(big.reason, 'CONSECUTIVE_UNCOMPRESSED_INERTIA');
+});
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Suite 8 — "刚压就发提醒" regressions (compress-then-nudge)
+// ─────────────────────────────────────────────────────────────────────────────
+
+test('Suite 8 [8.1]: a bare prose mention of a fence is NOT compliance credit', () => {
+  const tracker = new WillingnessTracker();
+  tracker.consecutiveUncompressedSteps = 5;
+  tracker.accumulatedUncompressedChars = 9000;
+
+  // The model explaining the protocol / quoting a fence while reasoning — no real
+  // fenced block, nothing that findSummaryBlock can parse.
+  tracker.updateStep({
+    turn: 3,
+    step: 7,
+    outgoingMessages: [],
+    incomingDecision: {
+      role: 'assistant',
+      content: [{ type: 'text', text: 'I will use ```result-summary to compact this output.' }]
+    },
+    compressed: false,
+    eventSeq: 9001
+  });
+
+  assert.equal(tracker.lastCompressStep, null, 'prose mention must not stamp lastCompressStep');
+  assert.equal(tracker.accumulatedUncompressedChars, 9000, 'backlog must survive a non-compressing mention');
+  assert.equal(tracker.consecutiveUncompressedSteps, 5);
+});
+
+test('Suite 8 [8.2]: a real fenced block still credits compliance', () => {
+  const tracker = new WillingnessTracker();
+  tracker.accumulatedUncompressedChars = 9000;
+
+  const text = ['done', '```result-summary', 'truncate keep 2 lines', '- fact', '```'].join('\n');
+  tracker.updateStep({
+    turn: 3,
+    step: 7,
+    outgoingMessages: [],
+    incomingDecision: { role: 'assistant', content: [{ type: 'text', text }] },
+    compressed: false,
+    eventSeq: 9002
+  });
+
+  assert.equal(tracker.lastCompressStep, 7);
+  assert.equal(tracker.accumulatedUncompressedChars, 0);
+  assert.equal(tracker.consecutiveUncompressedSteps, 0);
+});
+
+test('Suite 8 [8.3]: silence window is strictly wider than the inertia trigger window', () => {
+  const tracker = new WillingnessTracker({ uncompressedStepThreshold: 2, cooldownSteps: 2 });
+  tracker.recordCompression(10);
+
+  const toolMsg = payloadMessages(3000);
+  const reasons = [];
+  for (let step = 11; step <= 14; step++) {
+    tracker.updateStep({
+      turn: 1,
+      step,
+      outgoingMessages: toolMsg,
+      incomingDecision: { role: 'assistant', content: [{ type: 'text', text: 'ok' }] },
+      compressed: false,
+      eventSeq: 9100 + step
+    });
+    reasons.push({ step, ...tracker.evaluateNudgeNeeded({ turn: 1, step, outgoingMessages: toolMsg }) });
+  }
+
+  // Previously recordCompression(N) -> ALREADY_COMPRESSED at N+1,N+2 and the inertia
+  // trigger fired at N+3, i.e. the model was nagged 3 steps after complying.
+  assert.equal(reasons[0].shouldNudge, false, 'step+1 must be silent');
+  assert.equal(reasons[1].shouldNudge, false, 'step+2 must be silent');
+  assert.equal(reasons[2].shouldNudge, false, 'step+3 must still be silent (window widened to 3)');
+  assert.equal(reasons[0].reason, 'ALREADY_COMPRESSED');
+});
+
+test('Suite 8 [8.4]: complianceWindowSteps is configurable and can be widened further', () => {
+  const tracker = new WillingnessTracker({ complianceWindowSteps: 5 });
+  tracker.recordCompression(10);
+  const toolMsg = payloadMessages(3000);
+
+  for (let step = 11; step <= 15; step++) {
+    tracker.updateStep({
+      turn: 1,
+      step,
+      outgoingMessages: toolMsg,
+      incomingDecision: { role: 'assistant', content: [{ type: 'text', text: 'ok' }] },
+      compressed: false,
+      eventSeq: 9200 + step
+    });
+    const dec = tracker.evaluateNudgeNeeded({ turn: 1, step, outgoingMessages: toolMsg });
+    assert.equal(dec.shouldNudge, false, 'step ' + step + ' is inside the configured 5-step window');
+  }
+});
+
+test('Suite 8 [8.5]: observeSurfaceReplaces reports the delta and leaves crediting to the caller', () => {
+  const tracker = new WillingnessTracker();
+
+  // First observation only establishes the baseline: an unknown starting count must
+  // never be mistaken for "a replacement just landed".
+  assert.equal(tracker.observeSurfaceReplaces(10), false);
+  assert.equal(tracker.observeSurfaceReplaces(10), false, 'unchanged count is not a write');
+  assert.equal(tracker.observeSurfaceReplaces(11), true, 'a grown count is a real write');
+
+  // The tracker no longer records compression on its own here: the caller knows which
+  // step the fence was authored on, so it passes that step explicitly. Recording with
+  // lastObservedStep attributed the credit to the wrong step.
+  assert.equal(tracker.lastCompressStep, null);
+});
+
+test('Suite 8 [8.6]: an unchanged surface count does not fabricate compliance', () => {
+  const tracker = new WillingnessTracker();
+  tracker.accumulatedUncompressedChars = 7000;
+  tracker.consecutiveUncompressedSteps = 3;
+
+  tracker.observeSurfaceReplaces(10);
+  const landed = tracker.observeSurfaceReplaces(10);
+
+  assert.equal(landed, false);
+  assert.equal(tracker.accumulatedUncompressedChars, 7000, 'no write means no forgiveness');
+  assert.equal(tracker.consecutiveUncompressedSteps, 3);
+});
+
+test('Suite 8 [8.7]: updateStep credits a grown surface count reported inline', () => {
+  const tracker = new WillingnessTracker();
+  tracker.accumulatedUncompressedChars = 7000;
+
+  tracker.updateStep({
+    turn: 2, step: 5, outgoingMessages: [],
+    incomingDecision: { role: 'assistant', content: [{ type: 'text', text: 'ok' }] },
+    compressed: false, surfaceReplaces: 4, eventSeq: 9301
+  });
+  assert.equal(tracker.lastCompressStep, null, 'first observation only records the baseline');
+
+  tracker.updateStep({
+    turn: 2, step: 6, outgoingMessages: [],
+    incomingDecision: { role: 'assistant', content: [{ type: 'text', text: 'ok' }] },
+    compressed: false, surfaceReplaces: 5, eventSeq: 9302
+  });
+  assert.equal(tracker.lastCompressStep, 6);
+  assert.equal(tracker.accumulatedUncompressedChars, 0);
+});
+

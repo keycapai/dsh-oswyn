@@ -2,7 +2,7 @@
   "metadata": {
     "benchmarkVersion": "2.3.0",
     "model": "group/deepseek-v4.1-flash",
-    "timestamp": "2026-11-17T08:11:40.243Z",
+    "timestamp": "2026-11-17T08:16:34.613Z",
     "pricing": {
       "uncachedPromptUsdPerM": 0.15,
       "cachedPromptUsdPerM": 0.003,
@@ -14,27 +14,27 @@
       "scenarioId": "LC-1",
       "name": "Sliding Window Rate Limiter (TypeScript/Python)",
       "v22": {
-        "promptTokens": 2309,
-        "completionTokens": 3518,
-        "reasoningTokens": 2800,
-        "ttftMs": 5124,
-        "totalTimeMs": 56964,
-        "costUsd": 0.00245715,
-        "accuracy": 0.5
+        "promptTokens": 2356,
+        "completionTokens": 1200,
+        "reasoningTokens": 1186,
+        "ttftMs": 1220,
+        "totalTimeMs": 7401,
+        "costUsd": 0.00075353,
+        "accuracy": 0
       },
       "v23": {
         "promptTokens": 177,
-        "completionTokens": 1729,
-        "reasoningTokens": 533,
-        "ttftMs": 2586,
-        "totalTimeMs": 39590,
-        "costUsd": 0.00106395,
-        "accuracy": 1
+        "completionTokens": 2509,
+        "reasoningTokens": 1486,
+        "ttftMs": 3816,
+        "totalTimeMs": 46483,
+        "costUsd": 0.00153195,
+        "accuracy": 0.75
       },
       "improvements": {
-        "tokenReductionPct": 92.33,
-        "ttftSpeedupPct": 49.53,
-        "costSavingsPct": 56.7
+        "tokenReductionPct": 92.49,
+        "ttftSpeedupPct": -212.79,
+        "costSavingsPct": -103.3
       }
     },
     {
@@ -43,25 +43,25 @@
       "v22": {
         "promptTokens": 1858,
         "completionTokens": 1200,
-        "reasoningTokens": 501,
-        "ttftMs": 2560,
-        "totalTimeMs": 14708,
-        "costUsd": 0.00073528,
+        "reasoningTokens": 486,
+        "ttftMs": 2455,
+        "totalTimeMs": 27087,
+        "costUsd": 0.00075409,
         "accuracy": 1
       },
       "v23": {
         "promptTokens": 151,
         "completionTokens": 1200,
-        "reasoningTokens": 862,
-        "ttftMs": 2675,
-        "totalTimeMs": 26029,
-        "costUsd": 0.00074265,
+        "reasoningTokens": 1096,
+        "ttftMs": 2521,
+        "totalTimeMs": 12445,
+        "costUsd": 0.00072383,
         "accuracy": 0.8
       },
       "improvements": {
         "tokenReductionPct": 91.87,
-        "ttftSpeedupPct": -4.49,
-        "costSavingsPct": -1
+        "ttftSpeedupPct": -2.69,
+        "costSavingsPct": 4.01
       }
     }
   ],
@@ -71,40 +71,40 @@
       "name": "Microservice Deadlock & Socket Diagnosis",
       "v22": {
         "promptTokens": 2448,
-        "ttftMs": 136481,
-        "costUsd": 0.0004273,
+        "ttftMs": 70927,
+        "costUsd": 0.0002113,
         "accuracy": 1,
         "hits": 4,
         "totalNeedles": 4
       },
       "v23NoRecall": {
         "promptTokens": 220,
-        "ttftMs": 64655,
-        "costUsd": 0.0002304,
+        "ttftMs": 2492,
+        "costUsd": 0.00017078,
         "accuracy": 0.5,
         "hits": 2,
         "totalNeedles": 4
       },
       "v23RecallTool": {
         "promptTokens": 2405,
-        "ttftMs": 2484,
-        "costUsd": 0.00094635,
+        "ttftMs": 2345,
+        "costUsd": 0.00016246,
         "accuracy": 1,
         "hits": 4,
         "totalNeedles": 4
       },
       "v23RecallThink": {
         "promptTokens": 220,
-        "ttftMs": 2295,
-        "costUsd": 0.00018758,
+        "ttftMs": 2466,
+        "costUsd": 0.00021458,
         "accuracy": 0.5,
         "hits": 2,
         "totalNeedles": 4
       },
       "v23RecallBoth": {
         "promptTokens": 2476,
-        "ttftMs": 2555,
-        "costUsd": 0.000747,
+        "ttftMs": 2383,
+        "costUsd": 0.0006319,
         "accuracy": 1,
         "hits": 4,
         "totalNeedles": 4
@@ -115,40 +115,40 @@
       "name": "Database Migration & Execution Plan Audit",
       "v22": {
         "promptTokens": 1922,
-        "ttftMs": 1770,
-        "costUsd": 0.00007686,
+        "ttftMs": 2483,
+        "costUsd": 0.00017586,
         "accuracy": 1,
         "hits": 2,
         "totalNeedles": 2
       },
       "v23NoRecall": {
         "promptTokens": 180,
-        "ttftMs": 4590,
-        "costUsd": 0.0002562,
+        "ttftMs": 3740,
+        "costUsd": 0.00025658,
         "accuracy": 0.5,
         "hits": 1,
         "totalNeedles": 2
       },
       "v23RecallTool": {
         "promptTokens": 1897,
-        "ttftMs": 1881,
-        "costUsd": 0.00037995,
+        "ttftMs": 1983,
+        "costUsd": 0.00011173,
         "accuracy": 1,
         "hits": 2,
         "totalNeedles": 2
       },
       "v23RecallThink": {
         "promptTokens": 180,
-        "ttftMs": 2412,
-        "costUsd": 0.00022418,
+        "ttftMs": 2500,
+        "costUsd": 0.00021938,
         "accuracy": 0.5,
         "hits": 1,
         "totalNeedles": 2
       },
       "v23RecallBoth": {
         "promptTokens": 1950,
-        "ttftMs": 1828,
-        "costUsd": 0.0003855,
+        "ttftMs": 2466,
+        "costUsd": 0.00017646,
         "accuracy": 1,
         "hits": 2,
         "totalNeedles": 2
@@ -157,11 +157,11 @@
   ],
   "summary": {
     "lowCorrelation": {
-      "avgTokenReductionPct": 92.1,
-      "avgTtftSpeedupPct": 22.52,
-      "avgCostSavingsPct": 27.85,
-      "v22AvgAccuracy": 0.75,
-      "v23AvgAccuracy": 0.9
+      "avgTokenReductionPct": 92.18,
+      "avgTtftSpeedupPct": -107.74,
+      "avgCostSavingsPct": -49.64,
+      "v22AvgAccuracy": 0.5,
+      "v23AvgAccuracy": 0.775
     },
     "highCorrelation": {
       "v22AvgAccuracy": 1,

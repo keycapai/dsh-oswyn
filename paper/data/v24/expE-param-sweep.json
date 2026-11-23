@@ -1,0 +1,1031 @@
+{
+  "meta": {
+    "ttft": {
+      "a": 1525.9,
+      "b": 0.0088718
+    },
+    "sessions": 293
+  },
+  "rows": [
+    {
+      "cfg": {
+        "policy": "none"
+      },
+      "seeds": 5,
+      "usd": 306.95,
+      "usdPerReplay": 61.39,
+      "uncachedMTokPerReplay": 378.4,
+      "uncachedMTok": 1891.8,
+      "hitRate": 0.8033,
+      "ttft": {
+        "p50": 1609,
+        "p90": 2636,
+        "p95": 4101,
+        "p99": 8517
+      },
+      "surfaceMTok": {
+        "p50": 0.182,
+        "p90": 0.689,
+        "p99": 1.435
+      },
+      "meanSurfaceMTok": 0.283,
+      "meanHistMTok": 0.273,
+      "resetsPer100Turns": 0,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": null,
+      "sessionFirePct": 0
+    },
+    {
+      "cfg": {
+        "policy": "ttl",
+        "tauTtl": 86400,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 277.62,
+      "usdPerReplay": 55.52,
+      "uncachedMTokPerReplay": 343.3,
+      "uncachedMTok": 1716.6,
+      "hitRate": 0.7962,
+      "ttft": {
+        "p50": 1607,
+        "p90": 2558,
+        "p95": 3677,
+        "p99": 7881
+      },
+      "surfaceMTok": {
+        "p50": 0.154,
+        "p90": 0.614,
+        "p99": 1.415
+      },
+      "meanSurfaceMTok": 0.248,
+      "meanHistMTok": 0.238,
+      "resetsPer100Turns": 0.19,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 25.85,
+      "sessionFirePct": 4.4
+    },
+    {
+      "cfg": {
+        "policy": "ttl",
+        "tauTtl": 3600,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 191.3,
+      "usdPerReplay": 38.26,
+      "uncachedMTokPerReplay": 239.7,
+      "uncachedMTok": 1198.6,
+      "hitRate": 0.7619,
+      "ttft": {
+        "p50": 1600,
+        "p90": 2356,
+        "p95": 2945,
+        "p99": 4872
+      },
+      "surfaceMTok": {
+        "p50": 0.104,
+        "p90": 0.336,
+        "p99": 0.902
+      },
+      "meanSurfaceMTok": 0.148,
+      "meanHistMTok": 0.138,
+      "resetsPer100Turns": 1.29,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 16.34,
+      "sessionFirePct": 30
+    },
+    {
+      "cfg": {
+        "policy": "ttl",
+        "tauTtl": 300,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 167.95,
+      "usdPerReplay": 33.59,
+      "uncachedMTokPerReplay": 212.3,
+      "uncachedMTok": 1061.4,
+      "hitRate": 0.7331,
+      "ttft": {
+        "p50": 1596,
+        "p90": 2297,
+        "p95": 2815,
+        "p99": 4214
+      },
+      "surfaceMTok": {
+        "p50": 0.083,
+        "p90": 0.261,
+        "p99": 0.629
+      },
+      "meanSurfaceMTok": 0.117,
+      "meanHistMTok": 0.107,
+      "resetsPer100Turns": 1.93,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 11.72,
+      "sessionFirePct": 44.7
+    },
+    {
+      "cfg": {
+        "policy": "volume",
+        "V": 4000,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 135.5,
+      "usdPerReplay": 27.1,
+      "uncachedMTokPerReplay": 173.8,
+      "uncachedMTok": 869.2,
+      "hitRate": 0.6628,
+      "ttft": {
+        "p50": 1586,
+        "p90": 2183,
+        "p95": 2585,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 3.33,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 6.17,
+      "sessionFirePct": 77.1
+    },
+    {
+      "cfg": {
+        "policy": "volume",
+        "V": 8000,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 135.78,
+      "usdPerReplay": 27.16,
+      "uncachedMTokPerReplay": 174.2,
+      "uncachedMTok": 871,
+      "hitRate": 0.6624,
+      "ttft": {
+        "p50": 1587,
+        "p90": 2183,
+        "p95": 2585,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 3.28,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 6.36,
+      "sessionFirePct": 76.1
+    },
+    {
+      "cfg": {
+        "policy": "volume",
+        "V": 12000,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 135.99,
+      "usdPerReplay": 27.2,
+      "uncachedMTokPerReplay": 174.5,
+      "uncachedMTok": 872.4,
+      "hitRate": 0.6622,
+      "ttft": {
+        "p50": 1588,
+        "p90": 2183,
+        "p95": 2585,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 3.24,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 6.55,
+      "sessionFirePct": 75.1
+    },
+    {
+      "cfg": {
+        "policy": "volume",
+        "V": 16000,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 136.22,
+      "usdPerReplay": 27.24,
+      "uncachedMTokPerReplay": 174.8,
+      "uncachedMTok": 873.9,
+      "hitRate": 0.662,
+      "ttft": {
+        "p50": 1588,
+        "p90": 2183,
+        "p95": 2585,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 3.18,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 6.73,
+      "sessionFirePct": 73.7
+    },
+    {
+      "cfg": {
+        "policy": "volume",
+        "V": 24000,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 137.03,
+      "usdPerReplay": 27.41,
+      "uncachedMTokPerReplay": 175.8,
+      "uncachedMTok": 879.1,
+      "hitRate": 0.6621,
+      "ttft": {
+        "p50": 1589,
+        "p90": 2184,
+        "p95": 2588,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.077,
+      "meanHistMTok": 0.067,
+      "resetsPer100Turns": 3.05,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 7.43,
+      "sessionFirePct": 70.6
+    },
+    {
+      "cfg": {
+        "policy": "volume",
+        "V": 32000,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 137.72,
+      "usdPerReplay": 27.54,
+      "uncachedMTokPerReplay": 176.7,
+      "uncachedMTok": 883.5,
+      "hitRate": 0.6624,
+      "ttft": {
+        "p50": 1590,
+        "p90": 2186,
+        "p95": 2590,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.051,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.077,
+      "meanHistMTok": 0.067,
+      "resetsPer100Turns": 2.94,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 7.87,
+      "sessionFirePct": 68.3
+    },
+    {
+      "cfg": {
+        "policy": "volume",
+        "V": 48000,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 139.99,
+      "usdPerReplay": 28,
+      "uncachedMTokPerReplay": 179.5,
+      "uncachedMTok": 897.7,
+      "hitRate": 0.6646,
+      "ttft": {
+        "p50": 1592,
+        "p90": 2200,
+        "p95": 2596,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.056,
+        "p90": 0.182,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.079,
+      "meanHistMTok": 0.069,
+      "resetsPer100Turns": 2.8,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 9.06,
+      "sessionFirePct": 64.8
+    },
+    {
+      "cfg": {
+        "policy": "volume",
+        "V": 64000,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 142.32,
+      "usdPerReplay": 28.46,
+      "uncachedMTokPerReplay": 182.4,
+      "uncachedMTok": 912.1,
+      "hitRate": 0.6679,
+      "ttft": {
+        "p50": 1594,
+        "p90": 2215,
+        "p95": 2610,
+        "p99": 3600
+      },
+      "surfaceMTok": {
+        "p50": 0.061,
+        "p90": 0.182,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.081,
+      "meanHistMTok": 0.071,
+      "resetsPer100Turns": 2.64,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 10.17,
+      "sessionFirePct": 61.1
+    },
+    {
+      "cfg": {
+        "policy": "volume",
+        "V": 96000,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 147.83,
+      "usdPerReplay": 29.57,
+      "uncachedMTokPerReplay": 189.2,
+      "uncachedMTok": 945.8,
+      "hitRate": 0.6775,
+      "ttft": {
+        "p50": 1596,
+        "p90": 2260,
+        "p95": 2653,
+        "p99": 3600
+      },
+      "surfaceMTok": {
+        "p50": 0.07,
+        "p90": 0.185,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.086,
+      "meanHistMTok": 0.076,
+      "resetsPer100Turns": 2.31,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 12.16,
+      "sessionFirePct": 53.6
+    },
+    {
+      "cfg": {
+        "policy": "volume",
+        "V": 128000,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 155.47,
+      "usdPerReplay": 31.09,
+      "uncachedMTokPerReplay": 198.5,
+      "uncachedMTok": 992.4,
+      "hitRate": 0.6895,
+      "ttft": {
+        "p50": 1598,
+        "p90": 2310,
+        "p95": 2748,
+        "p99": 3614
+      },
+      "surfaceMTok": {
+        "p50": 0.082,
+        "p90": 0.193,
+        "p99": 0.357
+      },
+      "meanSurfaceMTok": 0.094,
+      "meanHistMTok": 0.084,
+      "resetsPer100Turns": 1.99,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 15.09,
+      "sessionFirePct": 46.1
+    },
+    {
+      "cfg": {
+        "policy": "rounds",
+        "R": 1,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 132.26,
+      "usdPerReplay": 26.45,
+      "uncachedMTokPerReplay": 169.4,
+      "uncachedMTok": 847.2,
+      "hitRate": 0.6712,
+      "ttft": {
+        "p50": 1584,
+        "p90": 2160,
+        "p95": 2570,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 4.31,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 1,
+      "sessionFirePct": 100
+    },
+    {
+      "cfg": {
+        "policy": "rounds",
+        "R": 2,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 132.26,
+      "usdPerReplay": 26.45,
+      "uncachedMTokPerReplay": 169.4,
+      "uncachedMTok": 847.2,
+      "hitRate": 0.6712,
+      "ttft": {
+        "p50": 1584,
+        "p90": 2160,
+        "p95": 2570,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 4.31,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 2,
+      "sessionFirePct": 100
+    },
+    {
+      "cfg": {
+        "policy": "rounds",
+        "R": 3,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 132.3,
+      "usdPerReplay": 26.46,
+      "uncachedMTokPerReplay": 169.5,
+      "uncachedMTok": 847.4,
+      "hitRate": 0.6711,
+      "ttft": {
+        "p50": 1584,
+        "p90": 2160,
+        "p95": 2570,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 4.31,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 3,
+      "sessionFirePct": 100
+    },
+    {
+      "cfg": {
+        "policy": "rounds",
+        "R": 4,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 132.43,
+      "usdPerReplay": 26.49,
+      "uncachedMTokPerReplay": 169.7,
+      "uncachedMTok": 848.3,
+      "hitRate": 0.6708,
+      "ttft": {
+        "p50": 1584,
+        "p90": 2160,
+        "p95": 2578,
+        "p99": 3586
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.356
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 4.2,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 4,
+      "sessionFirePct": 97.3
+    },
+    {
+      "cfg": {
+        "policy": "rounds",
+        "R": 5,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 133.35,
+      "usdPerReplay": 26.67,
+      "uncachedMTokPerReplay": 170.9,
+      "uncachedMTok": 854.5,
+      "hitRate": 0.6689,
+      "ttft": {
+        "p50": 1584,
+        "p90": 2164,
+        "p95": 2579,
+        "p99": 3606
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.181,
+        "p99": 0.357
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 3.93,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 5,
+      "sessionFirePct": 91.1
+    },
+    {
+      "cfg": {
+        "policy": "rounds",
+        "R": 6,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 135.85,
+      "usdPerReplay": 27.17,
+      "uncachedMTokPerReplay": 174.3,
+      "uncachedMTok": 871.3,
+      "hitRate": 0.6636,
+      "ttft": {
+        "p50": 1586,
+        "p90": 2183,
+        "p95": 2590,
+        "p99": 3602
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.182,
+        "p99": 0.357
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 3.42,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 6,
+      "sessionFirePct": 79.2
+    },
+    {
+      "cfg": {
+        "policy": "rounds",
+        "R": 8,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 140.24,
+      "usdPerReplay": 28.05,
+      "uncachedMTokPerReplay": 179.7,
+      "uncachedMTok": 898.7,
+      "hitRate": 0.6687,
+      "ttft": {
+        "p50": 1590,
+        "p90": 2211,
+        "p95": 2614,
+        "p99": 3614
+      },
+      "surfaceMTok": {
+        "p50": 0.054,
+        "p90": 0.189,
+        "p99": 0.358
+      },
+      "meanSurfaceMTok": 0.08,
+      "meanHistMTok": 0.07,
+      "resetsPer100Turns": 2.91,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 8,
+      "sessionFirePct": 67.6
+    },
+    {
+      "cfg": {
+        "policy": "rounds",
+        "R": 10,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 145.25,
+      "usdPerReplay": 29.05,
+      "uncachedMTokPerReplay": 185.9,
+      "uncachedMTok": 929.7,
+      "hitRate": 0.6752,
+      "ttft": {
+        "p50": 1591,
+        "p90": 2240,
+        "p95": 2669,
+        "p99": 3703
+      },
+      "surfaceMTok": {
+        "p50": 0.06,
+        "p90": 0.194,
+        "p99": 0.364
+      },
+      "meanSurfaceMTok": 0.084,
+      "meanHistMTok": 0.074,
+      "resetsPer100Turns": 2.53,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 10,
+      "sessionFirePct": 58.7
+    },
+    {
+      "cfg": {
+        "policy": "rounds",
+        "R": 12,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 149.69,
+      "usdPerReplay": 29.94,
+      "uncachedMTokPerReplay": 191.3,
+      "uncachedMTok": 956.7,
+      "hitRate": 0.6833,
+      "ttft": {
+        "p50": 1594,
+        "p90": 2254,
+        "p95": 2699,
+        "p99": 3728
+      },
+      "surfaceMTok": {
+        "p50": 0.065,
+        "p90": 0.201,
+        "p99": 0.381
+      },
+      "meanSurfaceMTok": 0.089,
+      "meanHistMTok": 0.079,
+      "resetsPer100Turns": 2.25,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 12,
+      "sessionFirePct": 52.2
+    },
+    {
+      "cfg": {
+        "policy": "rounds",
+        "R": 16,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 159.97,
+      "usdPerReplay": 31.99,
+      "uncachedMTokPerReplay": 203.9,
+      "uncachedMTok": 1019.5,
+      "hitRate": 0.6974,
+      "ttft": {
+        "p50": 1598,
+        "p90": 2289,
+        "p95": 2778,
+        "p99": 3916
+      },
+      "surfaceMTok": {
+        "p50": 0.075,
+        "p90": 0.219,
+        "p99": 0.41
+      },
+      "meanSurfaceMTok": 0.099,
+      "meanHistMTok": 0.089,
+      "resetsPer100Turns": 1.75,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 16,
+      "sessionFirePct": 40.6
+    },
+    {
+      "cfg": {
+        "policy": "ratio",
+        "rho": 2,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 136.66,
+      "usdPerReplay": 27.33,
+      "uncachedMTokPerReplay": 175.3,
+      "uncachedMTok": 876.6,
+      "hitRate": 0.6625,
+      "ttft": {
+        "p50": 1588,
+        "p90": 2186,
+        "p95": 2595,
+        "p99": 3606
+      },
+      "surfaceMTok": {
+        "p50": 0.05,
+        "p90": 0.183,
+        "p99": 0.357
+      },
+      "meanSurfaceMTok": 0.076,
+      "meanHistMTok": 0.066,
+      "resetsPer100Turns": 3.22,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 6.59,
+      "sessionFirePct": 74.7
+    },
+    {
+      "cfg": {
+        "policy": "ratio",
+        "rho": 3,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 139.99,
+      "usdPerReplay": 28,
+      "uncachedMTokPerReplay": 179.4,
+      "uncachedMTok": 897.1,
+      "hitRate": 0.6687,
+      "ttft": {
+        "p50": 1590,
+        "p90": 2200,
+        "p95": 2614,
+        "p99": 3670
+      },
+      "surfaceMTok": {
+        "p50": 0.051,
+        "p90": 0.191,
+        "p99": 0.38
+      },
+      "meanSurfaceMTok": 0.08,
+      "meanHistMTok": 0.07,
+      "resetsPer100Turns": 2.9,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 7.1,
+      "sessionFirePct": 67.2
+    },
+    {
+      "cfg": {
+        "policy": "ratio",
+        "rho": 4,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 144.45,
+      "usdPerReplay": 28.89,
+      "uncachedMTokPerReplay": 184.9,
+      "uncachedMTok": 924.7,
+      "hitRate": 0.6741,
+      "ttft": {
+        "p50": 1591,
+        "p90": 2212,
+        "p95": 2661,
+        "p99": 3728
+      },
+      "surfaceMTok": {
+        "p50": 0.054,
+        "p90": 0.199,
+        "p99": 0.388
+      },
+      "meanSurfaceMTok": 0.084,
+      "meanHistMTok": 0.073,
+      "resetsPer100Turns": 2.71,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 8.25,
+      "sessionFirePct": 62.8
+    },
+    {
+      "cfg": {
+        "policy": "ratio",
+        "rho": 6,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 166.12,
+      "usdPerReplay": 33.22,
+      "uncachedMTokPerReplay": 210.7,
+      "uncachedMTok": 1053.5,
+      "hitRate": 0.7191,
+      "ttft": {
+        "p50": 1598,
+        "p90": 2251,
+        "p95": 2764,
+        "p99": 4296
+      },
+      "surfaceMTok": {
+        "p50": 0.062,
+        "p90": 0.25,
+        "p99": 0.839
+      },
+      "meanSurfaceMTok": 0.11,
+      "meanHistMTok": 0.1,
+      "resetsPer100Turns": 2.22,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 9.32,
+      "sessionFirePct": 51.5
+    },
+    {
+      "cfg": {
+        "policy": "ratio",
+        "rho": 8,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 191.97,
+      "usdPerReplay": 38.39,
+      "uncachedMTokPerReplay": 241.9,
+      "uncachedMTok": 1209.3,
+      "hitRate": 0.7444,
+      "ttft": {
+        "p50": 1600,
+        "p90": 2282,
+        "p95": 2837,
+        "p99": 5328
+      },
+      "surfaceMTok": {
+        "p50": 0.074,
+        "p90": 0.325,
+        "p99": 1.101
+      },
+      "meanSurfaceMTok": 0.139,
+      "meanHistMTok": 0.129,
+      "resetsPer100Turns": 1.78,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 9,
+      "sessionFirePct": 41.3
+    },
+    {
+      "cfg": {
+        "policy": "ratio",
+        "rho": 12,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 215.88,
+      "usdPerReplay": 43.18,
+      "uncachedMTokPerReplay": 270.4,
+      "uncachedMTok": 1352.1,
+      "hitRate": 0.7632,
+      "ttft": {
+        "p50": 1604,
+        "p90": 2371,
+        "p95": 3014,
+        "p99": 6229
+      },
+      "surfaceMTok": {
+        "p50": 0.1,
+        "p90": 0.427,
+        "p99": 1.101
+      },
+      "meanSurfaceMTok": 0.168,
+      "meanHistMTok": 0.158,
+      "resetsPer100Turns": 1.16,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 8.65,
+      "sessionFirePct": 27
+    },
+    {
+      "cfg": {
+        "policy": "ratio",
+        "rho": 16,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 251.78,
+      "usdPerReplay": 50.36,
+      "uncachedMTokPerReplay": 312.7,
+      "uncachedMTok": 1563.6,
+      "hitRate": 0.7861,
+      "ttft": {
+        "p50": 1605,
+        "p90": 2463,
+        "p95": 3427,
+        "p99": 7150
+      },
+      "surfaceMTok": {
+        "p50": 0.13,
+        "p90": 0.559,
+        "p99": 1.101
+      },
+      "meanSurfaceMTok": 0.215,
+      "meanHistMTok": 0.205,
+      "resetsPer100Turns": 0.74,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 7.8,
+      "sessionFirePct": 17.1
+    },
+    {
+      "cfg": {
+        "policy": "ratio",
+        "rho": 24,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 274.14,
+      "usdPerReplay": 54.83,
+      "uncachedMTokPerReplay": 338.9,
+      "uncachedMTok": 1694.6,
+      "hitRate": 0.797,
+      "ttft": {
+        "p50": 1606,
+        "p90": 2487,
+        "p95": 3601,
+        "p99": 7885
+      },
+      "surfaceMTok": {
+        "p50": 0.143,
+        "p90": 0.623,
+        "p99": 1.43
+      },
+      "meanSurfaceMTok": 0.246,
+      "meanHistMTok": 0.236,
+      "resetsPer100Turns": 0.44,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 7.33,
+      "sessionFirePct": 10.2
+    },
+    {
+      "cfg": {
+        "policy": "ratio",
+        "rho": 32,
+        "coalesce": false,
+        "Vhard": null
+      },
+      "seeds": 5,
+      "usd": 292.74,
+      "usdPerReplay": 58.55,
+      "uncachedMTokPerReplay": 361.1,
+      "uncachedMTok": 1805.4,
+      "hitRate": 0.8019,
+      "ttft": {
+        "p50": 1608,
+        "p90": 2551,
+        "p95": 3810,
+        "p99": 8315
+      },
+      "surfaceMTok": {
+        "p50": 0.162,
+        "p90": 0.659,
+        "p99": 1.435
+      },
+      "meanSurfaceMTok": 0.268,
+      "meanHistMTok": 0.258,
+      "resetsPer100Turns": 0.19,
+      "overCeilingTurnPct": 0,
+      "meanFireTurn": 7,
+      "sessionFirePct": 4.4
+    }
+  ]
+}

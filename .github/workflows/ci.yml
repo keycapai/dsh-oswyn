@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Node 20 is the declared floor (engines), 22 is the current LTS line,
+        # 24 is what the maintainer develops on. Testing all three catches both
+        # "too new to be portable" and "too old to support the declared floor".
+        node: [20, 22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm install --no-audit --no-fund
+      # The client bundle is generated, so a stale lib/client.js would let tests
+      # pass against code that is not what ships. Build first, then test.
+      - name: Build client bundle
+        run: node lib/client/build.js
+      - name: Verify the committed bundle matches the sources
+        run: |
+          if ! git diff --quiet -- lib/client.js; then
+            echo "::error::lib/client.js is out of date. Run `npm run build:client` and commit the result."
+            git diff --stat -- lib/client.js
+            exit 1
+          fi
+      - name: Test
+        run: node --test test/*.test.js

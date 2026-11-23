@@ -1,0 +1,120 @@
+{
+  "source": "/Users/reno/.dsh/dsh-bill/records.jsonl",
+  "calls": 6576,
+  "sessions": 78,
+  "timeRange": {
+    "from": "2026-10-09T05:46:34.064Z",
+    "to": "2026-10-19T02:56:00.405Z"
+  },
+  "tokens": {
+    "promptTotal": 1058569135,
+    "uncached": 103190044,
+    "cacheRead": 955379091,
+    "cacheWrite": 0,
+    "output": 2482294,
+    "cacheHitRatioByTokens": 0.9025
+  },
+  "usd": {
+    "total": 26.7054
+  },
+  "promptSizeQuantiles": {
+    "p10": 47400,
+    "p25": 78487,
+    "p50": 139413,
+    "p75": 217235,
+    "p90": 309130,
+    "p99": 508090,
+    "max": 529272
+  },
+  "idleGapSurvival": [
+    {
+      "lo": 0,
+      "hi": 10,
+      "n": 4663,
+      "meanHit": 0.9195,
+      "medianHit": 0.9969,
+      "fullMissRate": 0.0682
+    },
+    {
+      "lo": 10,
+      "hi": 30,
+      "n": 1088,
+      "meanHit": 0.7619,
+      "medianHit": 0.9953,
+      "fullMissRate": 0.2289
+    },
+    {
+      "lo": 30,
+      "hi": 60,
+      "n": 342,
+      "meanHit": 0.7106,
+      "medianHit": 0.9958,
+      "fullMissRate": 0.2778
+    },
+    {
+      "lo": 60,
+      "hi": 120,
+      "n": 153,
+      "meanHit": 0.6603,
+      "medianHit": 0.9935,
+      "fullMissRate": 0.3268
+    },
+    {
+      "lo": 120,
+      "hi": 300,
+      "n": 136,
+      "meanHit": 0.819,
+      "medianHit": 0.997,
+      "fullMissRate": 0.1765
+    },
+    {
+      "lo": 300,
+      "hi": 600,
+      "n": 43,
+      "meanHit": 0.7243,
+      "medianHit": 0.9975,
+      "fullMissRate": 0.2558
+    },
+    {
+      "lo": 600,
+      "hi": 1800,
+      "n": 38,
+      "meanHit": 0.5609,
+      "medianHit": 0.9958,
+      "fullMissRate": 0.3684
+    },
+    {
+      "lo": 1800,
+      "hi": 3600,
+      "n": 8,
+      "meanHit": 0.7177,
+      "medianHit": 0.9931,
+      "fullMissRate": 0.25
+    },
+    {
+      "lo": 3600,
+      "hi": 21600,
+      "n": 13,
+      "meanHit": 0.4922,
+      "medianHit": 0.1814,
+      "fullMissRate": 0.3846
+    },
+    {
+      "lo": 21600,
+      "hi": 86400,
+      "n": 8,
+      "meanHit": 0.2174,
+      "medianHit": 0.0229,
+      "fullMissRate": 0.625
+    },
+    {
+      "lo": 86400,
+      "hi": null,
+      "n": 6,
+      "meanHit": 0.2435,
+      "medianHit": 0.1398,
+      "fullMissRate": 0.5
+    }
+  ],
+  "pairs": 6498
+}
