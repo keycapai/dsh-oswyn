@@ -1,5 +1,9 @@
 # DSH-OSWYN: Only See What You Need
 
+## 预览
+
+![dsh-oswyn](docs/preview.svg)
+
 ### **Scaling in for better scaling out** — DeepSeek Harness 原生上下文精炼与多信号轮次蒸馏引擎 (v2.4)
 
 [![Version](https://img.shields.io/badge/version-2.4.0-blue.svg)](https://www.npmjs.com/package/dsh-oswyn)

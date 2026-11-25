@@ -15,7 +15,8 @@
     "cordis.patch.yml",
     "icon.svg",
     "README.md",
-    "ARCHITECTURE.md"
+    "ARCHITECTURE.md",
+    "docs"
   ],
   "icon": "./icon.svg",
   "author": "keycapai",
