@@ -487,14 +487,20 @@ test('distill [15]: isTurnIncompleteOrAwaitingAnswer excludes stopped, errored, 
   assert.deepEqual(step1Interrupted, [], 'interrupted previous turn must still be skipped on Step 1 of the new turn');
 });
 
-test('distill [16]: background task status updates (tool-jobs) are detected and never trigger turn distillation', async () => {
+test('distill [16]: background task and subagent/teammate status updates are detected and never trigger turn distillation', async () => {
   const { isBackgroundJobStatusMessage } = await import('../lib/core/projection.js');
   const { isTurnTriggeredByBackgroundJob } = await import('../lib/core/distill-projection.js');
 
   assert.equal(isBackgroundJobStatusMessage({ role: 'user', source: { kind: 'tool-jobs', form: 'notice' }, content: [{ type: 'text', text: 'job done' }] }), true);
   assert.equal(isBackgroundJobStatusMessage({ role: 'user', source: { kind: 'background-task' }, content: [{ type: 'text', text: 'running' }] }), true);
+  assert.equal(isBackgroundJobStatusMessage({ role: 'user', source: { kind: 'subagent' }, content: [{ type: 'text', text: 'subagent finished' }] }), true);
+  assert.equal(isBackgroundJobStatusMessage({ role: 'user', source: { kind: 'teammate' }, content: [{ type: 'text', text: 'teammate reply' }] }), true);
+  assert.equal(isBackgroundJobStatusMessage({ role: 'user', source: { kind: 'agent-message' }, content: [{ type: 'text', text: 'agent update' }] }), true);
   assert.equal(isBackgroundJobStatusMessage({ role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'hello' }] }), false);
   assert.equal(isBackgroundJobStatusMessage({ role: 'user', source: { kind: 'runtime-context' }, content: [{ type: 'text', text: 'ctx' }] }), false);
+  assert.equal(isBackgroundJobStatusMessage({ role: 'user', source: { kind: 'ptc-mode' }, content: [{ type: 'text', text: 'ptc' }] }), false);
+  assert.equal(isBackgroundJobStatusMessage({ role: 'user', source: { kind: 'oswyn-nudge' }, content: [{ type: 'text', text: 'nudge' }] }), false);
+  assert.equal(isBackgroundJobStatusMessage({ role: 'user', source: { kind: 'oswyn-compaction' }, content: [{ type: 'text', text: 'compact' }] }), false);
 
   const bgTurn = [
     { seq: 1, type: 'user/message', message: { role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'start build' }] } },
@@ -503,6 +509,14 @@ test('distill [16]: background task status updates (tool-jobs) are detected and 
     { seq: 4, type: 'assistant/message', message: { role: 'assistant', content: [{ type: 'text', text: 'noted' }] } }
   ];
   assert.equal(isTurnTriggeredByBackgroundJob(bgTurn), true, 'turn woken by tool-jobs notice must be detected');
+
+  const subagentTurn = [
+    { seq: 1, type: 'user/message', message: { role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'delegate task' }] } },
+    { seq: 2, type: 'assistant/message', message: { role: 'assistant', content: [{ type: 'text', text: 'delegated' }] } },
+    { seq: 3, type: 'user/message', message: { role: 'user', source: { kind: 'subagent' }, content: [{ type: 'text', text: 'subagent report' }] } },
+    { seq: 4, type: 'assistant/message', message: { role: 'assistant', content: [{ type: 'text', text: 'received' }] } }
+  ];
+  assert.equal(isTurnTriggeredByBackgroundJob(subagentTurn), true, 'turn woken by subagent return must be detected');
 
   const normalTurn = [
     { seq: 5, type: 'user/message', message: { role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'next step' }] } },
