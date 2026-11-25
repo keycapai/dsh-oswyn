@@ -999,3 +999,35 @@ test('Suite 8 [8.7]: updateStep credits a grown surface count reported inline', 
   assert.equal(tracker.accumulatedUncompressedChars, 0);
 });
 
+test('Suite 8 [8.8]: cross-turn step reset preserves ALREADY_COMPRESSED and COOLDOWN_ACTIVE windows', () => {
+  const tracker = new WillingnessTracker({ coldStartSteps: 0, complianceWindowSteps: 3, cooldownSteps: 2 });
+  tracker.syncStep(1, 8);
+  tracker.recordCompression(8, 1);
+
+  // New turn resets step back to 1 (step < lastCompressStep): silence window MUST still hold.
+  const turn2Step1 = tracker.evaluateNudgeNeeded({
+    turn: 2, step: 1, outgoingMessages: payloadMessages(3000), session: { totalTokens: 20000 }
+  });
+  assert.equal(turn2Step1.shouldNudge, false);
+  assert.equal(turn2Step1.reason, 'ALREADY_COMPRESSED');
+
+  const tracker2 = new WillingnessTracker({ coldStartSteps: 0, cooldownSteps: 2 });
+  tracker2.syncStep(1, 6);
+  tracker2.recordNudgeEmitted(6, 1);
+  tracker2.consecutiveUncompressedSteps = 3;
+  const cd = tracker2.evaluateNudgeNeeded({
+    turn: 2, step: 1, outgoingMessages: payloadMessages(3000), session: { totalTokens: 20000 }
+  });
+  assert.equal(cd.shouldNudge, false);
+  assert.equal(cd.reason, 'COOLDOWN_ACTIVE');
+});
+
+test('Suite 8 [8.9]: zero-backlog single 3K tool output does not prematurely fire CUMULATIVE_PAYLOAD_BLOAT', () => {
+  const tracker = new WillingnessTracker({ coldStartSteps: 0, accumulatedPayloadThreshold: 2000 });
+  const dec = tracker.evaluateNudgeNeeded({
+    turn: 3, step: 2, outgoingMessages: payloadMessages(3000), session: { totalTokens: 20000 }
+  });
+  assert.equal(dec.shouldNudge, false);
+  assert.equal(dec.reason, 'HEALTHY_BOUNDS');
+});
+

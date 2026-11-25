@@ -251,3 +251,62 @@ test('entryMetrics: per-row savingsRate reflects real before-after', () => {
   assert.equal(bad.savingsRate, 0); // clamped: after->before
   assert.equal(bad.compressed, false);
 });
+
+test('computeMetrics: avgSavingsRate includes turn-level deep distillation', () => {
+  const deepOnly = {
+    sessionId: 'deep_only',
+    updatedAt: Date.now(),
+    turns: 4,
+    entries: [],
+    distill: {
+      events: 1,
+      rawTokens: 20000,
+      distTokens: 4000,
+      surplusTokens: 16000,
+      cumulativeSaved: 16000,
+      turns: {
+        1: { reason: 'volume', rawTokens: 10000, distTokens: 1000, surplusTokens: 9000, seq: 10 },
+        2: { reason: 'volume', rawTokens: 10000, distTokens: 3000, surplusTokens: 7000, seq: 11 }
+      }
+    }
+  };
+  const m1 = computeMetrics([deepOnly], { now: Date.now() });
+  assert.equal(m1.avgSavingsRate, 80, 'deep-only session must reflect 80% compression rate');
+  assert.equal(m1.rowAvgSavingsRate, 0);
+
+  const combined = {
+    ...deepOnly,
+    sessionId: 'deep_and_step',
+    entries: [{ seq: 2, turn: 1, mode: 'truncate', before: 10000, after: 5000 }] // 50% step-level
+  };
+  const m2 = computeMetrics([combined], { now: Date.now() });
+  assert.equal(m2.rowAvgSavingsRate, 50);
+  assert.ok(m2.avgSavingsRate > 70 && m2.avgSavingsRate < 80, 'combined rate blends step-level and turn-level distillation');
+});
+
+test('computeMetrics: distillCumulativeSaved accumulates across every subsequent model request round-trip', () => {
+  const sess = {
+    sessionId: 'deep_req_cum',
+    updatedAt: Date.now(),
+    turns: 5,
+    // Requests at seq 5, 10, 15, 20, 25, 30
+    requestSeqs: [5, 10, 15, 20, 25, 30],
+    entries: [],
+    distill: {
+      events: 1,
+      rawTokens: 20000,
+      distTokens: 5000,
+      surplusTokens: 15000,
+      cumulativeSaved: 15000,
+      lastSeq: 12,
+      turns: {
+        // Distilled at seq=12 -> stays out of context for requests 15, 20, 25, 30 (4 round-trips!)
+        1: { reason: 'volume', rawTokens: 10000, distTokens: 2000, surplusTokens: 8000, seq: 12 },
+        // Distilled at seq=22 -> stays out of context for requests 25, 30 (2 round-trips!)
+        2: { reason: 'rounds', rawTokens: 10000, distTokens: 3000, surplusTokens: 7000, seq: 22 }
+      }
+    }
+  };
+  const m = computeMetrics([sess], { now: Date.now() });
+  assert.equal(m.distillCumulativeSaved, 8000 * 4 + 7000 * 2, 'must multiply each distilled turn surplus by subsequent model requests');
+});

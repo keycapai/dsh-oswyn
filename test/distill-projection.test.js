@@ -421,3 +421,115 @@ test('distill [14]: measureSurfaceBreakdown counts system prompt + distilled tur
   assert.equal(bd.uncompressedTokens, 1100, 'undistilled turns counted in uncompressedTokens');
   assert.equal(bd.totalTokens, 2500, 'totalTokens equals compressedTokens + uncompressedTokens');
 });
+
+test('distill [15]: isTurnIncompleteOrAwaitingAnswer excludes stopped, errored, and awaiting-answer turns', async () => {
+  const { isTurnIncompleteOrAwaitingAnswer, buildTurnDistillCheckpoints } = await import('../lib/core/distill-projection.js');
+
+  // 1. Stopped mid-tool (ends on tool/result)
+  const midTool = [
+    { seq: 1, type: 'user/message', message: { role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'check' }] } },
+    { seq: 2, type: 'assistant/message', message: { role: 'assistant', content: [{ type: 'tool-call', callId: 'c1', name: 'bash', arguments: '{}' }] } },
+    { seq: 3, type: 'tool/result', message: { role: 'tool', toolCallId: 'c1', content: [{ type: 'text', text: 'x'.repeat(2000) }] } }
+  ];
+  assert.deepEqual(isTurnIncompleteOrAwaitingAnswer(midTool), { excluded: true, reason: 'stopped_mid_tool' });
+
+  // 2. Asked user via ask_user_question
+  const askTool = [
+    { seq: 1, type: 'user/message', message: { role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'deploy' }] } },
+    { seq: 2, type: 'assistant/message', message: { role: 'assistant', content: [{ type: 'tool-call', callId: 'c2', name: 'ask_user_question', arguments: '{}' }] } },
+    { seq: 3, type: 'assistant/message', message: { role: 'assistant', content: [{ type: 'text', text: '请选择环境' }] } }
+  ];
+  assert.deepEqual(isTurnIncompleteOrAwaitingAnswer(askTool), { excluded: true, reason: 'ask_user_question' });
+
+  // 3. Final assistant line ends with question mark (awaiting user answer)
+  const questionTurn = [
+    { seq: 1, type: 'user/message', message: { role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'refactor' }] } },
+    { seq: 2, type: 'assistant/message', message: { role: 'assistant', content: [{ type: 'text', text: '需要同时修改测试文件吗？' }] } }
+  ];
+  assert.deepEqual(isTurnIncompleteOrAwaitingAnswer(questionTurn), { excluded: true, reason: 'awaiting_answer' });
+
+  // 4. Stopped mid-thinking (no visible final text)
+  const midThink = [
+    { seq: 1, type: 'user/message', message: { role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'analyze' }] } },
+    { seq: 2, type: 'assistant/message', message: { role: 'assistant', content: [{ type: 'reasoning', text: 'thinking...'.repeat(200) }] } }
+  ];
+  assert.deepEqual(isTurnIncompleteOrAwaitingAnswer(midThink), { excluded: true, reason: 'no_final_reply' });
+
+  // 5. Normal completed turn is NOT excluded
+  const normalTurn = [
+    { seq: 1, type: 'user/message', message: { role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'fix' }] } },
+    { seq: 2, type: 'assistant/message', message: { role: 'assistant', content: [{ type: 'text', text: '已完成修复并通过测试。' }] } }
+  ];
+  assert.deepEqual(isTurnIncompleteOrAwaitingAnswer(normalTurn), { excluded: false, reason: null });
+
+  // 6. buildTurnDistillCheckpoints with excludeIncompletePreviousTurn skips interrupted previous turn
+  const withNewTurn = [
+    ...midTool,
+    { seq: 4, type: 'user/message', message: { role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'continue' }] } }
+  ];
+  assert.deepEqual(
+    buildTurnDistillCheckpoints(withNewTurn, { excludeIncompletePreviousTurn: true }),
+    [],
+    'interrupted previous turn must be skipped when excludeIncompletePreviousTurn is enabled'
+  );
+
+  // 7. New-turn Step 1 (before new user message lands on surface): includeLastTurn=true
+  // distills a cleanly completed Turn N immediately, while still skipping an interrupted Turn N.
+  const cleanBigTurn = [
+    { seq: 1, type: 'user/message', message: { role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'inspect' }] } },
+    { seq: 2, type: 'assistant/message', message: { role: 'assistant', content: [{ type: 'reasoning', text: 'R'.repeat(3000) }, { type: 'text', text: '已完成检查。' }] } }
+  ];
+  const step1Clean = buildTurnDistillCheckpoints(cleanBigTurn, { includeLastTurn: true, excludeIncompletePreviousTurn: true });
+  assert.equal(step1Clean.length, 1, 'clean previous turn must be distilled on Step 1 of the new turn');
+  assert.equal(step1Clean[0].round, 1);
+
+  const step1Interrupted = buildTurnDistillCheckpoints(midTool, { includeLastTurn: true, excludeIncompletePreviousTurn: true });
+  assert.deepEqual(step1Interrupted, [], 'interrupted previous turn must still be skipped on Step 1 of the new turn');
+});
+
+test('distill [16]: background task status updates (tool-jobs) are detected and never trigger turn distillation', async () => {
+  const { isBackgroundJobStatusMessage } = await import('../lib/core/projection.js');
+  const { isTurnTriggeredByBackgroundJob } = await import('../lib/core/distill-projection.js');
+
+  assert.equal(isBackgroundJobStatusMessage({ role: 'user', source: { kind: 'tool-jobs', form: 'notice' }, content: [{ type: 'text', text: 'job done' }] }), true);
+  assert.equal(isBackgroundJobStatusMessage({ role: 'user', source: { kind: 'background-task' }, content: [{ type: 'text', text: 'running' }] }), true);
+  assert.equal(isBackgroundJobStatusMessage({ role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'hello' }] }), false);
+  assert.equal(isBackgroundJobStatusMessage({ role: 'user', source: { kind: 'runtime-context' }, content: [{ type: 'text', text: 'ctx' }] }), false);
+
+  const bgTurn = [
+    { seq: 1, type: 'user/message', message: { role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'start build' }] } },
+    { seq: 2, type: 'assistant/message', message: { role: 'assistant', content: [{ type: 'text', text: 'started' }] } },
+    { seq: 3, type: 'user/message', message: { role: 'user', source: { kind: 'tool-jobs', form: 'notice' }, content: [{ type: 'text', text: 'build running' }] } },
+    { seq: 4, type: 'assistant/message', message: { role: 'assistant', content: [{ type: 'text', text: 'noted' }] } }
+  ];
+  assert.equal(isTurnTriggeredByBackgroundJob(bgTurn), true, 'turn woken by tool-jobs notice must be detected');
+
+  const normalTurn = [
+    { seq: 5, type: 'user/message', message: { role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'next step' }] } },
+    { seq: 6, type: 'assistant/message', message: { role: 'assistant', content: [{ type: 'text', text: 'done.' }] } }
+  ];
+  assert.equal(isTurnTriggeredByBackgroundJob(normalTurn), false, 'normal organic user turn must not be flagged as background job');
+});
+
+test('distill [17]: turn distillation NEVER replaces preamble or mid-turn system/developer messages', async () => {
+  const { buildTurnDistillCheckpoints } = await import('../lib/core/distill-projection.js');
+  const pairsWithMidSystem = [
+    { seq: 0, type: 'system/message', message: { role: 'system', content: 'preamble system prompt' } },
+    { seq: 1, type: 'user/message', message: { role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'turn 1' }] } },
+    { seq: 2, type: 'assistant/message', message: { role: 'assistant', content: [{ type: 'reasoning', text: 'R'.repeat(2000) }, { type: 'text', text: 'part 1' }] } },
+    { seq: 3, type: 'system/message', message: { role: 'system', content: 'mid-turn system prompt update' } },
+    { seq: 4, type: 'developer/message', message: { role: 'developer', content: 'mid-turn developer prompt' } },
+    { seq: 5, type: 'assistant/message', message: { role: 'assistant', content: [{ type: 'reasoning', text: 'R'.repeat(2000) }, { type: 'text', text: 'part 2' }] } },
+    { seq: 6, type: 'user/message', message: { role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'turn 2' }] } }
+  ];
+
+  const cps = buildTurnDistillCheckpoints(pairsWithMidSystem);
+  assert.equal(cps.length, 2, 'should split into 2 segments around mid-turn system/developer nodes');
+  for (const cp of cps) {
+    assert.equal(cp.shadowedSeqs.includes(0), false, 'preamble system prompt must never be shadowed');
+    assert.equal(cp.shadowedSeqs.includes(3), false, 'mid-turn system prompt must never be shadowed');
+    assert.equal(cp.shadowedSeqs.includes(4), false, 'mid-turn developer prompt must never be shadowed');
+    assert.ok(!(cp.startSeq <= 3 && cp.endSeq >= 3), 'replace range must not span across seq 3');
+    assert.ok(!(cp.startSeq <= 4 && cp.endSeq >= 4), 'replace range must not span across seq 4');
+  }
+});
