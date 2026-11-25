@@ -488,13 +488,11 @@ test('Suite 5 [5.2]: buildAdaptiveNudgeNotice formats Tier 2 Contractual notice 
   const candidates = [{ toolName: 'bash_test', chars: 3200 }];
   const notice = buildAdaptiveNudgeNotice('contractual', candidates);
 
-  assert.ok(notice.includes('DSH-OSWYN 双通道共发契约唤醒'));
+  assert.ok(notice.includes('DSH-OSWYN 精炼提醒'));
   assert.ok(notice.includes('bash_test'));
   assert.ok(notice.includes('3200'));
-  assert.ok(notice.includes('truncate 或 discard'));
-  assert.ok(notice.includes('Step 0 豁免'));
-  // The nudge now advertises the fenced form only: XML tags used to be suggested
-  // but were never parsed, so models emitted fences that compressed nothing.
+  assert.ok(notice.includes('truncate / replace / discard'));
+  assert.ok(notice.includes('豁免'));
   assert.match(notice, /\u0060\u0060\u0060(?:dsh-)?result-summary/);
   assert.ok(!notice.includes('mode="..."'));
 });
@@ -503,19 +501,19 @@ test('Suite 5 [5.3]: buildAdaptiveNudgeNotice formats Tier 3 Budget notice corre
   const candidates = [{ toolName: 'grep_search', chars: 5400 }];
   const notice = buildAdaptiveNudgeNotice('budget', candidates);
 
-  assert.ok(notice.includes('DSH-OSWYN 载荷膨胀预算预警'));
+  assert.ok(notice.includes('DSH-OSWYN 载荷预算预警'));
   assert.ok(notice.includes('5400'));
-  assert.ok(notice.includes('KV-Cache 注意力正在严重稀释'));
-  assert.ok(notice.includes('Step 0 豁免'));
+  assert.ok(notice.includes('累计未精炼载荷已达'));
+  assert.ok(notice.includes('豁免'));
 });
 
 test('Suite 5 [5.4]: buildAdaptiveNudgeNotice formats Tier 1 Advisory notice correctly', () => {
   const candidates = [{ toolName: 'read_logs', chars: 1800 }];
   const notice = buildAdaptiveNudgeNotice('advisory', candidates);
 
-  assert.ok(notice.includes('DSH-OSWYN 上下文精炼建议'));
+  assert.ok(notice.includes('DSH-OSWYN 精炼建议'));
   assert.ok(notice.includes('1800'));
-  assert.ok(notice.includes('Step 0 豁免'));
+  assert.ok(notice.includes('豁免'));
 });
 
 // ============================================================================
@@ -563,7 +561,7 @@ test('Suite 6 [6.2]: agent/pre-step hook evaluates adaptive nudge and appends ep
   const nudge = decision.messages[decision.messages.length - 1];
   assert.equal(nudge.role, 'user');
   assert.equal(nudge.source?.kind, 'oswyn-nudge');
-  assert.ok(nudge.content[0].text.includes('DSH-OSWYN 双通道共发契约唤醒'));
+  assert.ok(nudge.content[0].text.includes('DSH-OSWYN 精炼提醒'));
   assert.equal(tracker.lastNudgeStep, 4);
 
   // Invariant: Prefix is strictly identical (100% KV cache hit)

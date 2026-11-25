@@ -136,16 +136,15 @@ test('Prompts & Smart Nudge: explicitly contrast Discard (replaces input+output)
   const stdPrompt = buildStandardProtocolPrompt();
   const ptcPrompt = buildPtcProtocolPrompt();
 
-  // Standard prompt has no PTC noise, PTC prompt has PTC MODE
-  assert.ok(!stdPrompt.includes('PTC MODE'), 'standard prompt excludes PTC MODE');
-  assert.ok(ptcPrompt.includes('PTC MODE'), 'PTC prompt includes PTC MODE');
+  // Standard prompt has no PTC noise, PTC prompt has PTC Mode
+  assert.ok(!/PTC Mode/i.test(stdPrompt), 'standard prompt excludes PTC Mode');
+  assert.ok(/PTC Mode/i.test(ptcPrompt), 'PTC prompt includes PTC Mode');
 
-  // Both prompts explicitly explain the Discard (input+output) vs Compress (output-only) boundary and 3-step decision tree
+  // Both prompts explicitly explain the Discard (input+output) vs Compress (output-only) boundary
   for (const p of [stdPrompt, ptcPrompt]) {
-    assert.match(p, /Discard \(Replaces Input \+ Output\) vs\. Compress \(Replaces Output Only\)/);
-    assert.match(p, /同时替换输入 \+ 输出/);
-    assert.match(p, /只替换输出，保留输入/);
-    assert.match(p, /Proactive 3-Step Decision Tree/);
+    assert.match(p, /replaces input args → `\{\}` AND output/);
+    assert.match(p, /replaces output only, keeps input/);
+    assert.match(p, /Tool Result Compression/);
   }
 
   // Smart Nudge inspects both inputChars and outputChars and explains Discard vs Compress
@@ -165,7 +164,7 @@ test('Prompts & Smart Nudge: explicitly contrast Discard (replaces input+output)
   assert.equal(candidates.length, 1);
   assert.ok(candidates[0].inputChars > 500, 'nudge candidate measures tool-call inputChars');
   const nudgeText = buildNudgePromptText(candidates);
-  assert.match(nudgeText, /调用入参约 \d+ 字符/);
-  assert.match(nudgeText, /同时替换输入 \+ 输出/);
-  assert.match(nudgeText, /只替换输出，保留输入/);
+  assert.match(nudgeText, /入参约 \d+ 字符/);
+  assert.match(nudgeText, /清空入参与输出/);
+  assert.match(nudgeText, /仅压输出/);
 });

@@ -104,15 +104,15 @@ test('index: Config keeps legacy keys + badgeEnabled', () => {
 test('protocol: PTC mode explains one outer fence / per-subcall facts', () => {
   const ptc = protocolText('ptc');
   const native = protocolText('native');
-  assert.match(ptc, /PTC MODE/);
-  assert.match(ptc, /NEVER write one fence per subcall/);
-  assert.ok(!/PTC MODE/.test(native));
+  assert.match(ptc, /PTC Mode/i);
+  assert.match(ptc, /never one fence per subcall/i);
+  assert.ok(!/PTC Mode/i.test(native));
 });
 
-test('protocol: reply summary guidance encourages free-form key-detail memo and discourages rigid boilerplate / forced open items', () => {
+test('protocol: reply summary guidance encourages free-form key-detail memo without rigid boilerplate', () => {
   const text = protocolText('ptc');
-  assert.match(text, /Free-Form Key-Detail Memo/i);
-  assert.match(text, /Preserve Critical Answer Details/i);
-  assert.match(text, /open items rarely exist/i);
-  assert.match(text, /Do NOT force fixed boilerplate headings/i);
+  assert.match(text, /Dual-Track Reply Memo/i);
+  assert.match(text, /free-form bullets/i);
+  assert.match(text, /file paths \+ line numbers/i);
+  assert.match(text, /```reply-summary/);
 });
