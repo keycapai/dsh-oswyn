@@ -938,7 +938,8 @@ test('Client DOM: streaming prose arriving after an early fence removes any prem
   const ctx = { effect(fn) { return fn(); }, get() {}, on() {}, logger: { info() {}, warn() {}, debug() {} } };
   mod.apply(ctx);
   await new Promise((r) => setTimeout(r, 200));
-  assert.equal(leadSeat.querySelectorAll('.dsh-oswyn-fold-chip').length, 1, 'chip appears transiently while the early fence is still at the tail');
+  assert.equal(leadSeat.querySelectorAll('.dsh-oswyn-fold-chip').length, 0, 'early fence with no preceding answer prose must be hidden silently, never flashing a bare 已压缩 chip');
+  assert.equal(leadWrap.style.display, 'none', 'early fence stays hidden during streaming');
 
   // Step 2: answer prose and trailing reply-summary stream in AFTER the leading fence
   const proseSeat = new El('div'); proseSeat._cls.add('seat');
