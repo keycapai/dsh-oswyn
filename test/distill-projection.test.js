@@ -547,3 +547,44 @@ test('distill [17]: turn distillation NEVER replaces preamble or mid-turn system
     assert.ok(!(cp.startSeq <= 4 && cp.endSeq >= 4), 'replace range must not span across seq 4');
   }
 });
+
+test('distill [18]: ANY turn without a final assistant answer (earlier, interrupted, or mid-turn interjection) is NEVER compressed', async () => {
+  const { buildTurnDistillCheckpoints } = await import('../lib/core/distill-projection.js');
+  const { projectDistilledHistory } = await import('../lib/core/projection.js');
+
+  // Turn 1: user asked, agent ran tool calls, user interjected before any final answer
+  // Turn 2: interjection + completed final answer
+  // Turn 3: user follow-up
+  const pairsWithEarlierNoFinal = [
+    { seq: 0, type: 'system/message', message: { role: 'system', content: 'sys' } },
+    { seq: 1, type: 'user/message', message: { role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'do task A' }] } },
+    { seq: 2, type: 'assistant/message', message: { role: 'assistant', content: [{ type: 'reasoning', text: 'R'.repeat(3000) }, { type: 'tool-call', callId: 'c1', name: 'bash', arguments: '{"cmd":"ls"}' }] } },
+    { seq: 3, type: 'tool/result', message: { role: 'tool', toolCallId: 'c1', content: [{ type: 'text', text: 'important intermediate output '.repeat(100) }] } },
+    // Mid-turn interjection (Turn 2 in organic partition) that DOES finish cleanly
+    { seq: 4, type: 'user/message', message: { role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'also check B' }] } },
+    { seq: 5, type: 'assistant/message', message: { role: 'assistant', content: [{ type: 'reasoning', text: 'R'.repeat(3000) }, { type: 'text', text: 'Finished both A and B.' }] } },
+    // Turn 3
+    { seq: 6, type: 'user/message', message: { role: 'user', source: { kind: 'user' }, content: [{ type: 'text', text: 'next question' }] } }
+  ];
+
+  // Even without excludeIncompletePreviousTurn (e.g. manual distill or later turn), Turn 1 MUST NOT be compressed!
+  const cps = buildTurnDistillCheckpoints(pairsWithEarlierNoFinal);
+  assert.equal(cps.length, 1, 'only Turn 2 (with final answer) should be compressed');
+  assert.equal(cps[0].round, 2);
+  assert.equal(cps.some((cp) => cp.round === 1), false, 'Turn 1 without final answer must never be compressed');
+
+  // Turn-close with includeLastTurn=true must also preserve Turn 1 untouched
+  const turnCloseCps = buildTurnDistillCheckpoints(pairsWithEarlierNoFinal.slice(0, 6), {
+    includeLastTurn: true,
+    excludeIncompletePreviousTurn: true
+  });
+  assert.equal(turnCloseCps.length, 1);
+  assert.equal(turnCloseCps[0].round, 2);
+
+  // Fallback projectDistilledHistory must also preserve Turn 1's tool work untouched
+  const projected = projectDistilledHistory(
+    pairsWithEarlierNoFinal.map((p) => p.message),
+    { forceCacheExpired: true }
+  );
+  assert.ok(projected.some((m) => m.role === 'tool' && m.toolCallId === 'c1'), 'projectDistilledHistory must preserve tool work of turns without a final answer');
+});

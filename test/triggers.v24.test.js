@@ -228,6 +228,7 @@ test('v2.4 [7.1]: the measured surface must be the session history, not the pre-
     history.push({ role: 'user', content: 'turn ' + t });
     history.push({ role: 'assistant', content: [{ type: 'text', text: '<think>r</think>a' + t }] });
     history.push({ role: 'tool', content: 'x'.repeat(24000) });
+    history.push({ role: 'assistant', content: [{ type: 'text', text: 'done ' + t }] });
   }
 
   const claimSurplus = measureSurfaces(claimed, (m) => projectDistilledHistory(m, { isExpired: true })).surplusTokens;
